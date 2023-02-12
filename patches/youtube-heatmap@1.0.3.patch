@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index 43f1055bbf79c508966947352d9bb43779273c16..abcdcd14484e815d9bef98743d0be11d148ba270 100644
+--- a/index.js
++++ b/index.js
+@@ -25,7 +25,7 @@ function getHeatMapFromHtml(html) {
+   if (!d.length)
+     throw new Error(`Tag '${cssHeatMapPath}' not found or is empty.`);
+ 
+-  return d.toArray();
++  return d
+ }
+ 
+ export async function getHeatMap(url) {

@@ -1,7 +1,8 @@
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
+import { getHeatMap } from 'youtube-heatmap'
 import { getPrimary, getSecondary, getContentPage } from './content'
-import { getMarkers } from './marker'
+import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 
 type Return<T extends (...args: any) => any> = {
@@ -10,6 +11,7 @@ type Return<T extends (...args: any) => any> = {
 type Params = { id: string } & {
 	sugestions?: b
 	contentPage?: b
+	heatmapPath?: b
 } & Return<typeof getPrimary> &
 	Return<typeof getSecondary> &
 	Return<typeof getMarkers>
@@ -27,7 +29,9 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 			? await getCompactVideoRenderer(id)
 			: undefined,
 		contentPage: params.contentPage ? await getContentPage(id) : undefined,
+		heatmapPath: params.heatmapPath ? await getHeatmapPath(id) : undefined,
 	}
+
 	return Ok({ body })
 }
 function reduceKeys<A extends object, B extends object>(A: A, B: B) {
