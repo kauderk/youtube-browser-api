@@ -10,6 +10,20 @@
 		Table
 	} from '@skeletonlabs/skeleton';
 	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types';
+	import Api from '../api';
+	const config = <const>{
+		query: {
+			id: 'ZwLekxsSY3Y',
+			sugestions: true,
+			contentPage: true,
+			title: true,
+			isLive: true,
+			channel: true,
+			description: true,
+			chapters: true,
+			heatmap: true
+		}
+	};
 
 	// Local
 
@@ -78,6 +92,154 @@
 					odit, temporibus ullam ab enim expedita eum officia ipsum, laboriosam, nobis quasi laborum
 					aspernatur reiciendis dignissimos optio sunt distinctio.
 				</p>
+				<section class="space-y-4">
+					<p class="text-center">
+						Tap the <strong>View Page Source</strong> above to inspect each example shown below.
+					</p>
+					<div class="card">
+						<!-- Card Body -->
+						<div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+							<!-- Column 1 -->
+							<div class="space-y-4">
+								<label class="label">
+									<span>Select</span>
+									<select
+										class="select"
+										on:change={() => {
+											Api.youtube.data
+												.GET({ query: { search: { keyword: 'API' } } })
+												.Ok((o) => console.log({ data: o.body }));
+
+											Api.youtube.content.GET(config).Ok((o) => console.log({ content: o.body }));
+
+											Api.youtube.transcript
+												.GET(config)
+												.Ok((o) => console.log({ transcript: o.body }));
+										}}
+									>
+										<option value="1">Option 1</option>
+										<option value="2">Option 2</option>
+										<option value="3">Option 3</option>
+										<option value="4">Option 4</option>
+										<option value="5">Option 5</option>
+									</select>
+								</label>
+								<label class="label">
+									<span>Select (size)</span>
+									<select class="select" size="4" value="1">
+										<option value="1">Option 1</option>
+										<option value="2">Option 2</option>
+										<option value="3">Option 3</option>
+										<option value="4">Option 4</option>
+										<option value="5">Option 5</option>
+									</select>
+								</label>
+								<label class="label">
+									<span>Select (multiple)</span>
+									<select class="select" multiple value={['1', '2']}>
+										<option value="1">Option 1</option>
+										<option value="2">Option 2</option>
+										<option value="3">Option 3</option>
+										<option value="4">Option 4</option>
+										<option value="5">Option 5</option>
+									</select>
+								</label>
+							</div>
+
+							<!-- Column 2 -->
+							<div class="space-y-4">
+								<label class="label">
+									<span>Textarea</span>
+									<textarea class="textarea" rows="4" placeholder="Enter some long form content." />
+								</label>
+								<fieldset>
+									<div class="label">
+										<strong>Checkboxes</strong>
+										<div class="space-y-2">
+											<label class="flex items-center space-x-2">
+												<input class="checkbox" type="checkbox" checked />
+												<p>Option 1</p>
+											</label>
+											<label class="flex items-center space-x-2">
+												<input class="checkbox" type="checkbox" />
+												<p>Option 2</p>
+											</label>
+											<label class="flex items-center space-x-2">
+												<input class="checkbox" type="checkbox" />
+												<p>Option 3</p>
+											</label>
+										</div>
+									</div>
+								</fieldset>
+								<fieldset>
+									<div class="label">
+										<strong>Radio Buttons</strong>
+										<div class="space-y-2">
+											<label class="flex items-center space-x-2">
+												<input class="radio" type="radio" checked name="radio-direct" value="1" />
+												<p>Option 1</p>
+											</label>
+											<label class="flex items-center space-x-2">
+												<input class="radio" type="radio" name="radio-direct" value="2" />
+												<p>Option 2</p>
+											</label>
+											<label class="flex items-center space-x-2">
+												<input class="radio" type="radio" name="radio-direct" value="3" />
+												<p>Option 3</p>
+											</label>
+										</div>
+									</div>
+								</fieldset>
+								<label class="label">
+									<span>Input (range)</span>
+									<input type="range" value="75" max="100" />
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+						<label class="label">
+							<span>Website</span>
+							<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
+								<div class="input-group-shim">https://</div>
+								<input type="text" placeholder="www.example.com" />
+							</div>
+						</label>
+						<!-- --- -->
+						<label class="label">
+							<span>Amount</span>
+							<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
+								<div class="input-group-shim"><i class="fa-solid fa-dollar-sign" /></div>
+								<input type="text" placeholder="Amount" />
+								<select>
+									<option>USD</option>
+									<option>CAD</option>
+									<option>EURO</option>
+								</select>
+							</div>
+						</label>
+						<!-- --- -->
+						<label class="label">
+							<span>Username</span>
+							<div class="input-group input-group-divider grid-cols-[1fr_auto]">
+								<input type="text" placeholder="Enter Username..." />
+								<a href="/elements/forms" title="Username already in use.">
+									<i class="fa-solid fa-circle-exclamation text-warning-500 animate-pulse" />
+								</a>
+							</div>
+						</label>
+						<!-- --- -->
+						<label class="label">
+							<span>Search</span>
+							<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
+								<div class="input-group-shim"><i class="fa-solid fa-search" /></div>
+								<input type="search" placeholder="Search..." />
+								<button class="variant-filled-secondary">Submit</button>
+							</div>
+						</label>
+					</div>
+				</section>
 			</svelte:fragment>
 		</AccordionItem>
 		<AccordionItem>
