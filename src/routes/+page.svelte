@@ -11,6 +11,7 @@
 	} from '@skeletonlabs/skeleton'
 	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types'
 	import Api from '../api'
+	import Chart from './Chart.svelte'
 	const config = <const>{
 		query: {
 			id: 'ZwLekxsSY3Y',
@@ -136,6 +137,7 @@
 						x="0"
 						y="0" />
 				</svg>
+				<Chart />
 				<p>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit.
 					Voluptatum eligendi quibusdam odit, temporibus ullam ab enim
