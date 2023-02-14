@@ -8,7 +8,7 @@ export async function GetChannelById(channelId: s) {
 	const page = await getYouTubePage(endpoint)
 	const tabs: any[] =
 		// @ts-expect-error
-		page.initdata.contents.twoColumnBrowseResultsRenderer.tabs
+		page.initialData.contents.twoColumnBrowseResultsRenderer.tabs
 
 	return tabs
 		.map(json => {

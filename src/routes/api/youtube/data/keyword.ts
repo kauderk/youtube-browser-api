@@ -24,7 +24,7 @@ export async function GetListByKeyword({
 	const page = await getYouTubePage(endpoint)
 
 	const contents: any[] = // @ts-expect-error
-		page.initdata.contents.twoColumnSearchResultsRenderer.primaryContents
+		page.initialData.contents.twoColumnSearchResultsRenderer.primaryContents
 			.sectionListRenderer.contents
 
 	let contToken = {}

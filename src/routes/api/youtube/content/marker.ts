@@ -7,7 +7,7 @@ export async function getMarkers(videoId: s) {
 	const page = await getContentPage(videoId)
 
 	const relative =
-		page.initdata.playerOverlays.playerOverlayRenderer
+		page.initialData.playerOverlays.playerOverlayRenderer
 			.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar
 			.multiMarkersPlayerBarRenderer.markersMap
 

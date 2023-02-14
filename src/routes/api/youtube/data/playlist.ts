@@ -8,7 +8,7 @@ export const GetPlaylistData = async (playlistId: s, limit = 0) => {
 	const endpoint = `${youtubeEndpoint}/playlist?list=${playlistId}&${_locale_}`
 
 	const page = await getYouTubePage(endpoint)
-	const sectionListRenderer = await page.initdata
+	const sectionListRenderer = await page.initialData
 	// @ts-expect-error
 	const metadata = await sectionListRenderer.metadata
 	if (!sectionListRenderer?.contents) {

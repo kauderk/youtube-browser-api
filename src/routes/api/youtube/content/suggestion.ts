@@ -17,7 +17,7 @@ export async function getCompactVideoRenderer(videoId: s) {
 }
 
 export function getNextResult(page: Page) {
-	return page.initdata.contents.twoColumnWatchNextResults
+	return page.initialData.contents.twoColumnWatchNextResults
 }
 
 function compactVideoRenderer(compactVideoRendererJson: any) {
