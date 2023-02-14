@@ -12,9 +12,11 @@
 	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types'
 	import Api from '../api'
 	import Chart from './Chart.svelte'
+	import Preview from './Preview.svelte'
+	import ProgressBar from './ProgressBar.svelte'
 	const config = <const>{
 		query: {
-			id: 'ZwLekxsSY3Y',
+			id: '3sWTzMsmdx8',
 			sugestions: true,
 			contentPage: true,
 			title: true,
@@ -22,6 +24,7 @@
 			channel: true,
 			description: true,
 			chapters: true,
+			auto_chapters: true,
 			heatmap: true,
 			heatmapPath: true,
 		},
@@ -138,6 +141,8 @@
 						y="0" />
 				</svg>
 				<Chart />
+				<ProgressBar />
+				<Preview />
 				<p>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit.
 					Voluptatum eligendi quibusdam odit, temporibus ullam ab enim
