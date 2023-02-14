@@ -1,43 +1,36 @@
 // "youtube-search-api": "^1.1.1"
 import axios from 'axios'
-import type { RootObject } from '../types'
-
-let eneabledLog = false
-
-export const setEnabledConsoleLog = (b: b) => (eneabledLog = b)
+import type { InitialData } from './types/initial-data'
+import type { PlayerResponse } from './types/player-response'
 
 export async function TryGetYouTubePage(url: s) {
-	let apiToken = null
-	let context = null
-
-	eneabledLog && console.log(encodeURI(url))
 	const page = await axios.get(encodeURI(url))
-	const ytInitData = await page.data.split('var ytInitialData =')
-	if (!ytInitData.length) {
-		return Promise.reject()
-	}
-
-	const data = await ytInitData[1].split('</script>')[0].slice(0, -1)
-
-	if (page.data.split('innertubeApiKey').length > 0) {
-		apiToken = await page.data
-			.split('innertubeApiKey')[1]
-			.trim()
-			.split(',')[0]
-			.split('"')[2]
-	}
-
-	if (page.data.split('INNERTUBE_CONTEXT').length > 0) {
-		context = await JSON.parse(
-			page.data.split('INNERTUBE_CONTEXT')[1].trim().slice(2, -2)
-		)
-	}
 
 	return {
-		initdata: (await JSON.parse(data)) as RootObject,
-		apiToken,
-		context,
+		initialData: parse<InitialData>(
+			page.data
+				.split('var ytInitialData =')[1]
+				?.split('</script>')[0]
+				.slice(0, -1)
+		),
+		playerResponse: parse<PlayerResponse>(
+			page.data
+				.split('var ytInitialPlayerResponse =')[1]
+				?.split('</script>')[0]
+				.slice(0, -1)
+		),
+		apiToken: page.data
+			.split('innertubeApiKey')[1]
+			?.trim()
+			.split(',')[0]
+			.split('"')[2],
+		context: parse(
+			page.data.split('INNERTUBE_CONTEXT')[1]?.trim().slice(2, -2) ?? '{}'
+		),
 	}
+}
+function parse<T>(object?: s) {
+	return JSON.parse(object ?? '{}') as T
 }
 
 import { getMap_smart } from '../utils'
