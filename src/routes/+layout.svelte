@@ -1,11 +1,16 @@
-<script>
+<script lang="ts">
 	import '@skeletonlabs/skeleton/themes/theme-rocket.css'
 	import '@skeletonlabs/skeleton/styles/all.css'
 	import '../app.postcss'
 
 	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
 	import { writable } from 'svelte/store'
-	const storeValue = writable(1)
+	const endpoints = <const>{
+		content: { shim: ' fa-video' },
+		data: { shim: 'fa-file-alt' },
+		transcript: { shim: 'fa-file-alt' },
+	}
+	const storeValue = writable<(keyof typeof endpoints | '')[n]>()
 </script>
 
 <div
@@ -13,23 +18,20 @@
 	<AppRail selected={storeValue}>
 		<!-- Lead -->
 		<svelte:fragment slot="lead">
-			<AppRailTile
-				tag="a"
-				href="/components/app-rail"
-				title="Lead slot tile.">
+			<AppRailTile tag="a" href="/" value={''} title="Lead slot tile.">
 				<i class="fa-solid fa-bars text-2xl" />
 			</AppRailTile>
 		</svelte:fragment>
 		<!-- Default -->
-		<AppRailTile label="Tile 1" value={1}>
-			<i class="fa-solid fa-image text-2xl" />
-		</AppRailTile>
-		<AppRailTile label="Tile 2" value={2}>
-			<i class="fa-solid fa-image text-2xl" />
-		</AppRailTile>
-		<AppRailTile label="Tile 3" value={3}>
-			<i class="fa-solid fa-image text-2xl" />
-		</AppRailTile>
+		{#each Object.entries(endpoints) as [to, { shim }]}
+			<AppRailTile
+				tag="a"
+				href="/api/youtube/{to}"
+				label={to.toUpperCase()}
+				value={to}>
+				<i class="fa-solid {shim} text-2xl" />
+			</AppRailTile>
+		{/each}
 		<!-- Trail -->
 		<svelte:fragment slot="trail">
 			<section class="card flex justify-center items-center">
@@ -44,7 +46,8 @@
 			</AppRailTile>
 		</svelte:fragment>
 	</AppRail>
-	<div class="grid place-content-center place-items-center">
+	<div
+		class="!bg-surface-500/5 card grid max-w-[800px] overflow-hidden justify-self-center">
 		<slot />
 	</div>
 </div>
