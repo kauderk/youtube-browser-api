@@ -5,6 +5,7 @@ import { getPrimary, getSecondary, getContentPage } from './content'
 import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
+import { json } from '@sveltejs/kit'
 
 type Return<T extends (...args: any) => any> = {
 	[key in keyof Partial<Awaited<ReturnType<T>>>]?: b
@@ -37,7 +38,15 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 			: undefined,
 	}
 
-	return Ok({ body })
+	console.log('content')
+
+	return {
+		body: JSON.stringify(body),
+		type: 'json',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	}
 }
 async function getStoryboards(id: s, params: { storyboard?: b }) {
 	const page = await getContentPage(id)

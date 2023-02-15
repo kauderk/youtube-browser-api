@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Api from '../api'
+	import { onMount } from 'svelte'
+	import Api from '../../../../api'
 	const config = <const>{
 		query: {
 			id: '3sWTzMsmdx8',
@@ -15,6 +16,9 @@
 			heatmapPath: true,
 		},
 	}
+	export let data
+
+	onMount(() => console.log(data))
 </script>
 
 <section class="space-y-4">

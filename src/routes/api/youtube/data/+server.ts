@@ -21,6 +21,7 @@ export const GET = async (event: API<{ query?: Params }>) => {
 		suggestion: suggestion ? await GetSuggestData(suggestion) : undefined,
 		search: search ? await GetListByKeyword(search as any) : undefined,
 	}
+	console.log('hello')
 
 	return Ok({ body })
 }
