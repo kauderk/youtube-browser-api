@@ -4,8 +4,8 @@ import { VideoRender } from './query'
 const youtubeEndpoint = `https://www.youtube.com`
 const _locale_ = 'hl=en&gl=us'
 
-export const GetPlaylistData = async (playlistId: s, limit = 0) => {
-	const endpoint = `${youtubeEndpoint}/playlist?list=${playlistId}&${_locale_}`
+export const GetPlaylistData = async (params: { playlistId: s; limit: n }) => {
+	const endpoint = `${youtubeEndpoint}/playlist?list=${params.playlistId}&${_locale_}`
 
 	const page = await getYouTubePage(endpoint)
 	const sectionListRenderer = await page.initialData
@@ -26,9 +26,9 @@ export const GetPlaylistData = async (playlistId: s, limit = 0) => {
 			items.push(VideoRender(item))
 		}
 	})
-	const itemsResult = limit != 0 ? items.slice(0, limit) : items
+	const limit = params.limit
 	return {
-		items: itemsResult,
+		items: !limit ? items : items.slice(0, limit),
 		metadata: metadata,
 	}
 }

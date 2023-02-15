@@ -2,18 +2,17 @@ import type { ITEM } from '../types'
 import { getYouTubePage } from './parse'
 import { youtubeEndpoint, _locale_, eneabledLog, VideoRender } from './query'
 
-export type ListOptions = {
-	keyword: s
-	withPlaylist?: boolean
-	limit?: n
-	option?: 'video' | 'channel' | 'playlist' | 'movie' | ''
-}
 export async function GetListByKeyword({
 	keyword,
 	withPlaylist = false,
 	limit = 0,
 	option = '',
-}: ListOptions) {
+}: {
+	keyword: s
+	withPlaylist?: boolean
+	limit?: n
+	option?: 'video' | 'channel' | 'playlist' | 'movie' | ''
+}) {
 	let endpoint = `${youtubeEndpoint}/results?search_query=${keyword}&${_locale_}`
 	if (option == 'video') endpoint = `${endpoint}&sp=EgIQAQ%3D%3D`
 	else if (option == 'channel') endpoint = `${endpoint}&sp=EgIQAg%3D%3D`
