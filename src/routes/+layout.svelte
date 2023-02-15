@@ -1,49 +1,50 @@
 <script>
-	import '@skeletonlabs/skeleton/themes/theme-rocket.css';
-	import '@skeletonlabs/skeleton/styles/all.css';
-	import '../app.postcss';
-	import { AppShell, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import '@skeletonlabs/skeleton/themes/theme-rocket.css'
+	import '@skeletonlabs/skeleton/styles/all.css'
+	import '../app.postcss'
+
+	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
+	import { writable } from 'svelte/store'
+	const storeValue = writable(1)
 </script>
 
-<!-- App Shell -->
-<AppShell>
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar>
-			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Skeleton</strong>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				<section class="card flex justify-center items-center">
-					<LightSwitch />
-				</section>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Discord
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Twitter
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
-					rel="noreferrer"
-				>
-					GitHub
-				</a>
-			</svelte:fragment>
-		</AppBar>
-	</svelte:fragment>
-	<!-- Page Route Content -->
-	<slot />
-</AppShell>
+<div
+	class="card !bg-surface-500/5 overflow-hidden h-screen grid grid-cols-[auto_1fr]">
+	<AppRail selected={storeValue}>
+		<!-- Lead -->
+		<svelte:fragment slot="lead">
+			<AppRailTile
+				tag="a"
+				href="/components/app-rail"
+				title="Lead slot tile.">
+				<i class="fa-solid fa-bars text-2xl" />
+			</AppRailTile>
+		</svelte:fragment>
+		<!-- Default -->
+		<AppRailTile label="Tile 1" value={1}>
+			<i class="fa-solid fa-image text-2xl" />
+		</AppRailTile>
+		<AppRailTile label="Tile 2" value={2}>
+			<i class="fa-solid fa-image text-2xl" />
+		</AppRailTile>
+		<AppRailTile label="Tile 3" value={3}>
+			<i class="fa-solid fa-image text-2xl" />
+		</AppRailTile>
+		<!-- Trail -->
+		<svelte:fragment slot="trail">
+			<section class="card flex justify-center items-center">
+				<LightSwitch />
+			</section>
+			<AppRailTile
+				tag="a"
+				href="https://github.com/"
+				target="_blank"
+				title="Trail slot tile.">
+				<i class="fa-brands fa-github text-2xl" />
+			</AppRailTile>
+		</svelte:fragment>
+	</AppRail>
+	<div class="grid place-content-center place-items-center">
+		<slot />
+	</div>
+</div>
