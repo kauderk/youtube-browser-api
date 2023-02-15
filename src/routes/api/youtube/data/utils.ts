@@ -1,5 +1,5 @@
 import type { OptionalKey } from '../utility-types'
-import type Item from '../content/Item.svelte'
+import type Item from '../components/Item.svelte'
 
 export type Pre<T> = OptionalKey<
 	Item['$$prop_def'],
