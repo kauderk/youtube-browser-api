@@ -4,6 +4,7 @@
 	export let title: s
 	export let placeholder: s
 	export let shim = ''
+	export let submit: (() => void) | undefined = undefined
 	export let param: s | b | n | undefined = ''
 </script>
 
@@ -14,6 +15,10 @@
 			class="input-group input-group-divider grid grid-cols-[auto_1fr_auto]">
 			<Shim {shim} />
 			<input type="text" bind:value={param} {placeholder} />
+			{#if submit}
+				<button class="variant-filled-secondary" on:click={submit}
+					>Fetch</button>
+			{/if}
 		</div>
 	{:else if typeof param == 'number'}
 		<div
