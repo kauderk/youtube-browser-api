@@ -21,13 +21,15 @@ specifiers:
   eslint: ^8.28.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-svelte3: ^4.0.0
+  highlight.js: ^11.7.0
   postcss: ^8.4.21
   prettier: ^2.8.0
   prettier-plugin-svelte: ^2.8.1
   svelte: ^3.54.0
   svelte-check: ^3.0.1
   svelte-preprocess: ^5.0.1
-  sveltekit-zero-api: ^0.11.17
+  svelte-tree-view: ^1.3.3
+  sveltekit-zero-api: ^0.12.1
   tailwindcss: ^3.2.6
   tslib: ^2.4.1
   typescript: ^4.9.3
@@ -52,13 +54,15 @@ devDependencies:
   eslint: 8.34.0
   eslint-config-prettier: 8.6.0_eslint@8.34.0
   eslint-plugin-svelte3: 4.0.0_dbthnr4b2bdkhyiebwn7su3hnq
+  highlight.js: 11.7.0
   postcss: 8.4.21
   prettier: 2.8.4
   prettier-plugin-svelte: 2.9.0_jrsxveqmsx2uadbqiuq74wlc4u
   svelte: 3.55.1
   svelte-check: 3.0.3_pehl75e5jsy22vp33udjja4soi
   svelte-preprocess: 5.0.1_k4bhxdknaltjvjwprbm23edr5q
-  sveltekit-zero-api: 0.11.17
+  svelte-tree-view: 1.3.3_svelte@3.55.1
+  sveltekit-zero-api: 0.12.1_mombgr4tqjba7weu533t6lazv4
   tailwindcss: 3.2.6_postcss@8.4.21
   tslib: 2.5.0
   typescript: 4.9.5
@@ -1503,6 +1507,11 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /highlight.js/11.7.0:
+    resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
+    engines: {node: '>=12.0.0'}
+    dev: true
+
   /htmlparser2/8.0.1:
     resolution: {integrity: sha512-4lVbmc1diZC7GUJQtRQ5yBAeUCL1exyMwmForWkRLnwyzWBFxN633SALPMGYaWZvKe9j1pRZJpauvmxENSp/EA==}
     dependencies:
@@ -2375,6 +2384,14 @@ packages:
       typescript: 4.9.5
     dev: true
 
+  /svelte-tree-view/1.3.3_svelte@3.55.1:
+    resolution: {integrity: sha512-MkpOC/+FK1cMRDUy9H4O82s+B20oKBYcq9B1ql+xQ46tueRnqHUC5tRmFpOG1slHy+ZijSEmA0zwtwO1h174Cg==}
+    peerDependencies:
+      svelte: '>=3'
+    dependencies:
+      svelte: 3.55.1
+    dev: true
+
   /svelte/3.55.1:
     resolution: {integrity: sha512-S+87/P0Ve67HxKkEV23iCdAh/SX1xiSfjF1HOglno/YTbSTW7RniICMCofWGdJJbdjw3S+0PfFb1JtGfTXE0oQ==}
     engines: {node: '>= 8'}
@@ -2392,8 +2409,14 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /sveltekit-zero-api/0.11.17:
-    resolution: {integrity: sha512-8YSGTloj5i/T7PWh75HZBgWVDn4LtP00gziW8yw2Bk3Z/VLzq2fr6QAR8rjdTlgc2YKs5+XhgRWPDe1pRivI1A==}
+  /sveltekit-zero-api/0.12.1_mombgr4tqjba7weu533t6lazv4:
+    resolution: {integrity: sha512-BD7aNDs4D8MFR5qooOoX87CbuEv4R3A36MxxqIR6aN3JJbL0+LTBPC5D6a9rK2enr0eqBSxOdtLuXUKM95mt7A==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.5.5
+      svelte: ^3.55.1
+    dependencies:
+      '@sveltejs/kit': 1.5.5_svelte@3.55.1+vite@4.1.1
+      svelte: 3.55.1
     dev: true
 
   /tailwindcss/3.2.6_postcss@8.4.21:
