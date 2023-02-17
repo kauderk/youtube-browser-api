@@ -1,49 +1,41 @@
 <script lang="ts">
+	import { Subscribe } from 'svelte-subscribe'
 	import Legend from '../components/Legend.svelte'
 	import Item from '../components/Item.svelte'
 	import type { Params } from './+server'
 	import type { NonNullableNested } from '../utility-types'
 	import { toProps, type Pre } from './utils'
 	import { common } from '../components/common'
-	import { CodeBlock, ProgressRadial } from '@skeletonlabs/skeleton'
-	import JsonTree from '../components/JsonTree.svelte'
-	import { writable, type Writable } from 'svelte/store'
+
+	import Api from '../../../../api'
+	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
+	import { fetchQuery } from '../components/submit'
+	import { error } from '@sveltejs/kit'
+	import { derived, writable } from 'svelte/store'
 
 	//#region Types
 	type Model = NonNullableNested<Params>
-	type Multiple<M = Filter<Model>['objects']> = {
+	type Multiple<M = Model> = {
 		[K in keyof M]?: {
 			[key in keyof M[K]]: Pre<M[K][key]> & { submit?: () => void }
 		}
-	}
-	type Single<M = Filter<Model>['symbols']> = {
-		[K in keyof M]?: Pre<M[K]> & { submit?: () => void }
-	}
-	type Filter<T> = {
-		symbols: Pick<
-			T,
-			{ [K in keyof T]: T[K] extends string ? K : never }[keyof T]
-		>
-		objects: Pick<
-			T,
-			{ [K in keyof T]: T[K] extends object ? K : never }[keyof T]
-		>
 	}
 	export const ObjectKeys = <obj extends o>(o: obj) =>
 		Object.keys(o) as (keyof typeof o)[]
 	//#endregion
 
-	const Single = {
+	//#region Lookups
+	const Multiple = {
 		channel: {
-			intent: 'submit',
-			shim: '/',
-			placeholder: 'ColdFusion',
+			channelId: {
+				shim: '/',
+				placeholder: 'ColdFusion',
+				intent: 'submit',
+			},
 		},
 		suggestion: {
-			param: 0,
+			limit: { param: 1, intent: 'submit' },
 		},
-	} satisfies Single<Model>
-	let Multiple = {
 		playlist: {
 			playlistId: { ...common.playlistId[1], intent: 'submit' },
 			limit: {
@@ -64,34 +56,23 @@
 			},
 		},
 	} satisfies Multiple<Model>
+	//#endregion
 
-	const lists = ObjectKeys(Multiple).map(title => ({
-		title,
-		list: Object.entries(Multiple[title]).map(toProps),
-		state: writable({
-			isLoading: false,
-			data: {},
-			error: null as o | null,
-		}),
-	}))
-	import { Subscribe } from 'svelte-subscribe'
-	import Api from '../../../../api'
-</script>
-
-<section class="space-y-4">
-	<p class="text-center card p-4 card-header">
-		<strong>Data Endpoint</strong>
-	</p>
-
-	{#each lists as { list, state, title }}
-		<Legend title={title.toUpperCase()} />
-		<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-			{#each list as props}
-				{@const submit = () =>
-					Api.youtube.data
-						.GET({
-							query: {
-								[title]: Object.values(list)
+	const fetchParamsList = ObjectKeys(Multiple)
+		.reverse()
+		.map(title => {
+			const propList = Object.entries(Multiple[title]).map(toProps)
+			return {
+				title,
+				propList,
+				state: createState(),
+				fetchUrl: derived(
+					propList.map(_ => _.param),
+					_ => {
+						const query = {
+							[title]: JSON.stringify(
+								Object.values(propList)
+									// @ts-expect-error
 									.filter(x => x != '' && x != undefined)
 									.reduce(
 										(acc, curr) => ({
@@ -99,53 +80,40 @@
 											[curr.key]: curr.param,
 										}),
 										{}
-									),
-							},
-						})
-						.Ok(res => {
-							state.update($ => ({
-								...$,
-								error: null,
-								data: res.body,
-							}))
-						})
-						.catch(error => state.update($ => ({ ...$, error })))}
-				<Item
-					{...props}
-					bind:param={props.param}
-					submit={props.intent == 'submit' ? submit : undefined} />
-			{/each}
-		</div>
-		<CodeBlock
-			language="ts"
-			code={`fetch("api/youtube/content?${Object.values(list)
-				.map(v => (v.param == undefined ? '' : `${v.key}=${v.param}`))
-				.filter(v => !!v)
-				.join('&')}")
-			.then(res => res.json())
-			.then(console.log)`} />
-		<Subscribe {state} let:state>
-			{#if state.isLoading}
-				<div class="p-4 space-y-2 w-20">
-					<ProgressRadial
-						stroke={40}
-						meter="stroke-primary-500"
-						track="stroke-primary-500/30" />
-					<p>Fetching...</p>
-				</div>
-			{:else if state.error}
-				<div class="p-4 space-y-2 w-20">
-					Error: {JSON.stringify(state.error)}
-				</div>
-			{:else}
-				<JsonTree data={state.data} />
-			{/if}
+									)
+							),
+						}
+						return `${
+							//@ts-expect-error
+							Api.youtube.data.path
+						}?${new URLSearchParams(query).toString()}&format=json`
+					}
+				),
+			}
+		})
+</script>
+
+<section class="space-y-4">
+	<p class="text-center card p-4 card-header">
+		<strong>Data Endpoint</strong>
+	</p>
+
+	{#each fetchParamsList as { propList, state, title, fetchUrl }}
+		<Subscribe {fetchUrl} let:fetchUrl>
+			<Legend title={title.toUpperCase()} />
+			<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+				{#each propList as props}
+					{@const submit = async () => {
+						fetchQuery(state, Api.youtube.data, fetchUrl)
+					}}
+					<Item
+						{...props}
+						submit={props.intent == 'submit'
+							? submit
+							: undefined} />
+				{/each}
+			</div>
+			<CodeBlocks {state} {fetchUrl} />
 		</Subscribe>
-	{/each}
-	{#each Object.entries(Single) as entry}
-		<Legend title={entry[0]} />
-		<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-			<Item {...toProps(entry)} />
-		</div>
 	{/each}
 </section>

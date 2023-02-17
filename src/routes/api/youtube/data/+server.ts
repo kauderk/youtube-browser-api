@@ -12,20 +12,19 @@ type Param<
 > = Parameters<Func>[I]
 export type Params = Prettify<{
 	playlist?: Param<typeof GetPlaylistData>
-	channel?: string
-	suggestion?: number
+	channel?: Param<typeof GetChannelById>
+	suggestion?: Param<typeof GetSuggestData>
 	search?: Param<typeof GetListByKeyword>
 }>
 
 export const GET = async (event: API<{ query?: Params }>) => {
-	const { playlist, channel, suggestion, search } = querySpread(event)
+	const { playlist, channel, suggestion, search } = querySpread(event) as any
 
 	const body = {
-		// @ts-expect-error
 		playlist: playlist ? await GetPlaylistData(playlist) : undefined,
 		channel: channel ? await GetChannelById(channel) : undefined,
 		suggestion: suggestion ? await GetSuggestData(suggestion) : undefined,
-		search: search ? await GetListByKeyword(search as any) : undefined,
+		search: search ? await GetListByKeyword(search) : undefined,
 	}
 
 	return Ok({ body })

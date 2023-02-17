@@ -1,17 +1,16 @@
-import { getYouTubePage } from './parse'
+import { TryGetYouTubePage } from './parse'
 import { VideoRender } from './query'
 import type { ITEM } from '../types'
 const youtubeEndpoint = `https://www.youtube.com`
 const _locale_ = 'hl=en&gl=us'
 
-export async function GetSuggestData(limit = 0) {
+export async function GetSuggestData(params: { limit: n }) {
 	const endpoint = `${youtubeEndpoint}?${_locale_}`
 
-	const page = await getYouTubePage(endpoint)
-	// @ts-expect-error
-	const sectionListRenderer: any[] = await page.contents
-		.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
-		.richGridRenderer.contents
+	const page = await TryGetYouTubePage(endpoint)
+	const sectionListRenderer: any[] = await // @ts-expect-error
+	page.initialData.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer
+		.content.richGridRenderer.contents
 	let items: ITEM[] = []
 	let otherItems = []
 	sectionListRenderer.forEach(item => {
@@ -24,7 +23,7 @@ export async function GetSuggestData(limit = 0) {
 			}
 		}
 	})
-	const itemsResult = limit != 0 ? items.slice(0, limit) : items
+	const itemsResult = params.limit < 0 ? items.slice(0, params.limit) : items
 
 	return { items: itemsResult }
 }

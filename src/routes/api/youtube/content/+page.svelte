@@ -14,6 +14,8 @@
 	import Api from '../../../../api'
 	import { writable } from 'svelte/store'
 	import JsonTree from '../components/JsonTree.svelte'
+	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
+	import { fetchQuery } from '../components/submit'
 
 	type Model = NonNullableNested<Params>
 	type Shape = {
@@ -48,50 +50,24 @@
 	)
 
 	const videoId = toProps(common.videoId)
-	const state = writable({ isLoading: false, data: {} })
+	const state = createState()
 </script>
 
 <section class="space-y-4">
 	<p class="text-center card p-4 card-header">
 		<strong>Content Endpoint</strong>
 	</p>
-	<section class="card p-4 grid grid-cols-1 gap-4">
-		<CodeBlock
-			language="ts"
-			code={`fetch("api/youtube/content?id=${videoId.param}&${selectedIds
-				?.reduce((acc, id) => {
-					acc.append(id, '1')
-					return acc
-				}, new URLSearchParams())
-				.toString()}")
-			.then(res => res.json())
-			.then(console.log)`} />
-		{#if $state.isLoading}
-			<div class="p-4 space-y-2 w-20">
-				<ProgressRadial
-					stroke={40}
-					meter="stroke-primary-500"
-					track="stroke-primary-500/30" />
-				<p>Fetching...</p>
-			</div>
-		{:else}
-			<JsonTree data={$state.data} />
-		{/if}
-	</section>
+
 	<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 		<Item
 			{...videoId}
 			bind:param={videoId.param}
 			submit={() => {
-				$state.isLoading = true
 				const query = selectedIds.reduce(
 					(acc, param) => ({ ...acc, [param]: true }),
 					{ id: videoId.param }
 				)
-				Api.youtube.content.GET({ query }).Ok(res => {
-					$state.data = res.body
-					$state.isLoading = false
-				})
+				fetchQuery(state, Api.youtube.content, query)
 			}} />
 	</div>
 	<div class="space-y-2">
@@ -150,4 +126,12 @@
 			</label>
 		</div>
 	</div>
+	<CodeBlocks
+		{state}
+		fetchUrl={`api/youtube/content?id=${videoId.param}&${selectedIds
+			?.reduce((acc, id) => {
+				acc.append(id, '1')
+				return acc
+			}, new URLSearchParams())
+			.toString()}`} />
 </section>

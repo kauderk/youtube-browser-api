@@ -1,21 +1,24 @@
 import type { OptionalKey } from '../utility-types'
 import type Item from '../components/Item.svelte'
+import { get, writable } from 'svelte/store'
 
 export type Pre<T> = OptionalKey<
-	Item['$$prop_def'],
+	Omit<Item['$$prop_def'], 'param'>,
 	'title' | 'placeholder'
 > & {
 	intent?: 'necessary' | 'optional' | 'submit'
 } & { param?: T }
-export function toProps<T = s>([key, value]: [
+export function toProps<T = s | n | b>([key, value]: [
 	key: string,
 	value: Pre<T>
-]): any {
+]) {
+	const pre = writable(value.param ?? '')
 	return {
 		title: camelCaseToPhrase(key),
 		...value,
+		param: { ...pre, get: () => get(pre) },
 		key,
-		placeholder: value.placeholder ?? value.param!,
+		placeholder: value.placeholder ?? (value.param as s)?.toString() ?? '',
 	}
 }
 function camelCaseToPhrase(str: string): string {

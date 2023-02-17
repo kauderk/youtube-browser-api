@@ -1,5 +1,7 @@
 <script lang="ts">
 	export let shim: s
+	export let submit: (() => void) | undefined = undefined
+	export let value: s | b | n
 </script>
 
 <!-- RIDICULOUS -->
@@ -11,4 +13,9 @@
 			{shim}
 		{/if}
 	</div>
+{/if}
+<slot />
+{#if submit}
+	<button class="variant-filled-secondary" disabled={!value} on:click={submit}
+		>Fetch</button>
 {/if}
