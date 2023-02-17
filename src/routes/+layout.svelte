@@ -54,6 +54,8 @@
 	</AppRail>
 	<div
 		class="!bg-surface-500/5 card grid max-w-[800px] overflow-hidden justify-self-center">
-		<slot />
+		<div class="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+			<slot />
+		</div>
 	</div>
 </div>
