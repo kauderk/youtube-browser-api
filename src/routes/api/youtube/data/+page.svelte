@@ -5,16 +5,19 @@
 	import type { NonNullableNested } from '../utility-types'
 	import { toProps, type Pre } from './utils'
 	import { common } from '../components/common'
+	import { CodeBlock, ProgressRadial } from '@skeletonlabs/skeleton'
+	import JsonTree from '../components/JsonTree.svelte'
+	import { writable, type Writable } from 'svelte/store'
 
 	//#region Types
 	type Model = NonNullableNested<Params>
 	type Multiple<M = Filter<Model>['objects']> = {
 		[K in keyof M]?: {
-			[key in keyof M[K]]: Pre<M[K][key]>
+			[key in keyof M[K]]: Pre<M[K][key]> & { submit?: () => void }
 		}
 	}
 	type Single<M = Filter<Model>['symbols']> = {
-		[K in keyof M]?: Pre<M[K]>
+		[K in keyof M]?: Pre<M[K]> & { submit?: () => void }
 	}
 	type Filter<T> = {
 		symbols: Pick<
@@ -32,7 +35,7 @@
 
 	const Single = {
 		channel: {
-			intent: 'necessary',
+			intent: 'submit',
 			shim: '/',
 			placeholder: 'ColdFusion',
 		},
@@ -42,19 +45,19 @@
 	} satisfies Single<Model>
 	let Multiple = {
 		playlist: {
-			playlistId: common.playlistId[1],
+			playlistId: { ...common.playlistId[1], intent: 'submit' },
 			limit: {
-				param: 10,
+				param: 1,
 			},
 		},
 		search: {
 			keyword: {
 				placeholder: 'How to...',
-				intent: 'necessary',
+				intent: 'submit',
 				shim: 'fa-search',
 			},
 			withPlaylist: { param: false },
-			limit: { param: 10 },
+			limit: { param: 1 },
 			option: {
 				placeholder: `'' | 'video' | 'channel' | 'playlist' | 'movie'`,
 				shim: 'fa-photo-film-music',
@@ -62,29 +65,82 @@
 		},
 	} satisfies Multiple<Model>
 
-	$: log = Object.values(Multiple).reduce(
-		(acc, sub) =>
-			(acc += Object.values(sub).reduce(
-				(a, b) => (a += b.param || ''),
-				''
-			)),
-		''
-	)
-	$: console.log({ Multiple, Single })
+	const lists = ObjectKeys(Multiple).map(title => ({
+		title,
+		list: Object.entries(Multiple[title]).map(toProps),
+		state: writable({
+			isLoading: false,
+			data: {},
+			error: null as o | null,
+		}),
+	}))
+	import { Subscribe } from 'svelte-subscribe'
+	import Api from '../../../../api'
 </script>
 
 <section class="space-y-4">
 	<p class="text-center card p-4 card-header">
 		<strong>Data Endpoint</strong>
 	</p>
-	{log}
-	{#each ObjectKeys(Multiple) as title}
-		<Legend {title} />
+
+	{#each lists as { list, state, title }}
+		<Legend title={title.toUpperCase()} />
 		<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-			{#each Object.entries(Multiple[title]).map(toProps) as props}
-				<Item {...props} />
+			{#each list as props}
+				{@const submit = () =>
+					Api.youtube.data
+						.GET({
+							query: {
+								[title]: Object.values(list)
+									.filter(x => x != '' && x != undefined)
+									.reduce(
+										(acc, curr) => ({
+											...acc,
+											[curr.key]: curr.param,
+										}),
+										{}
+									),
+							},
+						})
+						.Ok(res => {
+							state.update($ => ({
+								...$,
+								error: null,
+								data: res.body,
+							}))
+						})
+						.catch(error => state.update($ => ({ ...$, error })))}
+				<Item
+					{...props}
+					bind:param={props.param}
+					submit={props.intent == 'submit' ? submit : undefined} />
 			{/each}
 		</div>
+		<CodeBlock
+			language="ts"
+			code={`fetch("api/youtube/content?${Object.values(list)
+				.map(v => (v.param == undefined ? '' : `${v.key}=${v.param}`))
+				.filter(v => !!v)
+				.join('&')}")
+			.then(res => res.json())
+			.then(console.log)`} />
+		<Subscribe {state} let:state>
+			{#if state.isLoading}
+				<div class="p-4 space-y-2 w-20">
+					<ProgressRadial
+						stroke={40}
+						meter="stroke-primary-500"
+						track="stroke-primary-500/30" />
+					<p>Fetching...</p>
+				</div>
+			{:else if state.error}
+				<div class="p-4 space-y-2 w-20">
+					Error: {JSON.stringify(state.error)}
+				</div>
+			{:else}
+				<JsonTree data={state.data} />
+			{/if}
+		</Subscribe>
 	{/each}
 	{#each Object.entries(Single) as entry}
 		<Legend title={entry[0]} />

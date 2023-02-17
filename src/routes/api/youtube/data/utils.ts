@@ -5,7 +5,7 @@ export type Pre<T> = OptionalKey<
 	Item['$$prop_def'],
 	'title' | 'placeholder'
 > & {
-	intent?: 'necessary' | 'optional'
+	intent?: 'necessary' | 'optional' | 'submit'
 } & { param?: T }
 export function toProps<T = s>([key, value]: [
 	key: string,
@@ -14,6 +14,7 @@ export function toProps<T = s>([key, value]: [
 	return {
 		title: camelCaseToPhrase(key),
 		...value,
+		key,
 		placeholder: value.placeholder ?? value.param!,
 	}
 }
