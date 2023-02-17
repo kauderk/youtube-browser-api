@@ -2,6 +2,12 @@
 	import '@skeletonlabs/skeleton/themes/theme-rocket.css'
 	import '@skeletonlabs/skeleton/styles/all.css'
 	import '../app.postcss'
+	//#region Skeleton/CodeBlack + highlight.js
+	import hljs from 'highlight.js'
+	import 'highlight.js/styles/github-dark.css'
+	import { storeHighlightJs } from '@skeletonlabs/skeleton'
+	storeHighlightJs.set(hljs)
+	//#endregion
 
 	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
 	import { writable } from 'svelte/store'
