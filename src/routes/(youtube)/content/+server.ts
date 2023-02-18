@@ -6,7 +6,6 @@ import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
 import type { Return, FirstFlatten } from './types'
-import type { Prettify } from '../utility-types'
 
 export type Single = {
 	suggestions?: b

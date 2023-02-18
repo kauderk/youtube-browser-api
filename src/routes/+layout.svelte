@@ -32,7 +32,7 @@
 		{#each Object.entries(endpoints) as [to, { shim }]}
 			<AppRailTile
 				tag="a"
-				href="/api/youtube/{to}"
+				href="/{to}"
 				label={to.toUpperCase()}
 				value={to}>
 				<i class="fa-solid {shim} text-2xl" />

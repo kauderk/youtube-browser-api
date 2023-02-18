@@ -1,7 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
-// @ts-expect-error
+// @ts-ignore
 import { zeroAPI } from 'sveltekit-zero-api'
 
 export default defineConfig({
@@ -14,7 +14,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			src: resolve('./src'),
+			$src: resolve('./src'),
 		},
 	},
 })

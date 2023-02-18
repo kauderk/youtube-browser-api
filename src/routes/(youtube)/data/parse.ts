@@ -1,5 +1,6 @@
 // "youtube-search-api": "^1.1.1"
 import axios from 'axios'
+import { getMap_smart } from '../utils'
 import type { InitialData } from './types/initial-data'
 import type { PlayerResponse } from './types/player-response'
 
@@ -32,8 +33,6 @@ export async function TryGetYouTubePage(url: s) {
 function parse<T>(object?: s) {
 	return JSON.parse(object ?? '{}') as T
 }
-
-import { getMap_smart } from '../utils'
 
 type page = ReturnType<typeof TryGetYouTubePage>
 const map = new Map<string, page>()

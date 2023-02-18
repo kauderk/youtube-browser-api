@@ -16,17 +16,17 @@
 			<!-- prettier-ignore -->
 			<tbody>
 				<tr>
-					<td><code><a href="/api/youtube/content">CONTENT</a></code></td>
+					<td><code><a href="/content">CONTENT</a></code></td>
 					<td>"?id="</td>
 					<td>Extract all/some video data.</td>
 				</tr>
 				<tr>
-					<td><code><a href="/api/youtube/data">DATA</a></code></td>
+					<td><code><a href="/data">DATA</a></code></td>
 					<td>"keywords"</td>
 					<td>Search for narrower data.</td>
 				</tr>
 				<tr>
-					<td><code><a href="/api/youtube/transcript">TRANSCRIPT</a></code></td>
+					<td><code><a href="/transcript">TRANSCRIPT</a></code></td>
 					<td>"video ids"</td>
 					<td>Extract transcripts.</td>
 				</tr>

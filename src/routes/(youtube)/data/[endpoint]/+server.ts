@@ -1,4 +1,5 @@
 import { querySpread } from 'sveltekit-zero-api'
+// @ts-ignore
 import type { API } from './$types'
 import { Ok } from 'sveltekit-zero-api/http'
 import { GetListByKeyword } from '../keyword'

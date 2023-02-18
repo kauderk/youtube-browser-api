@@ -7,7 +7,7 @@
 	import { toProps, type Pre } from './utils'
 	import { common } from '../components/common'
 
-	import Api from '../../../../api'
+	import Api from '$src/api'
 	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
 	import { fetchQuery } from '../components/submit'
 

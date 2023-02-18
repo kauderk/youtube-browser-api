@@ -1,6 +1,8 @@
 // https://github.com/vgranado/youtube-timeline/blob/3d643f93b9d3ef6ec3cc9f4f617c85f341884721/src/index.ts#L27
 // ytdl-core/lib/info-extras.getStoryboards()
 
+import type { Storyboards } from '../data/types/player-response'
+
 function getStoryboards(storyboards?: Storyboards) {
 	const parts = storyboards?.playerStoryboardSpecRenderer?.spec?.split('|')
 	if (!parts) return []
@@ -43,8 +45,6 @@ function getStoryboards(storyboards?: Storyboards) {
 		}
 	})
 }
-
-import type { Storyboards } from '../data/types/player-response'
 
 type StoryboardQuality = keyof typeof qualityEnum
 

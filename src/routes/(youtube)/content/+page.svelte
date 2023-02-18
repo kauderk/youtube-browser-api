@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { options } from './../../../../../.svelte-kit/generated/server/internal.js'
 	import type { Params } from './+server'
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton'
 	import type { NonNullableNested } from '../utility-types'
@@ -7,7 +6,7 @@
 	import Item from '../components/Item.svelte'
 	import { common } from '../components/common'
 
-	import Api from '../../../../api'
+	import Api from '$src/api'
 	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
 	import { fetchQuery } from '../components/submit'
 	import { page } from '$app/stores'
@@ -104,11 +103,11 @@ const fetchUrl = "${base}" + selectedIds.join()`,
 					multiple>
 					{@const list = Object.entries(ClientParams).map(
 						([key, payload]) => ({
-							name: payload.name ?? key,
+							name: payload?.name ?? key,
 							id: key,
-							selected: payload.selected,
-							title: payload.title ?? key.toUpperCase(),
-							icon: payload.shim ?? 'fa-book',
+							selected: payload?.selected,
+							title: payload?.title ?? key.toUpperCase(),
+							icon: payload?.shim ?? 'fa-book',
 						})
 					)}
 					{#each list as item}
