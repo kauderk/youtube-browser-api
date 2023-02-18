@@ -7,8 +7,8 @@ import { getMap_smart } from '../utils'
 import type { Prettify } from '../utility-types'
 
 type Params = {
-	list?: string
-	id?: string
+	playlistId?: string
+	videoId?: string
 }
 
 const transcriptMap = new Map<string, Promise<TranscriptResponse[]>>()
@@ -25,11 +25,13 @@ const getPageIds = async (list: s) => {
 }
 
 export const GET = async (event: API<{ query: Prettify<Params> }>) => {
-	const { id, list } = querySpread(event)
+	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
-		id: id ? await getTranscript(id) : undefined,
-		list: list ? await getPlaylistTranscripts(list) : undefined,
+		videoId: videoId ? await getTranscript(videoId) : undefined,
+		playlistId: playlistId
+			? await getPlaylistTranscripts(playlistId)
+			: undefined,
 	}
 
 	return Ok({ body })
