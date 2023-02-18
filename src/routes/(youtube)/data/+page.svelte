@@ -99,27 +99,28 @@ const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
 		})
 </script>
 
-<section class="space-y-4">
-	<p class="text-center card p-4 card-header">
-		<strong>Data Endpoint</strong>
-	</p>
+<svelte:head>
+	<meta
+		name="description"
+		content="Retrieve YouTube search results with options to limit, with playlist, or type, based on a phrase and display the results with a json tree view. Get a code snippet to carry your query with you." />
+	<meta
+		name="keywords"
+		content="YouTube, search results, limit, playlist, type, json tree view, code snippet" />
+</svelte:head>
 
-	{#each fetchParamsList as { propList, state, title, fetchData }}
-		<Subscribe {fetchData} let:fetchData>
-			<Legend title={title.toUpperCase()} />
-			<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-				{#each propList as props}
-					{@const submit = async () => {
-						fetchQuery(state, Api.youtube.data, fetchData.url)
-					}}
-					<Item
-						{...props}
-						submit={props.intent == 'submit'
-							? submit
-							: undefined} />
-				{/each}
-			</div>
-			<CodeBlocks {state} {fetchData} />
-		</Subscribe>
-	{/each}
-</section>
+{#each fetchParamsList as { propList, state, title, fetchData }}
+	<Subscribe {fetchData} let:fetchData>
+		<Legend title={title.toUpperCase()} />
+		<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+			{#each propList as props}
+				{@const submit = async () => {
+					fetchQuery(state, Api.youtube.data, fetchData.url)
+				}}
+				<Item
+					{...props}
+					submit={props.intent == 'submit' ? submit : undefined} />
+			{/each}
+		</div>
+		<CodeBlocks {state} {fetchData} />
+	</Subscribe>
+{/each}

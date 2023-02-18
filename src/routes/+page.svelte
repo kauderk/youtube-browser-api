@@ -1,5 +1,34 @@
-<script lang="ts">
+<script>
+	const endpoints = [
+		{
+			name: 'CONTENT',
+			required: '?id=',
+			description: 'Extract all/some video data.',
+			link: '/content',
+		},
+		{
+			name: 'DATA',
+			required: 'keywords',
+			description: 'Search for narrower data.',
+			link: '/data',
+		},
+		{
+			name: 'TRANSCRIPT',
+			required: 'video ids',
+			description: 'Extract transcripts.',
+			link: '/transcript',
+		},
+	]
 </script>
+
+<svelte:head>
+	<meta
+		name="description"
+		content="Easily access YouTube's videos, channels, playlists and more through our YouTube API Wrapper website. Our API wrapper offers content, data, and transcript endpoints with a simple interface tailored to your needs." />
+	<meta
+		name="keywords"
+		content="YouTube API, YouTube API Wrapper, video data, transcripts, channels, playlists, data endpoints, content endpoints, HTML data, simple interface, user-friendly." />
+</svelte:head>
 
 <section class="space-y-4 p-10">
 	<h2>How It Works</h2>
@@ -13,23 +42,18 @@
 					<th>Description</th>
 				</tr>
 			</thead>
-			<!-- prettier-ignore -->
 			<tbody>
-				<tr>
-					<td><code><a href="/content">CONTENT</a></code></td>
-					<td>"?id="</td>
-					<td>Extract all/some video data.</td>
-				</tr>
-				<tr>
-					<td><code><a href="/data">DATA</a></code></td>
-					<td>"keywords"</td>
-					<td>Search for narrower data.</td>
-				</tr>
-				<tr>
-					<td><code><a href="/transcript">TRANSCRIPT</a></code></td>
-					<td>"video ids"</td>
-					<td>Extract transcripts.</td>
-				</tr>
+				{#each endpoints as endpoint}
+					<tr>
+						<td>
+							<code>
+								<a href={endpoint.link}>{endpoint.name}</a>
+							</code>
+						</td>
+						<td>{endpoint.required}</td>
+						<td>{endpoint.description}</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 	</div>

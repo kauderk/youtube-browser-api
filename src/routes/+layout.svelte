@@ -2,6 +2,7 @@
 	import '@skeletonlabs/skeleton/themes/theme-rocket.css'
 	import '@skeletonlabs/skeleton/styles/all.css'
 	import '../app.postcss'
+
 	//#region Skeleton/CodeBlack + highlight.js
 	import hljs from 'highlight.js'
 	import 'highlight.js/styles/github-dark.css'
@@ -10,26 +11,45 @@
 	//#endregion
 
 	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
+	import { page } from '$app/stores'
 	import { writable } from 'svelte/store'
+
 	const endpoints = <const>{
-		content: { shim: ' fa-video' },
-		data: { shim: 'fa-file-alt' },
-		transcript: { shim: 'fa-file-alt' },
+		main: { shim: ' fa-bars', title: 'YouTube Browser API' },
+		content: { shim: ' fa-video', title: 'YouTube Video Browser API' },
+		data: { shim: 'fa-file-alt', title: 'YouTube Data Browser API' },
+		transcript: {
+			shim: 'fa-file-alt',
+			title: 'YouTube Transcript Browser API',
+		},
 	}
-	const storeValue = writable<(keyof typeof endpoints | 'off')[n]>('off')
+	const { main, ...rest } = endpoints
+	const storeValue = writable<keyof typeof endpoints>('main')
 </script>
+
+<svelte:head>
+	<title>{endpoints[$storeValue].title}</title>
+	<title>YouTube Browser API</title>
+	<meta name="author" content="KauDerK" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="canonical" href={$page.url.toString()} />
+</svelte:head>
 
 <div
 	class="card !bg-surface-500/5 overflow-hidden h-screen grid grid-cols-[auto_1fr]">
 	<AppRail selected={storeValue}>
 		<!-- Lead -->
 		<svelte:fragment slot="lead">
-			<AppRailTile tag="a" href="/" value={'off'} title="Lead slot tile.">
-				<i class="fa-solid fa-bars text-2xl" />
+			<AppRailTile
+				tag="a"
+				href="/"
+				value={'main'}
+				title="Lead slot tile.">
+				<i class="fa-solid {main.shim} text-2xl" />
 			</AppRailTile>
 		</svelte:fragment>
 		<!-- Default -->
-		{#each Object.entries(endpoints) as [to, { shim }]}
+		{#each Object.entries(rest) as [to, { shim }]}
 			<AppRailTile
 				tag="a"
 				href="/{to}"
@@ -55,7 +75,12 @@
 	<div
 		class="!bg-surface-500/5 card grid max-w-[800px] overflow-hidden justify-self-center">
 		<div class="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-			<slot />
+			<section class="card variant-glass p-4 space-y-4">
+				<p class="text-center card p-4 card-header">
+					<strong>{endpoints[$storeValue].title}</strong>
+				</p>
+				<slot />
+			</section>
 		</div>
 	</div>
 </div>

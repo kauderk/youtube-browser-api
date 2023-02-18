@@ -1,5 +1,5 @@
 {
-	"name": "youtube-api",
+	"name": "youtube-browser-api",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {

@@ -57,73 +57,77 @@ const fetchUrl = "${base}" + selectedIds.join()`,
 	}
 </script>
 
-<section class="space-y-4">
-	<p class="text-center card p-4 card-header">
-		<strong>Content Endpoint</strong>
-	</p>
+<svelte:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta
+		name="description"
+		content="Get detailed analytics on any YouTube video with our tool. Retrieve suggestions, storyboard, heatmap path, and more with just the video ID." />
+	<meta
+		name="keywords"
+		content="YouTube, video analytics, suggestions, storyboard, heatmap, json tree view" />
+</svelte:head>
 
-	<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-		<Item
-			{...videoId}
-			submit={() => {
-				fetchQuery(state, Api.youtube.content, fetchData.url)
-			}} />
-	</div>
-	<div class="space-y-2">
-		<div class="card variant-glass p-4 space-y-4">
-			<label for="" class="space-y-4">
-				<span class="flex items-center gap-4 flex-wrap"
-					>Multiple Selection
-					<div>
-						<div class="btn-group variant-ghost-secondary">
-							{#each Object.entries({ clear() {
-									selectedIds = []
-								}, all() {
-									selectedIds = Object.keys(ClientParams)
-								}, random() {
-									const arr = Object.keys(ClientParams)
-									const minSize = Math.ceil(arr.length * 0.3)
-									const size = Math.floor(Math.random() * (arr.length - minSize + 1)) + minSize
-									const shuffled = arr.sort(() => Math.random() - 0.5)
-									const random = shuffled.slice(0, size)
-									selectedIds = random
-								} }) as [item, click]}
-								<button
-									class="btn btn-sm variant-soft-primary"
-									on:click={click}>{item}</button>
-							{/each}
-						</div>
+<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+	<Item
+		{...videoId}
+		submit={() => {
+			fetchQuery(state, Api.youtube.content, fetchData.url)
+		}} />
+</div>
+<div class="space-y-2">
+	<div class="card variant-glass p-4 space-y-4">
+		<label for="" class="space-y-4">
+			<span class="flex items-center gap-4 flex-wrap"
+				>Multiple Selection
+				<div>
+					<div class="btn-group variant-ghost-secondary">
+						{#each Object.entries({ clear() {
+								selectedIds = []
+							}, all() {
+								selectedIds = Object.keys(ClientParams)
+							}, random() {
+								const arr = Object.keys(ClientParams)
+								const minSize = Math.ceil(arr.length * 0.3)
+								const size = Math.floor(Math.random() * (arr.length - minSize + 1)) + minSize
+								const shuffled = arr.sort(() => Math.random() - 0.5)
+								const random = shuffled.slice(0, size)
+								selectedIds = random
+							} }) as [item, click]}
+							<button
+								class="btn btn-sm variant-soft-primary"
+								on:click={click}>{item}</button>
+						{/each}
 					</div>
-				</span>
-				<code style="overflow-wrap: anywhere; white-space: normal;"
-					>{selectedIds.length ? selectedIds : 'None'}</code>
-				<ListBox
-					active="variant-filled-primary"
-					hover="hover:variant-soft-primary"
-					multiple>
-					{@const list = Object.entries(ClientParams).map(
-						([key, payload]) => ({
-							name: payload?.name ?? key,
-							id: key,
-							selected: payload?.selected,
-							title: payload?.title ?? key.toUpperCase(),
-							icon: payload?.shim ?? 'fa-book',
-						})
-					)}
-					{#each list as item}
-						<ListBoxItem
-							bind:group={selectedIds}
-							name={item.name}
-							value={item.id}>
-							<svelte:fragment slot="lead">
-								<i
-									class="fa-solid {item.icon} w-6 text-center" /></svelte:fragment>
-							{item.title}
-						</ListBoxItem>
-					{/each}
-				</ListBox>
-			</label>
-		</div>
+				</div>
+			</span>
+			<code style="overflow-wrap: anywhere; white-space: normal;"
+				>{selectedIds.length ? selectedIds : 'None'}</code>
+			<ListBox
+				active="variant-filled-primary"
+				hover="hover:variant-soft-primary"
+				multiple>
+				{@const list = Object.entries(ClientParams).map(
+					([key, payload]) => ({
+						name: payload?.name ?? key,
+						id: key,
+						selected: payload?.selected,
+						title: payload?.title ?? key.toUpperCase(),
+						icon: payload?.shim ?? 'fa-book',
+					})
+				)}
+				{#each list as item}
+					<ListBoxItem
+						bind:group={selectedIds}
+						name={item.name}
+						value={item.id}>
+						<svelte:fragment slot="lead">
+							<i
+								class="fa-solid {item.icon} w-6 text-center" /></svelte:fragment>
+						{item.title}
+					</ListBoxItem>
+				{/each}
+			</ListBox>
+		</label>
 	</div>
-	<CodeBlocks {state} {fetchData} />
-</section>
+</div>
+<CodeBlocks {state} {fetchData} />
