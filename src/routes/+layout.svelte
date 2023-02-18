@@ -4,11 +4,15 @@
 	import '../app.postcss'
 
 	//#region Skeleton/CodeBlack + highlight.js
-	import hljs from 'highlight.js'
 	import 'highlight.js/styles/github-dark.css'
 	import { storeHighlightJs } from '@skeletonlabs/skeleton'
-	storeHighlightJs.set(hljs)
+	import { onMount } from 'svelte'
 	//#endregion
+
+	onMount(() => {
+		// otherwise it will nuke down the entire site
+		import('highlight.js').then(hljs => storeHighlightJs.set(hljs.default))
+	})
 
 	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
 	import { page } from '$app/stores'
