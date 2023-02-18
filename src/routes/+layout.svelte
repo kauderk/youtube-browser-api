@@ -16,7 +16,7 @@
 		data: { shim: 'fa-file-alt' },
 		transcript: { shim: 'fa-file-alt' },
 	}
-	const storeValue = writable<(keyof typeof endpoints | '')[n]>()
+	const storeValue = writable<(keyof typeof endpoints | 'off')[n]>('off')
 </script>
 
 <div
@@ -24,7 +24,7 @@
 	<AppRail selected={storeValue}>
 		<!-- Lead -->
 		<svelte:fragment slot="lead">
-			<AppRailTile tag="a" href="/" value={''} title="Lead slot tile.">
+			<AppRailTile tag="a" href="/" value={'off'} title="Lead slot tile.">
 				<i class="fa-solid fa-bars text-2xl" />
 			</AppRailTile>
 		</svelte:fragment>
