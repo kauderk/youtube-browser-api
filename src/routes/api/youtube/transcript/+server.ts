@@ -28,9 +28,9 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
-		videoId: videoId ? await getTranscript(videoId) : undefined,
+		videoId: videoId ? await getTranscript(videoId).catch() : undefined,
 		playlistId: playlistId
-			? await getPlaylistTranscripts(playlistId)
+			? await getPlaylistTranscripts(playlistId).catch()
 			: undefined,
 	}
 

@@ -25,16 +25,16 @@ export const GET = async (event: API<{ query?: Prettify<Union<Params>> }>) => {
 
 	switch (event.params.endpoint) {
 		case 'playlist':
-			body = await GetPlaylistData(query)
+			body = await GetPlaylistData(query).catch()
 			break
 		case 'channel':
-			body = await GetChannelById(query)
+			body = await GetChannelById(query).catch()
 			break
 		case 'suggestion':
-			body = await GetSuggestData(query)
+			body = await GetSuggestData(query).catch()
 			break
 		case 'search':
-			body = await GetListByKeyword(query)
+			body = await GetListByKeyword(query).catch()
 			break
 		default:
 			break

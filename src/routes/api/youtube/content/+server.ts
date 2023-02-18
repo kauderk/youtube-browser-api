@@ -24,21 +24,23 @@ export type Params = id & Single & FirstFlatten<Multiple>
 type query = (keyof Params)[]
 
 export const GET = async (event: API<{ query: id & { query: query } }>) => {
-	const { id, query } = querySpread(event)
+	const { id, query: Q } = querySpread(event)
+	// @ts-expect-error
+	const query: query = typeof Q == 'string' ? Q.split(',') : Q.flat()
 
 	const body = {
-		...reduceKeys(await getPrimary(id), query),
-		...reduceKeys(await getSecondary(id), query),
-		...reduceKeys(await getMarkers(id), query),
-		...reduceKeys(await getContentPage(id), query),
+		...reduceKeys(await getPrimary(id).catch(), query),
+		...reduceKeys(await getSecondary(id).catch(), query),
+		...reduceKeys(await getMarkers(id).catch(), query),
+		...reduceKeys(await getContentPage(id).catch(), query),
 		suggestions: query.includes('suggestions')
-			? await getCompactVideoRenderer(id)
+			? await getCompactVideoRenderer(id).catch()
 			: undefined,
 		heatmapPath: query.includes('heatmapPath')
-			? await getHeatmapPath(id)
+			? await getHeatmapPath(id).catch()
 			: undefined,
 		storyboard: query.includes('storyboard')
-			? await getStoryboards(id)
+			? await getStoryboards(id).catch()
 			: undefined,
 	}
 
@@ -58,8 +60,7 @@ async function getStoryboards(id: s) {
 }
 function reduceKeys<A extends object, B extends query>(A: A, B: B) {
 	return Object.entries(A).reduce((acc, [key, val]) => {
-		// @ts-expect-error
-		if (B.includes(key)) {
+		if (B?.find?.(k => key === k)) {
 			return { ...acc, [key]: val }
 		}
 		return acc
