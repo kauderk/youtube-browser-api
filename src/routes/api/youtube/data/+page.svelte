@@ -2,7 +2,7 @@
 	import { Subscribe } from 'svelte-subscribe'
 	import Legend from '../components/Legend.svelte'
 	import Item from '../components/Item.svelte'
-	import type { Params } from './+server'
+	import type { Params } from './[endpoint]/+server'
 	import type { NonNullableNested } from '../utility-types'
 	import { toProps, type Pre } from './utils'
 	import { common } from '../components/common'
@@ -10,8 +10,9 @@
 	import Api from '../../../../api'
 	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
 	import { fetchQuery } from '../components/submit'
-	import { error } from '@sveltejs/kit'
-	import { derived, writable } from 'svelte/store'
+
+	import { page } from '$app/stores'
+	import { derived } from 'svelte/store'
 
 	//#region Types
 	type Model = NonNullableNested<Params>
@@ -60,33 +61,38 @@
 
 	const fetchParamsList = ObjectKeys(Multiple)
 		.reverse()
-		.map(title => {
-			const propList = Object.entries(Multiple[title]).map(toProps)
+		.map(endpoint => {
+			const propList = Object.entries(Multiple[endpoint]).map(toProps)
 			return {
-				title,
+				title: endpoint,
 				propList,
 				state: createState(),
-				fetchUrl: derived(
+				fetchData: derived(
 					propList.map(_ => _.param),
 					_ => {
-						const query = {
-							[title]: JSON.stringify(
-								Object.values(propList)
-									// @ts-expect-error
-									.filter(x => x != '' && x != undefined)
-									.reduce(
-										(acc, curr) => ({
-											...acc,
-											[curr.key]: curr.param,
-										}),
-										{}
-									)
-							),
+						const query = Object.values(propList)
+							// @ts-expect-error
+							.filter(x => x != '' && x != undefined)
+							.reduce(
+								(acc, curr) => ({
+									...acc,
+									[curr.key]: curr.param.get(),
+								}),
+								{}
+							)
+						const base = $page.url + `/${endpoint}?`
+						return {
+							query: `const query = ${JSON.stringify(
+								query,
+								null,
+								2
+							)};
+const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
+							url:
+								base +
+								new URLSearchParams(query).toString() +
+								'&format=json',
 						}
-						return `${
-							//@ts-expect-error
-							Api.youtube.data.path
-						}?${new URLSearchParams(query).toString()}&format=json`
 					}
 				),
 			}
@@ -98,13 +104,13 @@
 		<strong>Data Endpoint</strong>
 	</p>
 
-	{#each fetchParamsList as { propList, state, title, fetchUrl }}
-		<Subscribe {fetchUrl} let:fetchUrl>
+	{#each fetchParamsList as { propList, state, title, fetchData }}
+		<Subscribe {fetchData} let:fetchData>
 			<Legend title={title.toUpperCase()} />
 			<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 				{#each propList as props}
 					{@const submit = async () => {
-						fetchQuery(state, Api.youtube.data, fetchUrl)
+						fetchQuery(state, Api.youtube.data, fetchData.url)
 					}}
 					<Item
 						{...props}
@@ -113,7 +119,7 @@
 							: undefined} />
 				{/each}
 			</div>
-			<CodeBlocks {state} {fetchUrl} />
+			<CodeBlocks {state} {fetchData} />
 		</Subscribe>
 	{/each}
 </section>
