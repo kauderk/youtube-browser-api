@@ -9,6 +9,7 @@ specifiers:
   '@playwright/test': ^1.28.1
   '@skeletonlabs/skeleton': ^0.124.2
   '@sveltejs/adapter-auto': ^2.0.0
+  '@sveltejs/adapter-netlify': ^2.0.5
   '@sveltejs/kit': ^1.5.0
   '@sveltejs/package': ^1.0.0
   '@tailwindcss/forms': ^0.5.3
@@ -43,6 +44,7 @@ devDependencies:
   '@playwright/test': 1.30.0
   '@skeletonlabs/skeleton': 0.124.2
   '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.5.5
+  '@sveltejs/adapter-netlify': 2.0.5_@sveltejs+kit@1.5.5
   '@sveltejs/kit': 1.5.5_svelte@3.55.1+vite@4.1.1
   '@sveltejs/package': 1.0.2_4x7phaipmicbaooxtnresslofa
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.6
@@ -310,6 +312,10 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
+  /@iarna/toml/2.2.5:
+    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+    dev: true
+
   /@jridgewell/resolve-uri/3.1.0:
     resolution: {integrity: sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==}
     engines: {node: '>=6.0.0'}
@@ -373,6 +379,17 @@ packages:
     dependencies:
       '@sveltejs/kit': 1.5.5_svelte@3.55.1+vite@4.1.1
       import-meta-resolve: 2.2.1
+    dev: true
+
+  /@sveltejs/adapter-netlify/2.0.5_@sveltejs+kit@1.5.5:
+    resolution: {integrity: sha512-i0qkxuH2/mLfk9T6uHAc/a3KU6mm9QhYdqqoIWWSAhst1lchLt9FzZfX9u6zzltOX+w+78/9E/+KPEwib7xenA==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.5.0
+    dependencies:
+      '@iarna/toml': 2.2.5
+      '@sveltejs/kit': 1.5.5_svelte@3.55.1+vite@4.1.1
+      esbuild: 0.16.17
+      set-cookie-parser: 2.5.1
     dev: true
 
   /@sveltejs/kit/1.5.5_svelte@3.55.1+vite@4.1.1:

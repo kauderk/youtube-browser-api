@@ -1,5 +1,6 @@
-// @ts-expect-error
-import { fetchTranscript, type TranscriptResponse } from 'youtube-transcript'
+import type { TranscriptResponse } from 'youtube-transcript'
+import pkg from 'youtube-transcript'
+const { fetchTranscript } = pkg
 import { getDomainText, ParseUniqueIDs } from './fetch'
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
