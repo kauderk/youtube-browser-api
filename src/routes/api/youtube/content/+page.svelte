@@ -1,21 +1,16 @@
 <script lang="ts">
+	import { options } from './../../../../../.svelte-kit/generated/server/internal.js'
 	import type { Params } from './+server'
-	import {
-		CodeBlock,
-		ListBox,
-		ListBoxItem,
-		ProgressRadial,
-	} from '@skeletonlabs/skeleton'
+	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton'
 	import type { NonNullableNested } from '../utility-types'
 	import { toProps } from '../data/utils'
 	import Item from '../components/Item.svelte'
 	import { common } from '../components/common'
 
 	import Api from '../../../../api'
-	import { writable } from 'svelte/store'
-	import JsonTree from '../components/JsonTree.svelte'
 	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
 	import { fetchQuery } from '../components/submit'
+	import { page } from '$app/stores'
 
 	type Model = NonNullableNested<Params>
 	type Shape = {
@@ -51,6 +46,16 @@
 
 	const videoId = toProps(common.videoId)
 	const state = createState()
+	const param = videoId.param
+	$: base = $page.url + `?id=${$param}&query=`
+	$: fetchData = {
+		query: `const query = {
+	id: "${$param}",
+	query: [${selectedIds.map(el => `"${el}"`).join()}],
+}
+const fetchUrl = "${base}" + selectedIds.join()`,
+		url: base + selectedIds.join() + '&format=json',
+	}
 </script>
 
 <section class="space-y-4">
@@ -61,13 +66,8 @@
 	<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 		<Item
 			{...videoId}
-			bind:param={videoId.param}
 			submit={() => {
-				const query = selectedIds.reduce(
-					(acc, param) => ({ ...acc, [param]: true }),
-					{ id: videoId.param }
-				)
-				fetchQuery(state, Api.youtube.content, query)
+				fetchQuery(state, Api.youtube.content, fetchData.url)
 			}} />
 	</div>
 	<div class="space-y-2">
@@ -126,12 +126,5 @@
 			</label>
 		</div>
 	</div>
-	<CodeBlocks
-		{state}
-		fetchUrl={`api/youtube/content?id=${videoId.param}&${selectedIds
-			?.reduce((acc, id) => {
-				acc.append(id, '1')
-				return acc
-			}, new URLSearchParams())
-			.toString()}`} />
+	<CodeBlocks {state} {fetchData} />
 </section>

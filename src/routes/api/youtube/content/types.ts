@@ -33,6 +33,15 @@ type flattenedModel = FirstFlatten<{
 	doop: 'abcd'
 }>
 
-const y = <flattenedModel>{}
 // @ts-expect-error
-y.yolo
+<flattenedModel>{}.yolo
+
+// https://www.totaltypescript.com/tips/derive-a-union-type-from-an-object
+export type Union<T> = {
+	[K in keyof T]: {
+		[K2 in K]: number
+	}
+}[keyof T]
+
+// @ts-expect-error
+<Union<Model>>{}.yolo

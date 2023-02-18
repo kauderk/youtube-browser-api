@@ -19,32 +19,35 @@ export type Multiple = {
 	getContentPage?: Return<typeof getContentPage>
 	getMarkers?: Return<typeof getMarkers>
 }
-export type Params = { id: string } & Single & FirstFlatten<Multiple>
+type id = { id: string }
+export type Params = id & Single & FirstFlatten<Multiple>
+type query = (keyof Params)[]
 
-export const GET = async (event: API<{ query: Prettify<Params> }>) => {
-	const { id } = querySpread(event)
-	const params = querySpread(event)
+export const GET = async (event: API<{ query: id & { query: query } }>) => {
+	const { id, query } = querySpread(event)
 
 	const body = {
-		...reduceKeys(await getPrimary(id), params),
-		...reduceKeys(await getSecondary(id), params),
-		...reduceKeys(await getMarkers(id), params),
-		...reduceKeys(await getContentPage(id), params),
-		suggestions: params.suggestions
+		...reduceKeys(await getPrimary(id), query),
+		...reduceKeys(await getSecondary(id), query),
+		...reduceKeys(await getMarkers(id), query),
+		...reduceKeys(await getContentPage(id), query),
+		suggestions: query.includes('suggestions')
 			? await getCompactVideoRenderer(id)
 			: undefined,
-		heatmapPath: params.heatmapPath ? await getHeatmapPath(id) : undefined,
-		storyboard: params.storyboard
-			? await getStoryboards(id, params)
+		heatmapPath: query.includes('heatmapPath')
+			? await getHeatmapPath(id)
+			: undefined,
+		storyboard: query.includes('storyboard')
+			? await getStoryboards(id)
 			: undefined,
 	}
 
 	return Ok({ body })
 }
-async function getStoryboards(id: s, params: { storyboard?: b }) {
+async function getStoryboards(id: s) {
 	const page = await getContentPage(id)
 
-	if (!params.storyboard || !page?.playerResponse?.storyboards) {
+	if (!page?.playerResponse?.storyboards) {
 		return
 	}
 	const storyboards = page.playerResponse.storyboards
@@ -53,9 +56,10 @@ async function getStoryboards(id: s, params: { storyboard?: b }) {
 		timeline: getTimeline({ storyboards, quality: 'medium', quantity: 5 }),
 	}
 }
-function reduceKeys<A extends object, B extends object>(A: A, B: B) {
+function reduceKeys<A extends object, B extends query>(A: A, B: B) {
 	return Object.entries(A).reduce((acc, [key, val]) => {
-		if (Object.hasOwn(B, key)) {
+		// @ts-expect-error
+		if (B.includes(key)) {
 			return { ...acc, [key]: val }
 		}
 		return acc
