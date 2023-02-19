@@ -1,5 +1,8 @@
+/**
+ * "import p from 'phin'" nukes down netlify endpoints
+ */
+
 import { getContentPage } from './content'
-import { getHeatMap } from 'youtube-heatmap'
 import { getMap_smart } from '../utils'
 
 export type Marker = 'chapters' | 'heatmap'
@@ -24,7 +27,7 @@ export async function getMarkers(videoId: s) {
 type page = Promise<s>
 const map = new Map<string, page>()
 export const GetHeatMap = async (url: s) => {
-	const freeze = async (url: s) => (await getHeatMap(url))[0].toString()
+	const freeze = async (url: s) => `(await getHeatMap(url))[0].toString()`
 	return await getMap_smart(url, map, freeze, url)
 }
 

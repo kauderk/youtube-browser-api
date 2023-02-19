@@ -1,4 +1,4 @@
-import fetchTranscript, { type TranscriptResponse } from 'youtube-transcript'
+import { fetchTranscript } from './transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
@@ -10,10 +10,10 @@ type Params = {
 	videoId?: string
 }
 
-const transcriptMap = new Map<string, Promise<TranscriptResponse[]>>()
-const getYouTubeTranscript = async (url: s) => {
-	const freeze = async () => await fetchTranscript.fetchTranscript(url)
-	return getMap_smart(url, transcriptMap, freeze)
+const transcriptMap = new Map<string, ReturnType<typeof fetchTranscript>>()
+const getTranscript = async (id: s) => {
+	const freeze = async () => await fetchTranscript(id)
+	return getMap_smart(id, transcriptMap, freeze)
 }
 
 const pageIdsMap = new Map<string, ReturnType<typeof parseIDs>>()
@@ -36,9 +36,6 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 	return Ok({ body })
 }
 
-async function getTranscript(id: s) {
-	return await getYouTubeTranscript(id).catch()
-}
 async function getPlaylistTranscripts(list: s) {
 	const ids = await getPageIds(list)
 	return await Promise.all(ids.map(async id => getTranscript(id)))

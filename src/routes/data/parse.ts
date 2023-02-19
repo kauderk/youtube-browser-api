@@ -26,6 +26,15 @@ export async function TryGetYouTubePage(url: s) {
 		context: parse(
 			html.split('INNERTUBE_CONTEXT')[1]?.trim().slice(2, -2) ?? '{}'
 		),
+		transcriptMeta: {
+			key: html.split('"INNERTUBE_API_KEY":"')[1]?.split('"')[0],
+			params: html.split('"serializedShareEntity":"')[1]?.split('"')[0],
+			visitorData: html.split('"VISITOR_DATA":"')[1]?.split('"')[0],
+			sessionId: html.split('"sessionId":"')[1]?.split('"')[0],
+			clickTrackingParams: html
+				?.split('"clickTrackingParams":"')[1]
+				?.split('"')[0],
+		},
 	}
 }
 function parse<T>(object?: s) {
