@@ -36,11 +36,11 @@
 		const query = {
 			[props.key]: value,
 		}
-		const base = $page.url + `?`
+		const base = $page.data.endpoint + `?`
 		return {
 			query: `const query = ${JSON.stringify(query, null, 2)};
 const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
-			url: base + new URLSearchParams(query).toString() + '&format=json',
+			url: base + new URLSearchParams(query).toString(),
 		}
 	})
 </script>

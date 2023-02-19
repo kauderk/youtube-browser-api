@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { Params } from './+server'
+	import { page } from '$app/stores'
+	import type { Params } from '../+server'
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton'
-	import type { NonNullableNested } from '../utility-types'
-	import { toProps } from '../data/utils'
-	import Item from '../components/Item.svelte'
-	import { common } from '../components/common'
+	import type { NonNullableNested } from '../../utility-types'
+	import { toProps } from '../../data/utils'
+	import Item from '../../components/Item.svelte'
+	import { common } from '../../components/common'
 
 	import Api from '$src/api'
-	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
-	import { fetchQuery } from '../components/submit'
-	import { page } from '$app/stores'
+	import CodeBlocks, { createState } from '../../components/CodeBlocks.svelte'
+	import { fetchQuery } from '../../components/submit'
 
 	type Model = NonNullableNested<Params>
 	type Shape = {
@@ -46,14 +46,14 @@
 	const videoId = toProps(common.videoId)
 	const state = createState()
 	const param = videoId.param
-	$: base = $page.url + `?id=${$param}&query=`
+	$: base = $page.data.endpoint + `?id=${$param}&query=`
 	$: fetchData = {
 		query: `const query = {
 	id: "${$param}",
 	query: [${selectedIds.map(el => `"${el}"`).join()}],
 }
 const fetchUrl = "${base}" + selectedIds.join()`,
-		url: base + selectedIds.join() + '&format=json',
+		url: base + selectedIds.join(),
 	}
 </script>
 

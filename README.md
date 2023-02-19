@@ -16,7 +16,7 @@ const query = {
 	query: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
 }
 const fetchUrl = "https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=" + selectedIds.join()
-// https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title&format=json
+// https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title
 fetch(fetchUrl)
 	.then(res => res.json())
 	.then(console.log)
@@ -32,7 +32,7 @@ const query = {
   "option": ""
 };
 const fetchUrl = "https://youtube-browser-api.netlify.app/data/search?" + new URLSearchParams(query).toString()
-// https://youtube-browser-api.netlify.app/data/search?keyword=&withPlaylist=false&limit=1&option=&format=json
+// https://youtube-browser-api.netlify.app/data/search?keyword=&withPlaylist=false&limit=1&option=
 fetch(fetchUrl)
 	.then(res => res.json())
 	.then(console.log)
@@ -44,7 +44,7 @@ const query = {
   "videoId": "pOEyYwKtHJo"
 };
 const fetchUrl = "https://youtube-browser-api.netlify.app/transcript?" + new URLSearchParams(query).toString()
-// https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo&format=json
+// https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo
 fetch(fetchUrl)
 	.then(res => res.json())
 	.then(console.log)

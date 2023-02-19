@@ -1,32 +1,30 @@
-// "youtube-search-api": "^1.1.1"
-import axios from 'axios'
 import { getMap_smart } from '../utils'
 import type { InitialData } from './types/initial-data'
 import type { PlayerResponse } from './types/player-response'
 
 export async function TryGetYouTubePage(url: s) {
-	const page = await axios.get(encodeURI(url))
+	const html = await fetch(url).then(res => res.text())
 
 	return {
 		initialData: parse<InitialData>(
-			page.data
+			html
 				.split('var ytInitialData =')[1]
 				?.split('</script>')[0]
 				.slice(0, -1)
 		),
 		playerResponse: parse<PlayerResponse>(
-			page.data
+			html
 				.split('var ytInitialPlayerResponse =')[1]
 				?.split('</script>')[0]
 				.slice(0, -1)
 		),
-		apiToken: page.data
+		apiToken: html
 			.split('innertubeApiKey')[1]
 			?.trim()
 			.split(',')[0]
 			.split('"')[2],
 		context: parse(
-			page.data.split('INNERTUBE_CONTEXT')[1]?.trim().slice(2, -2) ?? '{}'
+			html.split('INNERTUBE_CONTEXT')[1]?.trim().slice(2, -2) ?? '{}'
 		),
 	}
 }

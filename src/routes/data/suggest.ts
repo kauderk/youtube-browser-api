@@ -23,7 +23,7 @@ export async function GetSuggestData(params: { limit: n }) {
 			}
 		}
 	})
-	const itemsResult = params.limit < 0 ? items.slice(0, params.limit) : items
+	const itemsResult = params.limit > 0 ? items.slice(0, params.limit) : items
 
 	return { items: itemsResult }
 }

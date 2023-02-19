@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import { Subscribe } from 'svelte-subscribe'
-	import Legend from '../components/Legend.svelte'
-	import Item from '../components/Item.svelte'
-	import type { Params } from './[endpoint]/+server'
-	import type { NonNullableNested } from '../utility-types'
-	import { toProps, type Pre } from './utils'
-	import { common } from '../components/common'
+	import Legend from '../../components/Legend.svelte'
+	import Item from '../../components/Item.svelte'
+	import type { Params } from '../[endpoint]/+server'
+	import type { NonNullableNested } from '../../utility-types'
+	import { toProps, type Pre } from '../utils'
+	import { common } from '../../components/common'
 
 	import Api from '$src/api'
-	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
-	import { fetchQuery } from '../components/submit'
+	import CodeBlocks, { createState } from '../../components/CodeBlocks.svelte'
+	import { fetchQuery } from '../../components/submit'
 
-	import { page } from '$app/stores'
 	import { derived } from 'svelte/store'
 
 	//#region Types
@@ -80,7 +80,7 @@
 								}),
 								{}
 							)
-						const base = $page.url + `/${endpoint}?`
+						const base = $page.data.endpoint + `/${endpoint}?`
 						return {
 							query: `const query = ${JSON.stringify(
 								query,
@@ -88,10 +88,7 @@
 								2
 							)};
 const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
-							url:
-								base +
-								new URLSearchParams(query).toString() +
-								'&format=json',
+							url: base + new URLSearchParams(query).toString(),
 						}
 					}
 				),

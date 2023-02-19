@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { common } from '../components/common'
-	import Stupidity from './Stupidity.svelte'
+	import { common } from '../../components/common'
+	import Stupidity from '../Stupidity.svelte'
 </script>
 
 <svelte:head>

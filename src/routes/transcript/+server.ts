@@ -1,6 +1,4 @@
-import type { TranscriptResponse } from 'youtube-transcript'
-import pkg from 'youtube-transcript'
-const { fetchTranscript } = pkg
+import fetchTranscript, { type TranscriptResponse } from 'youtube-transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
@@ -14,7 +12,7 @@ type Params = {
 
 const transcriptMap = new Map<string, Promise<TranscriptResponse[]>>()
 const getYouTubeTranscript = async (url: s) => {
-	const freeze = async () => await fetchTranscript(url)
+	const freeze = async () => await fetchTranscript.fetchTranscript(url)
 	return getMap_smart(url, transcriptMap, freeze)
 }
 

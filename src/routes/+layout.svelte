@@ -28,7 +28,12 @@
 		},
 	}
 	const { main, ...rest } = endpoints
-	const storeValue = writable<keyof typeof endpoints>('main')
+	// set to the current url
+	const initialKey: any =
+		Object.keys(endpoints).find(key =>
+			$page.url.toString().includes(key)
+		) || 'main'
+	const storeValue = writable<keyof typeof endpoints>(initialKey)
 </script>
 
 <svelte:head>
@@ -56,7 +61,7 @@
 		{#each Object.entries(rest) as [to, { shim }]}
 			<AppRailTile
 				tag="a"
-				href="/{to}"
+				href="/{to}/page"
 				label={to.toUpperCase()}
 				value={to}>
 				<i class="fa-solid {shim} text-2xl" />
