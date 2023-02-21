@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "rimraf dist && vite build",
-		"check-netlify-deploy": "npm run build && netlify deploy",
+		"check-netlify-deploy": "set CI=; && npm run build && netlify deploy",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
