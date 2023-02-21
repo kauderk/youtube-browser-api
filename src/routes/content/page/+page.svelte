@@ -46,14 +46,14 @@
 	const videoId = toProps(common.videoId)
 	const state = createState()
 	const param = videoId.param
-	$: base = $page.data.endpoint + `?id=${$param}&query=`
+	const base = $page.data.endpoint
 	$: fetchData = {
 		query: `const query = {
 	id: "${$param}",
-	query: [${selectedIds.map(el => `"${el}"`).join()}],
+	params: [${selectedIds.map(el => `"${el}"`).join()}],
 }
-const fetchUrl = "${base}" + selectedIds.join()`,
-		url: base + selectedIds.join(),
+const fetchUrl = \`${base}?id=\${query.id}&query=\` + query.params.join()`,
+		url: base + `?id=${$param}&query=` + selectedIds.join(),
 	}
 </script>
 

@@ -41,12 +41,5 @@ export const GET = async (event: API<{ query?: Prettify<Union<Params>> }>) => {
 			break
 	}
 
-	// const all = {
-	// 	playlist: playlist ? await GetPlaylistData(playlist) : undefined,
-	// 	channel: channel ? await GetChannelById(channel) : undefined,
-	// 	suggestion: suggestion ? await GetSuggestData(suggestion) : undefined,
-	// 	search: search ? await GetListByKeyword(search) : undefined,
-	// }
-
 	return Ok({ body })
 }

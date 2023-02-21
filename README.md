@@ -18,9 +18,9 @@ The API wrapper provides three endpoints - Content, Data, and Transcript - to ex
 ```ts
 const query = {
 	id: "pOEyYwKtHJo",
-	query: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
+	params: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
 }
-const fetchUrl = "https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=" + selectedIds.join()
+const fetchUrl = `https://youtube-browser-api.netlify.app/content?id=${query.id}&query=` + query.params.join()
 // https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title
 fetch(fetchUrl)
 	.then(res => res.json())
@@ -34,7 +34,7 @@ fetch(fetchUrl)
 
 ```ts
 const query = {
-  "keyword": "",
+  "keyword": "AI",
   "withPlaylist": false,
   "limit": 1,
   "option": ""
