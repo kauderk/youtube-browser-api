@@ -12,3 +12,6 @@ vite.config.ts.timestamp-*
 # Local Netlify folder
 .netlify
 dist
+
+# npm
+package

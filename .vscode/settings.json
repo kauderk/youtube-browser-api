@@ -1,8 +1,4 @@
 {
-	"files.exclude": {
-		"**/dist": true,
-		"**/.netlify": true
-	},
 	"tailwindCSS.classAttributes": [
 		"class",
 		"accent",

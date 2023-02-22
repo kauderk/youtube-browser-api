@@ -6,13 +6,9 @@ import { GetListByKeyword } from '../keyword'
 import { GetChannelById } from '../../content/channel'
 import { GetPlaylistData } from '../playlist'
 import { GetSuggestData } from '../suggest'
-import type { Prettify } from '../../utility-types'
+import type { Param, Prettify } from '../../utility-types'
 import type { Union } from '../../content/types'
 
-type Param<
-	Func extends (...args: any) => any,
-	I extends n = 0
-> = Parameters<Func>[I]
 export type Params = Prettify<{
 	playlist?: Param<typeof GetPlaylistData>
 	channel?: Param<typeof GetChannelById>

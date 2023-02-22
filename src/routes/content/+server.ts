@@ -6,6 +6,7 @@ import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
 import type { Return, FirstFlatten } from './types'
+import type { Param } from '../utility-types'
 
 export type Single = {
 	suggestions?: b
@@ -22,29 +23,31 @@ type id = { id: string }
 export type Params = id & Single & FirstFlatten<Multiple>
 type query = (keyof Params)[]
 
-export const GET = async (event: API<{ query: id & { query: query } }>) => {
-	const { id, query: Q } = querySpread(event)
-	// @ts-expect-error
-	const query: query = typeof Q == 'string' ? Q.split(',') : Q.flat()
+const get = async (event: { query: id & { params: query } }) => {
+	const { id, params: Q } = querySpread(event)
+	const params: query = typeof Q == 'string' ? Q.split(',') : Q.flat()
 
 	const body = {
-		...reduceKeys(await getPrimary(id).catch(), query),
-		...reduceKeys(await getSecondary(id).catch(), query),
-		...reduceKeys(await getMarkers(id).catch(), query),
-		...reduceKeys(await getContentPage(id).catch(), query),
-		suggestions: query.includes('suggestions')
+		...reduceKeys(await getPrimary(id).catch(), params),
+		...reduceKeys(await getSecondary(id).catch(), params),
+		...reduceKeys(await getMarkers(id).catch(), params),
+		...reduceKeys(await getContentPage(id).catch(), params),
+		suggestions: params.includes('suggestions')
 			? await getCompactVideoRenderer(id).catch()
 			: undefined,
-		heatmapPath: query.includes('heatmapPath')
+		heatmapPath: params.includes('heatmapPath')
 			? await getHeatmapPath(id).catch()
 			: undefined,
-		storyboard: query.includes('storyboard')
+		storyboard: params.includes('storyboard')
 			? await getStoryboards(id).catch()
 			: undefined,
 	}
 
-	return Ok({ body })
+	return body
 }
+// this is discussing
+export type get = typeof get
+export const GET = async (e: Param<typeof get>) => Ok({ body: await get(e) })
 async function getStoryboards(id: s) {
 	const page = await getContentPage(id)
 
