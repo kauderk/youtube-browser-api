@@ -10,5 +10,5 @@ const routes = createZeroApi({
 	},
 }) as GeneratedAPI
 
-export const Api = routes.api
+export const Api = routes
 export default Api

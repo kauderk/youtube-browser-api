@@ -42,4 +42,5 @@ const get = async (event: { query: Prettify<Params> }) => {
 }
 // this is discussing
 export type _get = typeof get
-export const GET = async (e: Param<typeof get>) => Ok({ body: await get(e) })
+export const GET = async (e: API<Param<typeof get>>) =>
+	Ok({ body: await get(e as any) })
