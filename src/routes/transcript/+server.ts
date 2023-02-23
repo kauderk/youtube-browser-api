@@ -3,7 +3,7 @@ import { getDomainText, ParseUniqueIDs } from './fetch'
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
 import { getMap_smart } from '../utils'
-import type { Prettify } from '../utility-types'
+import type { Param, Prettify } from '../utility-types'
 
 type Params = {
 	playlistId?: string
@@ -23,7 +23,12 @@ const getPageIds = async (list: s) => {
 	return getMap_smart(key, pageIdsMap, parseIDs, key)
 }
 
-export const GET = async (event: API<{ query: Prettify<Params> }>) => {
+async function getPlaylistTranscripts(list: s) {
+	const ids = await getPageIds(list)
+	return await Promise.all(ids.map(async id => getTranscript(id)))
+}
+
+const get = async (event: { query: Prettify<Params> }) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
@@ -33,10 +38,8 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 			: undefined,
 	}
 
-	return Ok({ body })
+	return body
 }
-
-async function getPlaylistTranscripts(list: s) {
-	const ids = await getPageIds(list)
-	return await Promise.all(ids.map(async id => getTranscript(id)))
-}
+// this is discussing
+export type _get = typeof get
+export const GET = async (e: Param<typeof get>) => Ok({ body: await get(e) })

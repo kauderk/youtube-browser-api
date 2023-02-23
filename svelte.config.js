@@ -12,7 +12,7 @@ const config = {
 		postcss: true,
 	}),
 	kit: {
-		adapter: auto(),
+		adapter: adapter(),
 	},
 	vitePlugin: {
 		experimental: {

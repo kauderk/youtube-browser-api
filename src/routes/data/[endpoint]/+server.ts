@@ -16,26 +16,25 @@ export type Params = Prettify<{
 	search?: Param<typeof GetListByKeyword>
 }>
 
-export const GET = async (event: API<{ query?: Prettify<Union<Params>> }>) => {
-	let body = <any>{}
-	const query = querySpread(event) as any
+const get = async (event: { query?: Union<Params> }) => {
+	const endpoint: keyof Params =
+		// @ts-expect-error
+		event.params.endpoint
 
-	switch (event.params.endpoint) {
-		case 'playlist':
-			body = await GetPlaylistData(query).catch()
-			break
-		case 'channel':
-			body = await GetChannelById(query).catch()
-			break
-		case 'suggestion':
-			body = await GetSuggestData(query).catch()
-			break
-		case 'search':
-			body = await GetListByKeyword(query).catch()
-			break
-		default:
-			break
+	const query = querySpread(event)
+	type _<E extends keyof Params> = Exclude<Params[E], undefined>
+
+	if (endpoint == 'playlist') {
+		return await GetPlaylistData(query as _<typeof endpoint>).catch()
+	} else if (endpoint == 'channel') {
+		return await GetChannelById(query as _<typeof endpoint>).catch()
+	} else if (endpoint == 'suggestion') {
+		return await GetSuggestData(query as _<typeof endpoint>).catch()
+	} //if(endpoint == 'search')
+	else {
+		return await GetListByKeyword(query as _<typeof endpoint>).catch()
 	}
-
-	return Ok({ body })
 }
+// this is discussing
+export type _get = typeof get
+export const GET = async (e: Param<typeof get>) => Ok({ body: await get(e) })

@@ -21,11 +21,11 @@ export type Multiple = {
 }
 type id = { id: string }
 export type Params = id & Single & FirstFlatten<Multiple>
-type query = (keyof Params)[]
+type params = (keyof Params)[]
 
-const get = async (event: { query: id & { params: query } }) => {
+const get = async (event: { query: id & { params: params } }) => {
 	const { id, params: Q } = querySpread(event)
-	const params: query = typeof Q == 'string' ? Q.split(',') : Q.flat()
+	const params: params = typeof Q == 'string' ? Q.split(',') : Q.flat()
 
 	const body = {
 		...reduceKeys(await getPrimary(id).catch(), params),
@@ -46,7 +46,7 @@ const get = async (event: { query: id & { params: query } }) => {
 	return body
 }
 // this is discussing
-export type get = typeof get
+export type _get = typeof get
 export const GET = async (e: Param<typeof get>) => Ok({ body: await get(e) })
 async function getStoryboards(id: s) {
 	const page = await getContentPage(id)
@@ -60,7 +60,7 @@ async function getStoryboards(id: s) {
 		timeline: getTimeline({ storyboards, quality: 'medium', quantity: 5 }),
 	}
 }
-function reduceKeys<A extends object, B extends query>(A: A, B: B) {
+function reduceKeys<A extends object, B extends params>(A: A, B: B) {
 	return Object.entries(A).reduce((acc, [key, val]) => {
 		if (B?.find?.(k => key === k)) {
 			return { ...acc, [key]: val }

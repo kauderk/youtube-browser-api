@@ -1,23 +1,63 @@
-// Reexport your entry components here
-
 import type { Param } from './routes/utility-types'
-import type { get } from './routes/content/+server'
-import type { Return } from './routes/content/types'
 
-type Config<Q extends { query: any }> = { url: string } & Q
+import type { _get as _content } from './routes/content/+server'
+import type { _get as _data } from './routes/data/[endpoint]/+server'
+import type { _get as _transcript } from './routes/transcript/+server'
 
-function assertConfig<Q extends { query: any }>(
-	params: Config<Q>
-): asserts params is Config<Q> & { url: string } {
-	params.url ??= 'https://youtube-browser-api.netlify.app'
+type Config<Q extends { query: any }> = { baseUrl?: string } & Q
+
+function createFetch<
+	T extends (...args: any) => any,
+	config = Config<Param<T>>
+>(parseUrlParameters: (config: config) => string) {
+	return function (config: config) {
+		// @ts-expect-error
+		const base = config.baseUrl ?? 'https://youtube-browser-api.netlify.app'
+		const params = parseUrlParameters(config)
+
+		return fetch(base + params).then(res =>
+			res.json()
+		) as unknown as ReturnType<T>
+	}
 }
 
-export function content(config: Config<Param<get>>) {
-	assertConfig(config)
+export const content = createFetch<_content>(params => {
+	const query = params.query
 
-	const query = config.query
-	const url =
-		`${config.url}/content?id=${query.id}&params=` + query.params.join()
+	return `/content?id=${query.id}&params=` + query.params.join()
+})
+export const data = createFetch<_data>(params => {
+	// @ts-expect-error exclude undefined
+	const zero = Object.entries(params.query)[0]
+	const endpoint = zero[0]
 
-	return fetch(url).then(res => res.json()) as Return<get>
-}
+	return `/data/${endpoint}?` + new URLSearchParams(zero[1] as any).toString()
+})
+export const transcript = createFetch<_transcript>(params => {
+	return `/transcript?` + new URLSearchParams(params.query).toString()
+})
+// content({
+// 	query: {
+// 		id: '',
+// 		params: ['title'],
+// 	},
+// }).then(res => {
+// 	res
+// })
+// data({
+// 	query: {
+// 		playlist: {
+// 			limit: 0,
+// 			playlistId: '',
+// 		},
+// 	},
+// }).then(res => {
+// 	res
+// })
+// transcript({
+// 	query: {
+// 		videoId: '',
+// 	},
+// }).then(res => {
+// 	res
+// })

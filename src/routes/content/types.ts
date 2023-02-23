@@ -39,7 +39,8 @@ type flattenedModel = FirstFlatten<{
 // https://www.totaltypescript.com/tips/derive-a-union-type-from-an-object
 export type Union<T> = {
 	[K in keyof T]: {
-		[K2 in K]: number
+		// instead of any, infer the type
+		[K2 in K]: T[K2]
 	}
 }[keyof T]
 

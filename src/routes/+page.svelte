@@ -1,4 +1,7 @@
 <script>
+	import { onMount } from 'svelte'
+	import { content, data, transcript } from '..'
+
 	const endpoints = [
 		{
 			name: 'CONTENT',
@@ -19,6 +22,26 @@
 			link: '/transcript',
 		},
 	]
+	onMount(() => {
+		content({
+			query: {
+				id: 'pOEyYwKtHJo',
+				params: ['title'],
+			},
+		}).then(console.log)
+		data({
+			query: {
+				suggestion: {
+					limit: 1,
+				},
+			},
+		}).then(console.log)
+		transcript({
+			query: {
+				videoId: 'pOEyYwKtHJo',
+			},
+		}).then(console.log)
+	})
 </script>
 
 <svelte:head>

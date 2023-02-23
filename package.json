@@ -4,10 +4,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "rimraf dist && vite build",
 		"preview": "vite preview",
 		"check-netlify-deploy": "set CI=; && vite build && netlify deploy",
-		"package": "vite build --config vite.config.package.ts",
+		"package": "rimraf package && vite build --config vite.config.package.ts --watch",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -16,11 +16,11 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"exports": {
-		".": "./dist/index.js"
+		".": "./package/index.js"
 	},
-	"types": "./dist/index.d.ts",
+	"types": "./package/index.d.ts",
 	"files": [
-		"dist"
+		"package"
 	],
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",

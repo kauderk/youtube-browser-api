@@ -10,6 +10,7 @@ export default defineConfig({
 		},
 	},
 	build: {
+		outDir: 'package',
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
 			name: 'MyLib',

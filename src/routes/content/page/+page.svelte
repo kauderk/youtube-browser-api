@@ -52,8 +52,8 @@
 	id: "${$param}",
 	params: [${selectedIds.map(el => `"${el}"`).join()}],
 }
-const fetchUrl = \`${base}?id=\${query.id}&query=\` + query.params.join()`,
-		url: base + `?id=${$param}&query=` + selectedIds.join(),
+const fetchUrl = \`${base}?id=\${query.id}&params=\` + query.params.join()`,
+		url: base + `?id=${$param}&params=` + selectedIds.join(),
 	}
 </script>
 
