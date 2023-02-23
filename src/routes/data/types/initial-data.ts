@@ -2707,7 +2707,7 @@ interface Autoplay {
 	autoplay: Autoplay2
 }
 
-interface TwoColumnWatchNextResults {
+export interface TwoColumnWatchNextResults {
 	results: Results
 	secondaryResults: SecondaryResults
 	autoplay: Autoplay
@@ -3620,7 +3620,7 @@ interface HeatMarkersDecoration {
 	timedMarkerDecorationRenderer: TimedMarkerDecorationRenderer
 }
 
-interface HeatmapRenderer {
+export interface HeatmapRenderer {
 	maxHeightDp: number
 	minHeightDp: number
 	showHideAnimationDurationMillis: number
