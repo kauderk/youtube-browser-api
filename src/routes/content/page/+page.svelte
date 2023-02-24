@@ -71,7 +71,7 @@ const fetchUrl = \`${base}?id=\${query.id}&params=\` + query.params.join()`,
 	<Item
 		{...videoId}
 		submit={() => {
-			fetchQuery(state, Api.youtube.content, fetchData.url)
+			fetchQuery(state, fetchData.url)
 		}} />
 </div>
 <div class="space-y-2">

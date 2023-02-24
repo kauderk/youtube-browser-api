@@ -1,6 +1,6 @@
 import type { State } from '../components/CodeBlocks.svelte'
 
-export const fetchQuery = (state: State, api: any, query: any) => {
+export const fetchQuery = (state: State, query: any, api?: any) => {
 	state.update($ => ({ ...$, isLoading: true }))
 	return fetch(query)
 		.then(res => res.json())

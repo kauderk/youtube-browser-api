@@ -32,25 +32,6 @@
 				},
 			})
 			.Ok(res => res.body)
-
-		content({
-			query: {
-				id: 'pOEyYwKtHJo',
-				params: ['title'],
-			},
-		}).then(console.log)
-		data({
-			query: {
-				suggestion: {
-					limit: 1,
-				},
-			},
-		}).then(console.log)
-		transcript({
-			query: {
-				videoId: 'pOEyYwKtHJo',
-			},
-		}).then(console.log)
 	})
 </script>
 

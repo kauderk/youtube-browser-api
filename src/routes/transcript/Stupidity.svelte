@@ -48,7 +48,7 @@ const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
 <Legend title={endpoint.toUpperCase()} />
 
 <div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-	<Item {...props} submit={() => fetchQuery(state, '', $fetchData.url)} />
+	<Item {...props} submit={() => fetchQuery(state, $fetchData.url)} />
 </div>
 
 <CodeBlocks {state} fetchData={$fetchData}>

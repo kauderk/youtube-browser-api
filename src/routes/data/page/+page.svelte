@@ -111,7 +111,7 @@ const fetchUrl = "${base}" + new URLSearchParams(query).toString()`,
 		<div class="card p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 			{#each propList as props}
 				{@const submit = async () => {
-					fetchQuery(state, Api.youtube.data, fetchData.url)
+					fetchQuery(state, fetchData.url)
 				}}
 				<Item
 					{...props}
