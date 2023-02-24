@@ -27,7 +27,6 @@ export type GeneratedAPI = {
   },
   "transcript": {
     } & Z<typeof __routes_transcript__server> & {
-    "dummy": {},
     "page": {}
   }
 }

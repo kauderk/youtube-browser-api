@@ -28,7 +28,7 @@ async function getPlaylistTranscripts(list: string) {
 	return await Promise.all(ids.map(async id => getTranscript(id)))
 }
 
-const get = async (event: { query: Prettify<Params> }) => {
+export const GET = async (event: { query: Prettify<Params> }) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
@@ -38,9 +38,5 @@ const get = async (event: { query: Prettify<Params> }) => {
 			: undefined,
 	}
 
-	return body
+	return Ok({ body })
 }
-// this is discussing
-export type _get = typeof get
-export const GET = async (e: API<Param<typeof get>>) =>
-	Ok({ body: await get(e as any) })
