@@ -9,7 +9,9 @@ import * as __routes_data__endpoint___server from "./routes/data/[endpoint]/+ser
 import * as __routes_transcript__server from "./routes/transcript/+server";
 
 
-type S = string | number 
+type SN = string | number
+type Slug<S = SN> = S extends SN ? S : SN
+
 export type GeneratedAPI = {
   "components": {},
   "content": {
@@ -19,7 +21,7 @@ export type GeneratedAPI = {
   "data": {
     "page": {},
     "types": {},
-    endpoint$: (endpoint: S) => {
+    endpoint$: (endpoint: Slug<__routes_data__endpoint___server.Slug>) => {
       } & Z<typeof __routes_data__endpoint___server> & {
     }
   },

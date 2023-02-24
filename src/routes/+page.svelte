@@ -1,8 +1,4 @@
 <script>
-	import Api from '$src/api'
-	import { onMount } from 'svelte'
-	import { content, data, transcript } from '..'
-
 	const endpoints = [
 		{
 			name: 'CONTENT',
@@ -23,16 +19,6 @@
 			link: '/transcript',
 		},
 	]
-	onMount(() => {
-		Api.content
-			.GET({
-				query: {
-					id: 'pOEyYwKtHJo',
-					params: ['title'],
-				},
-			})
-			.Ok(res => res.body)
-	})
 </script>
 
 <svelte:head>

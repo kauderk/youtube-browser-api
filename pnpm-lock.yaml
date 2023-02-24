@@ -5,7 +5,7 @@ patchedDependencies:
     hash: wglnch3ilf63vttv6vetc76w4i
     path: patches/youtube-heatmap@1.0.3.patch
   sveltekit-zero-api@0.12.1:
-    hash: bgo6rmq57vj4pwq3twhc4sxar4
+    hash: fiedrcrgzpy7y2inxc5vxep6cu
     path: patches/sveltekit-zero-api@0.12.1.patch
 
 specifiers:
@@ -72,7 +72,7 @@ devDependencies:
   svelte-preprocess: 5.0.1_k4bhxdknaltjvjwprbm23edr5q
   svelte-subscribe: 1.0.5
   svelte-tree-view: 1.3.3_svelte@3.55.1
-  sveltekit-zero-api: 0.12.1_bgo6rmq57vj4pwq3twhc4sxar4_mombgr4tqjba7weu533t6lazv4
+  sveltekit-zero-api: 0.12.1_fiedrcrgzpy7y2inxc5vxep6cu_mombgr4tqjba7weu533t6lazv4
   tailwindcss: 3.2.6_postcss@8.4.21
   tslib: 2.5.0
   typescript: 4.9.5
@@ -2753,7 +2753,7 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /sveltekit-zero-api/0.12.1_bgo6rmq57vj4pwq3twhc4sxar4_mombgr4tqjba7weu533t6lazv4:
+  /sveltekit-zero-api/0.12.1_fiedrcrgzpy7y2inxc5vxep6cu_mombgr4tqjba7weu533t6lazv4:
     resolution: {integrity: sha512-BD7aNDs4D8MFR5qooOoX87CbuEv4R3A36MxxqIR6aN3JJbL0+LTBPC5D6a9rK2enr0eqBSxOdtLuXUKM95mt7A==}
     peerDependencies:
       '@sveltejs/kit': ^1.5.5

@@ -1,13 +1,27 @@
 diff --git a/api-types/api-updater.js b/api-types/api-updater.js
-index 07a166114c41a789139058a6fbbe87689bb9c240..a1a9d4288940a8cda9e32e184427c23e3c07e298 100644
+index 07a166114c41a789139058a6fbbe87689bb9c240..8533c1e333194494401b392bd99cad34dc6dc119 100644
 --- a/api-types/api-updater.js
 +++ b/api-types/api-updater.js
-@@ -10,25 +10,35 @@ routesDirectory) {
+@@ -1,6 +1,6 @@
+ import { pathToImportPath, toValidVariable } from '../utils/string.js';
+ import fs from 'fs';
+-import { resolve } from 'path';
++import { resolve, relative } from 'path';
+ import { debugging } from '../internal.js';
+ const cwd = process.cwd();
+ /** Is run when file changes has been detected */
+@@ -10,25 +10,41 @@ routesDirectory) {
      let apiTypes = {};
      let importStatements = '';
      debugging && console.time(`[DEBUG] Updated generated types at ${routesDirectory} ...`);
++	
++    const { tempOutput, outputDir = 'src' } = config;
++    const resolution = tempOutput ?
++        resolve(cwd, tempOutput) : resolve(cwd, '.svelte-kit', 'types', outputDir, 'sveltekit-zero-api.d.ts');
++
 +	const parsePath = (path)=>{
-+		const importName = pathToImportPath(path);
++		const _relative = relative(resolution, path).replace('..','.');
++		const importName = pathToImportPath(_relative);
 +		const alias = toValidVariable(importName);
 +		return {importName, alias}
 +	}
@@ -44,7 +58,7 @@ index 07a166114c41a789139058a6fbbe87689bb9c240..a1a9d4288940a8cda9e32e184427c23e
          }
      }
      recursiveLoad(routesDirectory, apiTypes);
-@@ -53,7 +63,11 @@ routesDirectory) {
+@@ -53,11 +69,12 @@ routesDirectory) {
          .replaceAll(/(__server\>\",)|(__server\>\")/g, '__server> & {')
          // Transform slugs e.g. "[slug]": into functions slug$: (slug: S) =>
          // TODO: Allow ex. [slug].[second] to become slug$second$: (slug: S, second: S) =>
@@ -55,14 +69,18 @@ index 07a166114c41a789139058a6fbbe87689bb9c240..a1a9d4288940a8cda9e32e184427c23e
 +			return `${p1}$: (${p1}: Slug<${slug}.Slug>) =>`;
 +		})
          .replaceAll(/=\w+(?=:|\$)/g, '');
-     const { tempOutput, outputDir = 'src' } = config;
-     const resolution = tempOutput ?
-@@ -78,5 +92,7 @@ const file = (dirText, importCode) => `/* eslint-disable */
+-    const { tempOutput, outputDir = 'src' } = config;
+-    const resolution = tempOutput ?
+-        resolve(cwd, tempOutput) : resolve(cwd, '.svelte-kit', 'types', outputDir, 'sveltekit-zero-api.d.ts');
+     const folder = resolve(resolution, '..');
+     if (!fs.existsSync(folder))
+         fs.mkdirSync(folder, { recursive: true });
+@@ -78,5 +95,7 @@ const file = (dirText, importCode) => `/* eslint-disable */
  import type { Z } from 'sveltekit-zero-api/types/zeroapi'
  ${importCode}
  
 -type S = string | number 
 +type SN = string | number
 +type Slug<S = SN> = S extends SN ? S : SN
-+ 
++
  export type GeneratedAPI = ${dirText}`;
