@@ -4,9 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "set NODE_OPTIONS=--inspect && vite dev",
-		"build": "rimraf dist && vite build",
+		"build": "rimraf dist && rimraf .netlify/!(state.json) && vite build",
 		"preview": "vite preview",
-		"check-netlify-deploy": "set CI=; && vite build && netlify deploy",
+		"check-netlify-deploy": "set CI=; && npm run build && netlify deploy",
 		"package": "vite build --config vite.config.package.ts --watch",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

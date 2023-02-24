@@ -1,3 +1,28 @@
+diff --git a/api/handler.js b/api/handler.js
+index 59fd529f8ca36f179d7602214d5a54298540ca53..5fc2f82d070fde38acac0bd69e5b1ba9f1a78f92 100644
+--- a/api/handler.js
++++ b/api/handler.js
+@@ -18,7 +18,7 @@ export default function handler(options, api) {
+     const stringifyQueryObjects = options.config.stringifyQueryObjects === undefined ? true : options.config.stringifyQueryObjects;
+     if (stringifyQueryObjects && 'query' in api)
+         stringifyQuery(api);
+-    const url = options.config.baseUrl || '' + options.path + ('query' in api ? '?' + new URLSearchParams(api.query).toString() : '');
++    const url = (options.config.baseUrl || '') + options.path + ('query' in api ? '?' + new URLSearchParams(api.query).toString() : '');
+     const baseData = options.config.baseData || {};
+     const isForm = Object.prototype.toString.call(api.body) === '[object FormData]';
+     if (!('content-type' in api.headers))
+@@ -54,7 +54,10 @@ export default function handler(options, api) {
+     const requestInit = { ...baseData, ...api, headers: { ...(baseData['headers'] || {}), ...(api['headers'] || {}) } };
+     if (api.body === undefined)
+         delete requestInit['body'];
+-    const response = fetch(url, requestInit);
++	// avoid making the "preflight http request", which will make it twice as fast
++	const collapsedRequestInit = api.method === 'GET' ? undefined : requestInit
++
++    const response = fetch(url, collapsedRequestInit);
+     response.then(async (res) => {
+         const json = (res.headers.get('content-type') || '').includes('application/json') && await res[options.config.format || 'json']();
+         // TODO: Handle other responses than just JSON
 diff --git a/api-types/api-updater.js b/api-types/api-updater.js
 index 07a166114c41a789139058a6fbbe87689bb9c240..8533c1e333194494401b392bd99cad34dc6dc119 100644
 --- a/api-types/api-updater.js
