@@ -10,15 +10,15 @@ export default defineConfig({
 		},
 	},
 	build: {
-		outDir: 'package',
+		outDir: 'src/package',
+		minify: false,
 		lib: {
-			entry: resolve(__dirname, 'src/api.ts'),
-			name: 'MyLib',
+			entry: resolve(__dirname, 'src/index.ts'),
 			formats: ['es'],
 			fileName: 'index',
 		},
 		rollupOptions: {
-			treeshake: 'smallest',
+			treeshake: 'safest',
 		},
 	},
 	plugins: [

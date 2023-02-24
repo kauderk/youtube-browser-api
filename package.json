@@ -3,11 +3,11 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "set NODE_OPTIONS=--inspect && vite dev",
 		"build": "rimraf dist && vite build",
 		"preview": "vite preview",
 		"check-netlify-deploy": "set CI=; && vite build && netlify deploy",
-		"package": "rimraf package && vite build --config vite.config.package.ts --watch",
+		"package": "vite build --config vite.config.package.ts --watch",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

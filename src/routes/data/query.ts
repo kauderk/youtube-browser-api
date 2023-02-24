@@ -22,7 +22,7 @@ export function VideoRender(json: {
 		shortBylineText: videoRenderer.shortBylineText || '',
 		length: videoRenderer.lengthText ? videoRenderer.lengthText : '',
 		isLive:
-			videoRenderer.badges[0]?.metadataBadgeRenderer?.style ==
+			videoRenderer.badges?.[0]?.metadataBadgeRenderer?.style ==
 				'BADGE_STYLE_TYPE_LIVE_NOW' ||
 			videoRenderer.thumbnailOverlays?.some?.(
 				// @ts-expect-error
