@@ -62,7 +62,8 @@
 	"type": "module",
 	"pnpm": {
 		"patchedDependencies": {
-			"youtube-heatmap@1.0.3": "patches/youtube-heatmap@1.0.3.patch"
+			"youtube-heatmap@1.0.3": "patches/youtube-heatmap@1.0.3.patch",
+			"sveltekit-zero-api@0.12.1": "patches/sveltekit-zero-api@0.12.1.patch"
 		}
 	}
 }

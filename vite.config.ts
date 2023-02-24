@@ -5,7 +5,14 @@ import { resolve } from 'path'
 import { zeroAPI } from 'sveltekit-zero-api'
 
 export default defineConfig({
-	plugins: [sveltekit(), zeroAPI()],
+	plugins: [
+		sveltekit(),
+		zeroAPI({
+			tempOutput: './src/sveltekit-zero-api.d.ts',
+			// @ts-expect-error
+			removeDirectoryName: true,
+		}),
+	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 	},

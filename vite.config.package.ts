@@ -12,7 +12,7 @@ export default defineConfig({
 	build: {
 		outDir: 'package',
 		lib: {
-			entry: resolve(__dirname, 'src/index.ts'),
+			entry: resolve(__dirname, 'src/api.ts'),
 			name: 'MyLib',
 			formats: ['es'],
 			fileName: 'index',
