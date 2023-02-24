@@ -13,20 +13,15 @@ type SN = string | number
 type Slug<S = SN> = S extends SN ? S : SN
 
 export type GeneratedAPI = {
-  "components": {},
   "content": {
     } & Z<typeof __routes_content__server> & {
-    "page": {}
   },
   "data": {
-    "page": {},
-    "types": {},
     endpoint$: (endpoint: Slug<__routes_data__endpoint___server.Slug>) => {
       } & Z<typeof __routes_data__endpoint___server> & {
     }
   },
   "transcript": {
     } & Z<typeof __routes_transcript__server> & {
-    "page": {}
   }
 }

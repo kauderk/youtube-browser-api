@@ -24,18 +24,32 @@ index 59fd529f8ca36f179d7602214d5a54298540ca53..5fc2f82d070fde38acac0bd69e5b1ba9
          const json = (res.headers.get('content-type') || '').includes('application/json') && await res[options.config.format || 'json']();
          // TODO: Handle other responses than just JSON
 diff --git a/api-types/api-updater.js b/api-types/api-updater.js
-index 07a166114c41a789139058a6fbbe87689bb9c240..8533c1e333194494401b392bd99cad34dc6dc119 100644
+index 07a166114c41a789139058a6fbbe87689bb9c240..424c1fed809c50c3f68052bde541f4440c58d211 100644
 --- a/api-types/api-updater.js
 +++ b/api-types/api-updater.js
-@@ -1,6 +1,6 @@
+@@ -1,8 +1,20 @@
  import { pathToImportPath, toValidVariable } from '../utils/string.js';
  import fs from 'fs';
 -import { resolve } from 'path';
 +import { resolve, relative } from 'path';
  import { debugging } from '../internal.js';
  const cwd = process.cwd();
++
++function deleteEmptyObjects(obj) {
++	Object.keys(obj).forEach(function(key) {
++		if (typeof obj[key] === 'object') {
++			deleteEmptyObjects(obj[key]);
++			if (Object.keys(obj[key]).length === 0) {
++				delete obj[key];
++			}
++		}
++	});
++}
++
  /** Is run when file changes has been detected */
-@@ -10,25 +10,41 @@ routesDirectory) {
+ export function apiUpdater(config, 
+ /** Resolved to real path i.e. `src/routes = C:/current/project/src/routes` */
+@@ -10,25 +22,41 @@ routesDirectory) {
      let apiTypes = {};
      let importStatements = '';
      debugging && console.time(`[DEBUG] Updated generated types at ${routesDirectory} ...`);
@@ -83,7 +97,15 @@ index 07a166114c41a789139058a6fbbe87689bb9c240..8533c1e333194494401b392bd99cad34
          }
      }
      recursiveLoad(routesDirectory, apiTypes);
-@@ -53,11 +69,12 @@ routesDirectory) {
+@@ -45,6 +73,7 @@ routesDirectory) {
+         }
+         return obj;
+     }
++	deleteEmptyObjects(apiTypes);
+     apiTypes = fixKeys(apiTypes);
+     let dirText = JSON.stringify(apiTypes, null, 2);
+     dirText = dirText
+@@ -53,11 +82,12 @@ routesDirectory) {
          .replaceAll(/(__server\>\",)|(__server\>\")/g, '__server> & {')
          // Transform slugs e.g. "[slug]": into functions slug$: (slug: S) =>
          // TODO: Allow ex. [slug].[second] to become slug$second$: (slug: S, second: S) =>
@@ -100,7 +122,7 @@ index 07a166114c41a789139058a6fbbe87689bb9c240..8533c1e333194494401b392bd99cad34
      const folder = resolve(resolution, '..');
      if (!fs.existsSync(folder))
          fs.mkdirSync(folder, { recursive: true });
-@@ -78,5 +95,7 @@ const file = (dirText, importCode) => `/* eslint-disable */
+@@ -78,5 +108,7 @@ const file = (dirText, importCode) => `/* eslint-disable */
  import type { Z } from 'sveltekit-zero-api/types/zeroapi'
  ${importCode}
  

@@ -28,7 +28,7 @@ async function getPlaylistTranscripts(list: string) {
 	return await Promise.all(ids.map(async id => getTranscript(id)))
 }
 
-export const GET = async (event: { query: Prettify<Params> }) => {
+export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
