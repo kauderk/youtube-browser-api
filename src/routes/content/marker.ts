@@ -6,7 +6,7 @@ import { getContentPage } from './content'
 import { getMap_smart } from '../utils'
 
 export type Marker = 'chapters' | 'heatmap'
-export async function getMarkers(videoId: s) {
+export async function getMarkers(videoId: string) {
 	const page = await getContentPage(videoId)
 
 	const relative =
@@ -24,14 +24,15 @@ export async function getMarkers(videoId: s) {
 	}
 }
 
-type page = Promise<s>
+type page = Promise<string>
 const map = new Map<string, page>()
-export const GetHeatMap = async (url: s) => {
-	const freeze = async (url: s) => `(await getHeatMap(url))[0].toString()`
+export const GetHeatMap = async (url: string) => {
+	const freeze = async (url: string) =>
+		`(await getHeatMap(url))[0].toString()`
 	return await getMap_smart(url, map, freeze, url)
 }
 
-export async function getHeatmapPath(videoId: s) {
+export async function getHeatmapPath(videoId: string) {
 	const youtubeEndpoint = `https://www.youtube.com`
 	const _locale_ = 'hl=en&gl=us'
 	const endpoint = `${youtubeEndpoint}/watch?v=${videoId}&${_locale_}`

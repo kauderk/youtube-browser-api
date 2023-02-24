@@ -21,7 +21,7 @@
 			[key in keyof M[K]]: Pre<M[K][key]> & { submit?: () => void }
 		}
 	}
-	export const ObjectKeys = <obj extends o>(o: obj) =>
+	export const ObjectKeys = <obj extends object>(o: obj) =>
 		Object.keys(o) as (keyof typeof o)[]
 	//#endregion
 

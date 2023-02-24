@@ -12,7 +12,7 @@
 
 	export let entry: any
 
-	const props = toProps<s>(entry)
+	const props = toProps<string>(entry)
 	const endpoint = props.key
 
 	const state = createState({ [endpoint]: [] as TranscriptResponse[] })

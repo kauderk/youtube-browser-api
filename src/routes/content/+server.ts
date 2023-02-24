@@ -9,9 +9,9 @@ import type { Return, FirstFlatten } from './types'
 import type { Param } from '../utility-types'
 
 export type Single = {
-	suggestions?: b
-	storyboard?: b
-	heatmapPath?: b
+	suggestions?: boolean
+	storyboard?: boolean
+	heatmapPath?: boolean
 }
 export type Multiple = {
 	getPrimary?: Return<typeof getPrimary>
@@ -49,7 +49,7 @@ const get = async (event: { query: id & { params: params } }) => {
 export type _get = typeof get
 export const GET = async (e: API<Param<typeof get>>) =>
 	Ok({ body: await get(e as any) })
-async function getStoryboards(id: s) {
+async function getStoryboards(id: string) {
 	const page = await getContentPage(id)
 
 	if (!page?.playerResponse?.storyboards) {

@@ -2,10 +2,10 @@ import { page } from '$app/stores'
 import { derived } from 'svelte/store'
 
 export async function getMap_smart<
-	M extends Map<s, any>,
+	M extends Map<string, any>,
 	C extends (...args: any) => V,
 	V = M extends Map<any, infer I> ? I : never
->(key: s, map: M, callback: C, ...setMapCb_params: Parameters<C>) {
+>(key: string, map: M, callback: C, ...setMapCb_params: Parameters<C>) {
 	if (!key) {
 		throw new Error('invalid uid|key while trying to call getComponentMap')
 	}

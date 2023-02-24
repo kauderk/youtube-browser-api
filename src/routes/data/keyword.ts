@@ -8,9 +8,9 @@ export async function GetListByKeyword({
 	limit = 0,
 	option = '',
 }: {
-	keyword: s
+	keyword: string
 	withPlaylist?: boolean
-	limit?: n
+	limit?: number
 	option?: 'video' | 'channel' | 'playlist' | 'movie' | ''
 }) {
 	let endpoint = `${youtubeEndpoint}/results?search_query=${keyword}&${_locale_}`

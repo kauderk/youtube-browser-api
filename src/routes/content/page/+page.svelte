@@ -15,10 +15,10 @@
 	type Shape = {
 		// @ts-expect-error
 		[K in keyof Model]?: {
-			name?: s
-			selected: b
-			title?: s
-			shim?: s
+			name?: string
+			selected: boolean
+			title?: string
+			shim?: string
 		}
 	}
 	const ClientParams: Shape = {

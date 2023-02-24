@@ -8,5 +8,5 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {}
 
 export type Param<
 	Func extends (...args: any) => any,
-	I extends n = 0
+	I extends number = 0
 > = Parameters<Func>[I]

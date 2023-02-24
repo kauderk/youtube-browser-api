@@ -1,4 +1,7 @@
-export function buildQueryString(url: string, urlParams?: { [key: s]: s }) {
+export function buildQueryString(
+	url: string,
+	urlParams?: { [key: string]: string }
+) {
 	// https://codepen.io/ahsan01/pen/RJWOpx
 	function concat(params: any) {
 		return Object.entries(params)
@@ -9,10 +12,10 @@ export function buildQueryString(url: string, urlParams?: { [key: s]: s }) {
 	const qs = urlParams ? '?' + concat(urlParams) : ''
 	return `${url}${qs}`
 }
-export async function getDomainText(url: s) {
+export async function getDomainText(url: string) {
 	return fetch(url).then(res => res.text())
 }
-export function ParseUniqueIDs(htmlContent: s) {
+export function ParseUniqueIDs(htmlContent: string) {
 	// https://cable.ayra.ch/ytdl/playlist.php
 	const matches = [
 		...htmlContent.matchAll(/https?:\/\/youtu\.be\/([\w\W]{11})/gm),

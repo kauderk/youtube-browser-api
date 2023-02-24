@@ -2,7 +2,7 @@ import type { ITEM } from '../types'
 export const youtubeEndpoint = `https://www.youtube.com`
 export const _locale_ = 'hl=en&gl=us'
 export let eneabledLog = false
-export const setEnabledConsoleLog = (b: b) => (eneabledLog = b)
+export const setEnabledConsoleLog = (b: boolean) => (eneabledLog = b)
 
 export function VideoRender(json: {
 	videoRenderer?: any

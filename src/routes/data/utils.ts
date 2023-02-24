@@ -8,7 +8,7 @@ export type Pre<T> = OptionalKey<
 > & {
 	intent?: 'necessary' | 'optional' | 'submit'
 } & { param?: T }
-export function toProps<T = s | n | b>([key, value]: [
+export function toProps<T = string | number | boolean>([key, value]: [
 	key: string,
 	value: Pre<T>
 ]) {
@@ -18,7 +18,8 @@ export function toProps<T = s | n | b>([key, value]: [
 		...value,
 		param: { ...pre, get: () => get(pre) },
 		key,
-		placeholder: value.placeholder ?? (value.param as s)?.toString() ?? '',
+		placeholder:
+			value.placeholder ?? (value.param as string)?.toString() ?? '',
 	}
 }
 function camelCaseToPhrase(str: string): string {

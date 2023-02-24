@@ -2,7 +2,7 @@ import { getYouTubePage } from '../data/parse'
 const youtubeEndpoint = `https://www.youtube.com`
 const _locale_ = 'hl=en&gl=us'
 
-export async function GetChannelById(params: { channelId: s }) {
+export async function GetChannelById(params: { channelId: string }) {
 	const endpoint = `${youtubeEndpoint}/channel/${params.channelId}&${_locale_}`
 
 	const page = await getYouTubePage(endpoint)

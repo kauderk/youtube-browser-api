@@ -1,12 +1,12 @@
 export type ITEM = {
-	id?: s
-	type?: s
-	thumbnail?: s
-	title?: s
-	length?: s
+	id?: string
+	type?: string
+	thumbnail?: string
+	title?: string
+	length?: string
 	videos?: any
-	videoCount?: s
-	isLive?: b
-	channelTitle?: s
-	shortBylineText?: s
+	videoCount?: string
+	isLive?: boolean
+	channelTitle?: string
+	shortBylineText?: string
 }

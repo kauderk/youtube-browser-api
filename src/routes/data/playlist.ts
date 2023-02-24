@@ -4,7 +4,10 @@ import { VideoRender } from './query'
 const youtubeEndpoint = `https://www.youtube.com`
 const _locale_ = 'hl=en&gl=us'
 
-export const GetPlaylistData = async (params: { playlistId: s; limit: n }) => {
+export const GetPlaylistData = async (params: {
+	playlistId: string
+	limit: number
+}) => {
 	const endpoint = `${youtubeEndpoint}/playlist?list=${params.playlistId}&${_locale_}`
 
 	const page = await getYouTubePage(endpoint)

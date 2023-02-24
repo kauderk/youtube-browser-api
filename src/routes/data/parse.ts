@@ -2,7 +2,7 @@ import { getMap_smart } from '../utils'
 import type { InitialData } from './types/initial-data'
 import type { PlayerResponse } from './types/player-response'
 
-export async function TryGetYouTubePage(url: s) {
+export async function TryGetYouTubePage(url: string) {
 	const html = await fetch(url).then(res => res.text())
 
 	return {
@@ -37,14 +37,14 @@ export async function TryGetYouTubePage(url: s) {
 		},
 	}
 }
-function parse<T>(object?: s) {
+function parse<T>(object?: string) {
 	return JSON.parse(object ?? '{}') as T
 }
 
 type page = ReturnType<typeof TryGetYouTubePage>
 const map = new Map<string, page>()
 
-export const getYouTubePage = async (url: s) =>
+export const getYouTubePage = async (url: string) =>
 	await getMap_smart(url, map, TryGetYouTubePage, url)
 
 export type Page = Awaited<page>

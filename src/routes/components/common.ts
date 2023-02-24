@@ -1,6 +1,6 @@
 import type { Pre } from '../data/utils'
 
-export let common: { [key: s]: [key: s, pre: Pre<s>] } = {
+export let common: { [key: string]: [key: string, pre: Pre<string>] } = {
 	playlistId: [
 		'playlistId',
 		{

@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let title: s
+	export let title: string
 </script>
 
 <div class="relative w-auto left-5">

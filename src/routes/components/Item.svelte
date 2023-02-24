@@ -2,11 +2,11 @@
 	import { writable, type Writable } from 'svelte/store'
 	import { RangeSlider, SlideToggle } from '@skeletonlabs/skeleton'
 	import Shim from './Shim.svelte'
-	export let title: s
-	export let placeholder: s
+	export let title: string
+	export let placeholder: string
 	export let shim = ''
 	export let submit: (() => void) | undefined = undefined
-	export let param: Writable<s | b | n> = writable('')
+	export let param: Writable<string | boolean | number> = writable('')
 </script>
 
 <label class="label">

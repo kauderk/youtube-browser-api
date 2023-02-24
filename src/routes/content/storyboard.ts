@@ -7,7 +7,11 @@ import type { Storyboards } from '../data/types/player-response'
  * @param {boolean} hq High quality true
  * @param {number} seconds Duration of the YouTube video
  */
-export function getStoryboard(storyboards: Storyboards, hq: s | b, seconds: n) {
+export function getStoryboard(
+	storyboards: Storyboards,
+	hq: string | boolean,
+	seconds: number
+) {
 	const spec = storyboards.playerStoryboardSpecRenderer.spec
 	let specParts = spec.split('|')
 	let baseUrlHq = specParts[0].split('$')[0] + '2/'

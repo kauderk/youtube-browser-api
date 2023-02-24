@@ -10,7 +10,7 @@
  * @returns ( {match: string;} & groups )[]
  */
 export function matchAll<TKeys extends string | number | symbol>(
-	string: s,
+	string: string,
 	src: RegExp,
 	flags = 'gm'
 ) {

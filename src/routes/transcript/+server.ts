@@ -11,19 +11,19 @@ type Params = {
 }
 
 const transcriptMap = new Map<string, ReturnType<typeof fetchTranscript>>()
-const getTranscript = async (id: s) => {
+const getTranscript = async (id: string) => {
 	const freeze = async () => await fetchTranscript(id)
 	return getMap_smart(id, transcriptMap, freeze)
 }
 
 const pageIdsMap = new Map<string, ReturnType<typeof parseIDs>>()
-const parseIDs = async (key: s) => getDomainText(key).then(ParseUniqueIDs)
-const getPageIds = async (list: s) => {
+const parseIDs = async (key: string) => getDomainText(key).then(ParseUniqueIDs)
+const getPageIds = async (list: string) => {
 	const key = `https://www.youtube.com/playlist?list=${list}&g=1`
 	return getMap_smart(key, pageIdsMap, parseIDs, key)
 }
 
-async function getPlaylistTranscripts(list: s) {
+async function getPlaylistTranscripts(list: string) {
 	const ids = await getPageIds(list)
 	return await Promise.all(ids.map(async id => getTranscript(id)))
 }

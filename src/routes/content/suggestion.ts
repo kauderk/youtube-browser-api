@@ -3,7 +3,7 @@ import { getYouTubePage, type Page } from '../data/parse'
 const youtubeEndpoint = `https://www.youtube.com`
 const _locale_ = 'hl=en&gl=us'
 
-export async function getCompactVideoRenderer(videoId: s) {
+export async function getCompactVideoRenderer(videoId: string) {
 	const endpoint = `${youtubeEndpoint}/watch?v=${videoId}&${_locale_}`
 	const page = await getYouTubePage(endpoint)
 	const next = getNextResult(page)

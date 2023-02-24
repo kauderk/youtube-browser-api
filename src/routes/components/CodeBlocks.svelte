@@ -3,7 +3,7 @@
 		writable({
 			isLoading: false,
 			data: data,
-			error: null as o | null,
+			error: null as object | null,
 		})
 
 	export type State = ReturnType<typeof createState>
@@ -15,7 +15,7 @@
 	import { Subscribe } from 'svelte-subscribe'
 	import { writable } from 'svelte/store'
 	export let state: State
-	export let fetchData: { query: s; url: s }
+	export let fetchData: { query: string; url: string }
 </script>
 
 <section class="card p-4 grid grid-cols-1 gap-4">

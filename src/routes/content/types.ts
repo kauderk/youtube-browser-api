@@ -1,5 +1,5 @@
 export type Return<T extends (...args: any) => any> = {
-	[key in keyof Partial<Awaited<ReturnType<T>>>]?: b
+	[key in keyof Partial<Awaited<ReturnType<T>>>]?: boolean
 }
 
 // -----------------

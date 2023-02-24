@@ -1,7 +1,7 @@
 <script lang="ts">
-	export let shim: s
+	export let shim: string
 	export let submit: (() => void) | undefined = undefined
-	export let value: s | b | n
+	export let value: string | boolean | number
 </script>
 
 <!-- RIDICULOUS -->
