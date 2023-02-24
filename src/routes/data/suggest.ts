@@ -8,9 +8,9 @@ export async function GetSuggestData(params: { limit: number }) {
 	const endpoint = `${youtubeEndpoint}?${_locale_}`
 
 	const page = await TryGetYouTubePage(endpoint)
-	const sectionListRenderer: any[] = await // @ts-expect-error
-	page.initialData.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer
-		.content.richGridRenderer.contents
+	const sectionListRenderer =
+		page.initialData.contents.twoColumnBrowseResultsRenderer.tabs[0]
+			?.tabRenderer?.content?.richGridRenderer?.contents ?? []
 	let items: ITEM[] = []
 	let otherItems = []
 	sectionListRenderer.forEach(item => {

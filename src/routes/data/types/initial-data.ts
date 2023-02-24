@@ -1564,7 +1564,7 @@ interface RelatedChipCloudRenderer {
 	content: Content3
 }
 
-interface Thumbnail5 {
+export interface Thumbnail5 {
 	url: string
 	width: number
 	height: number
@@ -1634,7 +1634,7 @@ interface Accessibility16 {
 	accessibilityData: AccessibilityData22
 }
 
-interface LengthText {
+export interface LengthText {
 	accessibility: Accessibility16
 	simpleText: string
 }
@@ -2235,7 +2235,8 @@ interface CompactVideoRenderer {
 	thumbnailOverlays: ThumbnailOverlay[]
 	accessibility: Accessibility21
 	richThumbnail: RichThumbnail
-	ownerBadges: OwnerBadge[]
+	ownerBadges?: OwnerBadge[]
+	badges?: OwnerBadge[]
 }
 
 interface Thumbnail9 {
@@ -2647,6 +2648,7 @@ interface ItemSectionRenderer2 {
 }
 
 interface Result {
+	compactVideoRenderer: CompactVideoRenderer
 	relatedChipCloudRenderer: RelatedChipCloudRenderer
 	itemSectionRenderer: ItemSectionRenderer2
 }
@@ -2715,6 +2717,94 @@ export interface TwoColumnWatchNextResults {
 
 interface Contents {
 	twoColumnWatchNextResults: TwoColumnWatchNextResults
+	twoColumnBrowseResultsRenderer: TwoColumnBrowseResultsRenderer
+	twoColumnSearchResultsRenderer: TwoColumnSearchResultsRenderer
+}
+interface TwoColumnSearchResultsRenderer {
+	primaryContents: {
+		sectionListRenderer: {
+			contents: [
+				{
+					continuationItemRenderer: ContinuationItemRenderer
+
+					itemSectionRenderer: {
+						contents: {
+							videoRenderer: {
+								videoId: string
+								title?: {
+									runs?: {
+										text?: string
+									}[]
+								}
+								lengthText: {
+									simpleText: string
+								}
+								longBylineText?: LongBylineText
+								thumbnail?: { thumbnails: Thumbnail[] }
+							}
+							playlistRenderer: {
+								playlistId: string
+								title: {
+									simpleText: string
+								}
+								thumbnails: Thumbnail[]
+								videoCount: string
+								videos: { title: Title; videoId: string }[]
+							}
+
+							channelRenderer: {
+								channelId: string
+								subscriberCountText?: unknown
+								videoCountText?: unknown
+								title: {
+									simpleText: string
+								}
+								thumbnail: Thumbnail13
+							}
+						}[]
+					}
+				}
+			]
+		}
+	}
+}
+interface TwoColumnBrowseResultsRenderer {
+	tabs: Tab[]
+}
+interface Tab {
+	tabRenderer?: TabRenderer
+}
+
+interface TabRenderer {
+	title: string
+	trackingParams: string
+	selected?: boolean
+	content?: TabRendererContent
+}
+
+export interface TabRendererContent {
+	richGridRenderer?: RichGridRenderer
+	sectionListRenderer?: SectionListRenderer
+}
+
+interface RichGridRenderer {
+	contents: RichGridRendererContent[]
+}
+
+interface RichGridRendererContent {
+	richItemRenderer?: RichItemRenderer
+}
+
+interface RichItemRenderer {
+	content: RichItemRendererContent
+}
+
+interface RichItemRendererContent {
+	videoRenderer: VideoRenderer
+}
+
+interface VideoRenderer {
+	videoId: string
 }
 
 interface WebCommandMetadata38 {
@@ -2920,7 +3010,7 @@ interface Title6 {
 	simpleText: string
 }
 
-interface Thumbnail13 {
+export interface Thumbnail13 {
 	url: string
 	width: number
 	height: number
@@ -4513,6 +4603,48 @@ interface ContinuationItemRenderer3 {
 
 interface Content8 {
 	continuationItemRenderer: ContinuationItemRenderer3
+	playlistVideoListRenderer?: {
+		contents?: [
+			{
+				playlistVideoRenderer: {
+					videoId: string
+					thumbnail: {
+						thumbnails: Thumbnail[]
+					}
+					title: {
+						runs: {
+							text: string
+						}[]
+					}
+					index: {
+						simpleText: string
+					}
+					shortBylineText: {
+						runs: {
+							text: string
+							navigationEndpoint: {
+								browseEndpoint: {
+									browseId: string
+									canonicalBaseUrl: string
+								}
+							}
+						}[]
+					}
+					navigationEndpoint: {
+						watchEndpoint: {
+							videoId: string
+							playlistId: string
+							index: number
+							startTimeSeconds: number
+						}
+					}
+					lengthSeconds: string
+					isPlayable: boolean
+					isWatched: boolean
+				}
+			}
+		]
+	}
 }
 
 interface ItemSectionRenderer3 {
@@ -5726,6 +5858,57 @@ interface FrameworkUpdates {
 	elementUpdate: ElementUpdate
 }
 
+export interface MetaData {
+	playlistMetadataRenderer: {
+		title: string
+		description: string
+		androidAppindexingLink: string
+		iosAppindexingLink: string
+	}
+}
+
+interface ConfigInfo {
+	appInstallData: string
+}
+
+interface Client {
+	hl: string
+	gl: string
+	remoteHost: string
+	deviceMake: string
+	deviceModel: string
+	visitorData: string
+	userAgent: string
+	clientName: string
+	clientVersion: string
+	osVersion: string
+	originalUrl: string
+	platform: string
+	clientFormFactor: string
+	configInfo: ConfigInfo
+	acceptHeader: string
+	deviceExperimentId: string
+}
+
+interface User {
+	lockedSafetyMode: boolean
+}
+
+interface Request {
+	useSsl: boolean
+}
+
+interface ClickTracking {
+	clickTrackingParams: string
+}
+
+export interface Context {
+	client: Client
+	user: User
+	request: Request
+	clickTracking: ClickTracking
+}
+
 export interface InitialData {
 	responseContext: ResponseContext
 	contents: Contents
@@ -5737,4 +5920,5 @@ export interface InitialData {
 	topbar: Topbar
 	pageVisualEffects: PageVisualEffect[]
 	frameworkUpdates: FrameworkUpdates
+	metadata: MetaData
 }

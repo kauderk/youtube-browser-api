@@ -1,5 +1,5 @@
 import { getMap_smart } from '../utils'
-import type { InitialData } from './types/initial-data'
+import type { InitialData, Context } from './types/initial-data'
 import type { PlayerResponse } from './types/player-response'
 
 export async function TryGetYouTubePage(url: string) {
@@ -23,7 +23,7 @@ export async function TryGetYouTubePage(url: string) {
 			?.trim()
 			.split(',')[0]
 			.split('"')[2],
-		context: parse(
+		context: parse<Context>(
 			html.split('INNERTUBE_CONTEXT')[1]?.trim().slice(2, -2) ?? '{}'
 		),
 		transcriptMeta: {

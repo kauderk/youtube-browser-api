@@ -8,47 +8,25 @@ export function VideoRender(json: {
 	videoRenderer?: any
 	playlistVideoRenderer?: any
 }): ITEM {
-	if (!(json && (json.videoRenderer || json.playlistVideoRenderer))) {
+	const videoRenderer = json?.videoRenderer || json?.playlistVideoRenderer
+	if (!videoRenderer) {
 		return {}
 	}
 
-	let videoRenderer = null
-	if (json.videoRenderer) {
-		videoRenderer = json.videoRenderer
-	} else if (json.playlistVideoRenderer) {
-		videoRenderer = json.playlistVideoRenderer
-	}
-
-	let isLive =
-		videoRenderer.badges?.length &&
-		videoRenderer.badges[0].metadataBadgeRenderer?.style ==
-			'BADGE_STYLE_TYPE_LIVE_NOW'
-
-	// @ts-expect-error
-	videoRenderer.thumbnailOverlays?.forEach(item => {
-		if (
-			item.thumbnailOverlayTimeStatusRenderer &&
-			item.thumbnailOverlayTimeStatusRenderer?.style == 'LIVE'
-		) {
-			isLive = true
-		}
-	})
-
-	const id = videoRenderer.videoId
-	const thumbnail = videoRenderer.thumbnail
-	const title = videoRenderer.title.runs[0].text
-	const shortBylineText = videoRenderer.shortBylineText || ''
-	const lengthText = videoRenderer.lengthText ? videoRenderer.lengthText : ''
-	const channelTitle = videoRenderer.ownerText?.runs?.[0].text || ''
-
 	return {
-		id,
+		id: videoRenderer.videoId,
 		type: 'video',
-		thumbnail,
-		title,
-		channelTitle,
-		shortBylineText,
-		length: lengthText,
-		isLive,
+		thumbnail: videoRenderer.thumbnail,
+		title: videoRenderer.title.runs[0].text,
+		channelTitle: videoRenderer.ownerText?.runs?.[0].text || '',
+		shortBylineText: videoRenderer.shortBylineText || '',
+		length: videoRenderer.lengthText ? videoRenderer.lengthText : '',
+		isLive:
+			videoRenderer.badges[0]?.metadataBadgeRenderer?.style ==
+				'BADGE_STYLE_TYPE_LIVE_NOW' ||
+			videoRenderer.thumbnailOverlays?.some?.(
+				// @ts-expect-error
+				item => item.thumbnailOverlayTimeStatusRenderer?.style == 'LIVE'
+			),
 	}
 }

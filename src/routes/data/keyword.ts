@@ -22,21 +22,20 @@ export async function GetListByKeyword({
 	eneabledLog && console.log(endpoint)
 	const page = await getYouTubePage(endpoint)
 
-	const contents: any[] = // @ts-expect-error
+	const contents =
 		page.initialData.contents.twoColumnSearchResultsRenderer.primaryContents
 			.sectionListRenderer.contents
 
-	let contToken = {}
+	let continuationToken = ''
 
 	let items: ITEM[] = []
 
 	contents.forEach(content => {
 		if (content.continuationItemRenderer) {
-			contToken =
+			continuationToken =
 				content.continuationItemRenderer.continuationEndpoint
 					.continuationCommand.token
 		} else if (content.itemSectionRenderer.contents) {
-			// @ts-expect-error
 			content.itemSectionRenderer.contents.forEach(item => {
 				if (item.channelRenderer) {
 					let channelRenderer = item.channelRenderer
@@ -58,7 +57,7 @@ export async function GetListByKeyword({
 						items.push({
 							id: playListRender.playlistId,
 							type: 'playlist',
-							thumbnail: playListRender.thumbnails,
+							thumbnail: playListRender.thumbnails as any,
 							title: playListRender.title.simpleText,
 							length: playListRender.videoCount,
 							videos: playListRender.videos,
@@ -77,7 +76,7 @@ export async function GetListByKeyword({
 			nextPageToken: page.apiToken,
 			nextPageContext: {
 				context: page.context,
-				continuation: contToken,
+				continuationToken,
 			},
 		},
 	}
