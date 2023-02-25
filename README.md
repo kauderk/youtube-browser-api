@@ -1,5 +1,4 @@
-<meta name="description" content="Access YouTube's videos, channels, playlists and more through our YouTube API Wrapper website. Our API wrapper offers content, data, and transcript endpoints with a simple interface tailored to your needs." />
-<meta name="keywords" content="YouTube API, YouTube API Wrapper, video data, transcripts, channels, playlists, data endpoints, content endpoints, HTML data, simple interface, user-friendly." />
+Fully typed endpoints that parse HTML/JSON data from youtube.com from any environment.
 
 # [YouTube Browser API](https://youtube-browser-api.netlify.app/)
 <a href="https://youtube-browser-api.netlify.app/" target="_blank"><img src="https://img.shields.io/badge/youtube browser api-website-green"></a>
@@ -9,26 +8,23 @@
 - Get data on YouTube videos, channels, playlists, heatmap, chapters and more
 - Get YouTube video transcripts
 - Simple and user-friendly API wrapper
+- Works from any environment
 
-# Installation
+# Install <a href="https://github.com/kauderk/youtube-browser-api/wiki" target="_blank"><img src="https://img.shields.io/badge/npm-red"></a>
 ```bash
 npm install youtube-browser-api
 ```
 ###### `REST API is also available`
 
----
-
-## How It Works
-A thin wrapper over the YouTube API that parses raw HTML/JSON data.
-
 ## <a href="https://github.com/kauderk/youtube-browser-api/wiki" target="_blank"><img src="https://img.shields.io/badge/Documentaion-Wiki-yellow"></a>
+
 ---
 
 ## Endpoints
 
-**CONTENT**: Extract all or some video data by passing the video ID in the query parameter.
+**[/content](https://youtube-browser-api.netlify.app/content/page)**: Extract all or some video data by a video ID.
 
-<a href="https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title" target="_blank"><img src="https://img.shields.io/badge/test endpoint-&query=title"></a>
+<a href="https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&params=title" target="_blank"><img src="https://img.shields.io/badge/test endpoint-params=title-green"></a>
 
 ```ts
 // typescript
@@ -50,15 +46,15 @@ const query = {
     params: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
 }
 const fetchUrl = `https://youtube-browser-api.netlify.app/content?id=${query.id}&query=` + query.params.join()
-// https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title
+// https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&params=title
 fetch(fetchUrl)
     .then(res => res.json())
     .then(console.log)
 ```
 
-**DATA**: Search for narrower data by passing keywords in the query parameter. For example `search`:
+**[/data](https://youtube-browser-api.netlify.app/data/page)**: Search for narrower data by passing keywords in the query parameter. For example `search`:
 
-<a href="https://youtube-browser-api.netlify.app/data/search?keyword=record&withPlaylist=false&limit=1&option=" target="_blank"><img src="https://img.shields.io/badge/test endpoint-search?keyword=record"></a>
+<a href="https://youtube-browser-api.netlify.app/data/search?keyword=record&withPlaylist=false&limit=1&option=" target="_blank"><img src="https://img.shields.io/badge/test endpoint-keyword=record-green"></a>
 
 ```ts
 // typescript
@@ -91,9 +87,9 @@ fetch(fetchUrl)
     .then(console.log)
 ```
 
-**TRANSCRIPT**: Extract transcripts by passing video IDs in the query parameter. For example `video ids`:
+**[/transcript](https://youtube-browser-api.netlify.app/transcript/page)**: Extract transcripts by passing video IDs in the query parameter. For example `video ids`:
 
-<a href="https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo" target="_blank"><img src="https://img.shields.io/badge/test endpoint-transcript?videoId=pOEyYwKtHJo"></a>
+<a href="https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo" target="_blank"><img src="https://img.shields.io/badge/test endpoint-transcript-green"></a>
 
 ```ts
 // typescript
@@ -125,3 +121,7 @@ This YouTube API Wrapper website offers a simple and user-friendly interface to 
 This project is licensed under the [MIT License](https://github.com/kauderk/youtube-browser-api/blob/main/LICENSE).
 
 <a href="https://youtube-browser-api.netlify.app/" target="_blank"><img src="https://img.shields.io/badge/Try it out now!-youtube browser api-blue"></a>
+
+
+<meta name="description" content="Access YouTube's videos, channels, playlists and more through our YouTube API Wrapper website. Our API wrapper offers content, data, and transcript endpoints with a simple interface tailored to your needs." />
+<meta name="keywords" content="YouTube API, YouTube API Wrapper, video data, transcripts, channels, playlists, data endpoints, content endpoints, HTML data, simple interface, user-friendly." />
