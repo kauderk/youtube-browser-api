@@ -4,7 +4,7 @@ Fully typed endpoints that parse HTML/JSON data from youtube.com from any enviro
 <a href="https://youtube-browser-api.netlify.app/" target="_blank"><img src="https://img.shields.io/badge/youtube browser api-website-green"></a>
 
 ## Features
-- Fully typed endpoints
+- Fully typed endpoints powered by [sveltekit-zero-api](https://github.com/Refzlund/sveltekit-zero-api)
 - Get data on YouTube videos, channels, playlists, heatmap, chapters and more
 - Get YouTube video transcripts
 - Simple and user-friendly API wrapper
@@ -42,10 +42,10 @@ Api.content
 ```js
 // javascript
 const query = {
-    id: "pOEyYwKtHJo",
-    params: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
+    id: 'pOEyYwKtHJo',
+    params: ['title'], // ['title','suggestions','storyboard','heatmapPath','isLive','channel','description','initialData','playerResponse','apiToken','context','auto_chapters','chapters','heatmap']
 }
-const fetchUrl = `https://youtube-browser-api.netlify.app/content?id=${query.id}&query=` + query.params.join()
+const fetchUrl = `https://youtube-browser-api.netlify.app/content?id=${query.id}&params=` + query.params.join()
 // https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&params=title
 fetch(fetchUrl)
     .then(res => res.json())
@@ -64,10 +64,10 @@ Api.data
     .endpoint$('search')
     .GET({
         query: {
-            keyword: "AI",
+            keyword: 'AI',
             withPlaylist: false,
             limit: 1,
-            option: ""
+            option: ''
         },
     })
     .Ok((res) => console.log(res.body))
@@ -75,12 +75,12 @@ Api.data
 ```js
 // javascript
 const query = {
-    keyword: "AI",
+    keyword: 'AI',
     withPlaylist: false,
     limit: 1,
-    option: ""
+    option: ''
 };
-const fetchUrl = "https://youtube-browser-api.netlify.app/data/search?" + new URLSearchParams(query).toString()
+const fetchUrl = 'https://youtube-browser-api.netlify.app/data/search?' + new URLSearchParams(query).toString()
 // https://youtube-browser-api.netlify.app/data/search?keyword=record&withPlaylist=false&limit=1&option=
 fetch(fetchUrl)
     .then(res => res.json())
@@ -106,9 +106,9 @@ Api.transcript
 ```js
 // javascript
 const query = {
-    videoId: "pOEyYwKtHJo"
+    videoId: 'pOEyYwKtHJo'
 };
-const fetchUrl = "https://youtube-browser-api.netlify.app/transcript?" + new URLSearchParams(query).toString()
+const fetchUrl = 'https://youtube-browser-api.netlify.app/transcript?' + new URLSearchParams(query).toString()
 // https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo
 fetch(fetchUrl)
     .then(res => res.json())
