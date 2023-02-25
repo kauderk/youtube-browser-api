@@ -15,7 +15,21 @@ The API wrapper provides three endpoints - Content, Data, and Transcript - to ex
 
 <a href="https://youtube-browser-api.netlify.app/content?id=pOEyYwKtHJo&query=title"><img src="https://img.shields.io/badge/test endpoint-&query=title"></a>
 
-```ts
+````ts
+// typescript
+import Api from 'youtube-browser-api'
+
+Api.content
+	.GET({
+		query: {
+			id: 'pOEyYwKtHJo',
+			params: ['title'],
+		},
+	})
+	.Ok((res) => console.log(res.body))
+````
+```js
+// javascript
 const query = {
 	id: "pOEyYwKtHJo",
 	params: ["title"], // ["title","suggestions","storyboard","heatmapPath","isLive","channel","description","initialData","playerResponse","apiToken","context","auto_chapters","chapters","heatmap"]
@@ -32,12 +46,29 @@ fetch(fetchUrl)
 
 <a href="https://youtube-browser-api.netlify.app/data/search?keyword=record&withPlaylist=false&limit=1&option="><img src="https://img.shields.io/badge/test endpoint-search?keyword=record"></a>
 
-```ts
+````ts
+// typescript
+import Api from 'youtube-browser-api'
+
+Api.data
+	.endpoint$('search')
+	.GET({
+		query: {
+			keyword: "AI",
+			withPlaylist: false,
+			limit: 1,
+			option: ""
+		},
+	})
+	.Ok((res) => console.log(res.body))
+````
+```js
+// javascript
 const query = {
-  "keyword": "AI",
-  "withPlaylist": false,
-  "limit": 1,
-  "option": ""
+	keyword: "AI",
+	withPlaylist: false,
+	limit: 1,
+	option: ""
 };
 const fetchUrl = "https://youtube-browser-api.netlify.app/data/search?" + new URLSearchParams(query).toString()
 // https://youtube-browser-api.netlify.app/data/search?keyword=record&withPlaylist=false&limit=1&option=
@@ -50,7 +81,20 @@ fetch(fetchUrl)
 
 <a href="https://youtube-browser-api.netlify.app/transcript?videoId=pOEyYwKtHJo"><img src="https://img.shields.io/badge/test endpoint-transcript?videoId=pOEyYwKtHJo"></a>
 
-```ts
+````ts
+// typescript
+import Api from 'youtube-browser-api'
+
+Api.transcript
+	.GET({
+		query: {
+			videoId: 'pOEyYwKtHJo',
+		},
+	})
+	.Ok((res) => console.log(res.body))
+````
+```js
+// javascript
 const query = {
   "videoId": "pOEyYwKtHJo"
 };
