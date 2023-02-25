@@ -1,6 +1,6 @@
 {
 	"name": "youtube-browser-api",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"private": false,
 	"scripts": {
 		"dev": "set NODE_OPTIONS=--inspect && vite dev",
@@ -22,6 +22,29 @@
 	"files": [
 		"package"
 	],
+	"license": "MIT",
+	"keywords": [
+		"javascript",
+		"scraper",
+		"youtube",
+		"youtube-api",
+		"transcript",
+		"endpoint",
+		"video-data"
+	],
+	"author": "KauDerK",
+	"social": {
+		"twitter": "https://twitter.com/kauDerk_",
+		"github": "https://github.com/kauderk"
+	},
+	"homepage": "https://youtube-browser-api.netlify.app/",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kauderk/youtube-browser-api.git"
+	},
+	"bugs": {
+		"url": "https://github.com/kauderk/youtube-browser-api/issues"
+	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
 		"@skeletonlabs/skeleton": "^0.124.2",
@@ -60,6 +83,7 @@
 		"youtube-transcript": "^1.0.4"
 	},
 	"type": "module",
+	"sideEffects": false,
 	"pnpm": {
 		"patchedDependencies": {
 			"youtube-heatmap@1.0.3": "patches/youtube-heatmap@1.0.3.patch",
