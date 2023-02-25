@@ -1,7 +1,7 @@
 {
 	"name": "youtube-browser-api",
 	"version": "0.0.1",
-	"private": true,
+	"private": false,
 	"scripts": {
 		"dev": "set NODE_OPTIONS=--inspect && vite dev",
 		"build": "rimraf dist && rimraf .netlify/!(state.json) && vite build",

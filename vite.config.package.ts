@@ -24,6 +24,11 @@ export default defineConfig({
 	plugins: [
 		dts({
 			clearPureImport: false,
+			exclude: [
+				'./src/app.d.ts',
+				'./src/global.d.ts',
+				'./src/vite-env.d.ts',
+			],
 		}),
 	],
 })
