@@ -4161,8 +4161,8 @@ interface MacroMarkersListItemRenderer {
 }
 
 interface Content6 {
-	macroMarkersInfoItemRenderer: MacroMarkersInfoItemRenderer
-	macroMarkersListItemRenderer: MacroMarkersListItemRenderer
+	macroMarkersInfoItemRenderer?: MacroMarkersInfoItemRenderer
+	macroMarkersListItemRenderer?: MacroMarkersListItemRenderer
 }
 
 interface Run45 {

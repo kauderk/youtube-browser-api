@@ -19,6 +19,21 @@ export async function getMarkers(videoId: string) {
 			.chapters,
 		chapters: relative.find(e => e.key == 'DESCRIPTION_CHAPTERS')?.value
 			.chapters,
+		macro_chapters:
+			page.initialData.engagementPanels?.[1]?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
+				?.map(renderer => {
+					const macro = renderer.macroMarkersListItemRenderer!
+					if (!macro) return undefined as typeof macro // JA!
+					return {
+						chapter:
+							macro.repeatButton.toggleButtonRenderer
+								.defaultServiceEndpoint.repeatChapterCommand,
+						thumbnails: macro.thumbnail.thumbnails,
+						title: macro.title,
+						description: macro.timeDescription,
+					}
+				})
+				.filter(val => val !== undefined) ?? [], // typescript returns the union type on filter ?!
 		heatmap: relative.find(e => e.key == 'HEATSEEKER')?.value.heatmap
 			.heatmapRenderer,
 	}
