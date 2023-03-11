@@ -69,43 +69,57 @@ const getFramesDetails = (
 	quantity: number,
 	slot: ReturnType<typeof getStoryboards>[number]
 ) => {
-	const COLUMNS = 5
-	const ROWS = 5
+	const COUNT = 5
+	const MAX_COUNT = 25
 
 	const selectedFrames = evenlyDistributedElements(
 		Array.from({ length: slot.thumbnailCount }).map((_, i) => i),
 		quantity
 	)
 
-	return selectedFrames.map(frameIndex => {
-		const storyboardIndex = Math.floor(frameIndex / (COLUMNS * ROWS))
-		const url = slot.templateUrl.replace('$M', String(storyboardIndex))
+	return {
+		slot,
+		frames: selectedFrames.map((frameIndex, i) => {
+			const storyboardIndex = Math.floor(frameIndex / MAX_COUNT)
+			const url = slot.templateUrl.replace('$M', String(storyboardIndex))
 
-		const thumbnailIndex = frameIndex - storyboardIndex * (COLUMNS * ROWS)
-		const x = (thumbnailIndex % COLUMNS) * slot.thumbnailWidth
-		const y = Math.floor(thumbnailIndex / ROWS) * slot.thumbnailHeight
+			const maxCount = MAX_COUNT * (i + 1)
+			const lookupCount =
+				maxCount > slot.thumbnailCount
+					? slot.thumbnailCount - MAX_COUNT * i
+					: MAX_COUNT
+			const cords = getMaxRowsAndCols(lookupCount, COUNT)
 
-		return { url, x, y }
-	})
+			return {
+				url,
+				thumbnailCount: lookupCount,
+				width: slot.thumbnailWidth * slot.columns,
+				height: slot.thumbnailHeight * cords.rows,
+				...cords,
+			}
+		}),
+	}
+}
+function getMaxRowsAndCols(totalCells: number, cellsPerRow: number) {
+	const filledRows = Math.floor(totalCells / cellsPerRow)
+	const maxRows = totalCells % cellsPerRow > 0 ? filledRows + 1 : filledRows
+	return { rows: maxRows, columns: Math.floor(totalCells / maxRows) }
 }
 
 export const getTimeline = (params: {
 	storyboards: Storyboards
 	quality: StoryboardQuality
-	quantity: number
+	quantity?: number
 }) => {
-	if (params.quantity <= 0) {
-		return
-	}
+	params.quantity = params.quantity || 5
 
 	const storyboardArray = getStoryboards(params.storyboards)
-	// return getFramesDetails(
-	// 	params.quantity,
-	// 	storyboardArray[qualityEnum[params.quality]]
-	// )
-	return Object.entries(qualityEnum).map(([key, value]) => {
+
+	return Object.entries(qualityEnum).reduce((acc, [key, value]) => {
 		return {
+			...acc,
+			// @ts-expect-error
 			[key]: getFramesDetails(params.quantity, storyboardArray[value]),
 		}
-	})
+	}, {} as Record<StoryboardQuality, ReturnType<typeof getFramesDetails>>)
 }
