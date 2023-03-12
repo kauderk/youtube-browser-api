@@ -6,12 +6,13 @@ import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
 import type { Return, FirstFlatten } from './types'
-import type { Param } from '../utility-types'
+import { getMovingThumbnail } from './thumbnail'
 
 export type Single = {
 	suggestions?: boolean
 	storyboard?: boolean
 	heatmapPath?: boolean
+	movingThumbnail?: boolean
 }
 export type Multiple = {
 	getPrimary?: Return<typeof getPrimary>
@@ -41,6 +42,9 @@ export const GET = async (event: API<{ query: id & { params: params } }>) => {
 			: undefined,
 		storyboard: params.includes('storyboard')
 			? await getStoryboards(id).catch()
+			: undefined,
+		movingThumbnail: params.includes('movingThumbnail')
+			? await getMovingThumbnail(id).catch()
 			: undefined,
 	}
 
