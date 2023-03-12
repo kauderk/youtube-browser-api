@@ -4,7 +4,8 @@ const searchByIdMap = new Map<string, Promise<string>>()
 
 async function searchById(videoId: string) {
 	const endpoint = getEndpoint('/results', {
-		search_query: videoId,
+		// sometimes the "videoId" matches actual youtube video titles/searches
+		search_query: encodeURIComponent(`https://youtu.be/${videoId}`),
 		// &sp=EgIQAQ%3D%3D makes a lightweight request https://github.com/timeforaninja/node-ytsr/blob/master/example/example_filters_output.txt
 		sp: 'EgIQAQ%3D%3D',
 	})

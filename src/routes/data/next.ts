@@ -42,6 +42,7 @@ export const nextPage = async (
 				}
 			})
 		} else if (conitem.continuationItemRenderer) {
+			// @ts-expect-error
 			nextPage.nextPageContext.continuation =
 				conitem.continuationItemRenderer.continuationEndpoint.continuationCommand.token
 		}

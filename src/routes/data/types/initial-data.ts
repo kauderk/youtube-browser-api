@@ -3787,7 +3787,7 @@ interface PlayerOverlayRenderer {
 	addToMenu: AddToMenu
 	videoDetails: VideoDetails
 	autonavToggle: AutonavToggle
-	decoratedPlayerBarRenderer: DecoratedPlayerBarRenderer
+	decoratedPlayerBarRenderer?: DecoratedPlayerBarRenderer
 }
 
 interface PlayerOverlays {
@@ -4689,7 +4689,7 @@ interface ContinuationItemRenderer4 {
 
 interface Content5 {
 	adsEngagementPanelContentRenderer: AdsEngagementPanelContentRenderer
-	macroMarkersListRenderer: MacroMarkersListRenderer
+	macroMarkersListRenderer?: MacroMarkersListRenderer
 	structuredDescriptionContentRenderer: StructuredDescriptionContentRenderer
 	sectionListRenderer: SectionListRenderer
 	continuationItemRenderer: ContinuationItemRenderer4

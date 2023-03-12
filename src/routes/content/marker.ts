@@ -11,16 +11,16 @@ export async function getMarkers(videoId: string) {
 
 	const relative =
 		page.initialData.playerOverlays.playerOverlayRenderer
-			.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar
+			.decoratedPlayerBarRenderer?.decoratedPlayerBarRenderer.playerBar
 			.multiMarkersPlayerBarRenderer.markersMap
 
 	return {
-		auto_chapters: relative.find(e => e.key == 'AUTO_CHAPTERS')?.value
+		auto_chapters: relative?.find(e => e.key == 'AUTO_CHAPTERS')?.value
 			.chapters,
-		chapters: relative.find(e => e.key == 'DESCRIPTION_CHAPTERS')?.value
+		chapters: relative?.find(e => e.key == 'DESCRIPTION_CHAPTERS')?.value
 			.chapters,
 		macro_chapters:
-			page.initialData.engagementPanels?.[1]?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
+			page.initialData.engagementPanels?.[1]?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer?.contents
 				?.map(renderer => {
 					const macro = renderer.macroMarkersListItemRenderer!
 					if (!macro) return undefined as typeof macro // JA!
@@ -33,8 +33,8 @@ export async function getMarkers(videoId: string) {
 						description: macro.timeDescription,
 					}
 				})
-				.filter(val => val !== undefined) ?? [], // typescript returns the union type on filter ?!
-		heatmap: relative.find(e => e.key == 'HEATSEEKER')?.value.heatmap
+				.filter(val => val !== undefined), // typescript returns the union type on filter ?!
+		heatmap: relative?.find(e => e.key == 'HEATSEEKER')?.value.heatmap
 			.heatmapRenderer,
 	}
 }

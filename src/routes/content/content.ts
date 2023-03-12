@@ -34,6 +34,9 @@ export async function getSecondary(videoId: string) {
 			(content.description?.runs
 				.map(x => x.text)
 				.join()
-				.toString() as string) ?? '',
+				.toString() as string) ??
+			// @ts-expect-error
+			content.attributedDescription?.content ??
+			'',
 	}
 }
