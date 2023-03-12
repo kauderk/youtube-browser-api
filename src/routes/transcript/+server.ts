@@ -2,7 +2,7 @@ import { fetchTranscript } from './transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
-import { getMap_smart } from '../utils'
+import { getEndpoint, getMap_smart } from '../utils'
 import type { Param, Prettify } from '../utility-types'
 
 type Params = {
@@ -19,8 +19,11 @@ const getTranscript = async (id: string) => {
 const pageIdsMap = new Map<string, ReturnType<typeof parseIDs>>()
 const parseIDs = async (key: string) => getDomainText(key).then(ParseUniqueIDs)
 const getPageIds = async (list: string) => {
-	const key = `https://www.youtube.com/playlist?list=${list}&g=1`
-	return getMap_smart(key, pageIdsMap, parseIDs, key)
+	const endpoint = getEndpoint('/playlist', {
+		list: list,
+		g: '1',
+	})
+	return getMap_smart(endpoint, pageIdsMap, parseIDs, endpoint)
 }
 
 async function getPlaylistTranscripts(list: string) {

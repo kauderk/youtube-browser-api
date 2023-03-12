@@ -1,11 +1,10 @@
 import { TryGetYouTubePage } from './parse'
 import { VideoRender } from './query'
 import type { ITEM } from '../types'
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
+import { getEndpoint } from '../utils'
 
 export async function GetSuggestData(params: { limit: number }) {
-	const endpoint = `${youtubeEndpoint}?${_locale_}`
+	const endpoint = getEndpoint('')
 
 	const page = await TryGetYouTubePage(endpoint)
 	const sectionListRenderer =

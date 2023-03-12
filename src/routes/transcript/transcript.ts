@@ -6,6 +6,7 @@
 
 import type { Page } from '$src/routes/data/parse'
 import { getContentPage } from '$src/routes/content/content'
+import { getEndpoint } from '../utils'
 
 const RE_YOUTUBE =
 	/^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/im
@@ -40,16 +41,16 @@ export async function fetchTranscript(
 	if (!key?.length) return
 
 	const data = generateRequest(page.transcriptMeta, config)
-	const body = await fetch(
-		`https://www.youtube.com/youtubei/v1/get_transcript?key=${key}`,
-		{
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}
-	).then(res => res.json())
+	const endpoint = getEndpoint('/youtubei/v1/get_transcript', {
+		key,
+	})
+	const body = await fetch(endpoint, {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	}).then(res => res.json())
 
 	if (!body?.responseContext) {
 		return

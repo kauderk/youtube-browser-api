@@ -3,15 +3,16 @@ import type { ITEM } from '../types'
 import { VideoRender } from './query'
 import type { GetListByKeyword } from './keyword'
 import { GetPlaylistData } from './playlist'
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
+import { getEndpoint } from '../utils'
 
 export const nextPage = async (
 	nextPage: Awaited<ReturnType<typeof GetListByKeyword>>['nextPage'],
 	withPlaylist = false,
 	limit = 0
 ) => {
-	const endpoint = `${youtubeEndpoint}/youtubei/v1/search?key=${nextPage.nextPageToken}&${_locale_}`
+	const endpoint = getEndpoint('/youtubei/v1/search', {
+		key: nextPage.nextPageToken,
+	})
 
 	const page = await axios.post(encodeURI(endpoint), nextPage.nextPageContext)
 	const continuationItems: any[] =

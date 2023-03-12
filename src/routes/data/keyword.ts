@@ -1,6 +1,7 @@
 import type { ITEM } from '../types'
 import { getYouTubePage } from './parse'
-import { youtubeEndpoint, _locale_, eneabledLog, VideoRender } from './query'
+import { eneabledLog, VideoRender } from './query'
+import { getEndpoint } from '$src/routes/utils'
 
 export async function GetListByKeyword({
 	keyword,
@@ -13,7 +14,10 @@ export async function GetListByKeyword({
 	limit?: number
 	option?: 'video' | 'channel' | 'playlist' | 'movie' | ''
 }) {
-	let endpoint = `${youtubeEndpoint}/results?search_query=${keyword}&${_locale_}`
+	let endpoint = getEndpoint('/results', {
+		// sometimes the "videoId" matches actual youtube video titles/searches
+		search_query: encodeURIComponent(keyword),
+	})
 	if (option == 'video') endpoint = `${endpoint}&sp=EgIQAQ%3D%3D`
 	else if (option == 'channel') endpoint = `${endpoint}&sp=EgIQAg%3D%3D`
 	else if (option == 'playlist') endpoint = `${endpoint}&sp=EgIQAw%3D%3D`

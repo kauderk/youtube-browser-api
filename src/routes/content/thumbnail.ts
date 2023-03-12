@@ -1,12 +1,13 @@
-import { getMap_smart } from '../utils'
-
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
+import { getEndpoint, getMap_smart } from '../utils'
 
 const searchByIdMap = new Map<string, Promise<string>>()
+
 async function searchById(videoId: string) {
-	// &sp=EgIQAQ%3D%3D makes a lightweight request https://github.com/timeforaninja/node-ytsr/blob/master/example/example_filters_output.txt
-	const endpoint = `${youtubeEndpoint}/results?search_query=${videoId}&${_locale_}&sp=EgIQAQ%3D%3D`
+	const endpoint = getEndpoint('/results', {
+		search_query: videoId,
+		// &sp=EgIQAQ%3D%3D makes a lightweight request https://github.com/timeforaninja/node-ytsr/blob/master/example/example_filters_output.txt
+		sp: 'EgIQAQ%3D%3D',
+	})
 
 	const headers = {
 		// allow for "movingThumbnail" https://github.com/tarekdj/yt-thmb/blob/main/index.js || https://github.com/timcole/thumb.yt/blob/26c04f969e76aaa302daa3a3d34c997d9ecde9eb/src/scrape.ts

@@ -3,7 +3,7 @@
  */
 
 import { getContentPage } from './content'
-import { getMap_smart } from '../utils'
+import { getMap_smart, getWatchEndpoint } from '../utils'
 
 export type Marker = 'chapters' | 'heatmap'
 export async function getMarkers(videoId: string) {
@@ -48,9 +48,7 @@ export const GetHeatMap = async (url: string) => {
 }
 
 export async function getHeatmapPath(videoId: string) {
-	const youtubeEndpoint = `https://www.youtube.com`
-	const _locale_ = 'hl=en&gl=us'
-	const endpoint = `${youtubeEndpoint}/watch?v=${videoId}&${_locale_}`
+	const endpoint = getWatchEndpoint(videoId)
 	// FIXME: Fin a way to create an svg path using this method
 	// https://github.com/LuanRT/YouTube.js/pull/263
 	return await GetHeatMap(endpoint)

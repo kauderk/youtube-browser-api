@@ -1,9 +1,8 @@
 import { getYouTubePage } from '../data/parse'
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
+import { getEndpoint } from '../utils'
 
 export async function GetChannelById(params: { channelId: string }) {
-	const endpoint = `${youtubeEndpoint}/channel/${params.channelId}&${_locale_}`
+	const endpoint = getEndpoint(`/channel/${params.channelId}`)
 
 	const page = await getYouTubePage(endpoint)
 	const tabs = page.initialData.contents.twoColumnBrowseResultsRenderer.tabs

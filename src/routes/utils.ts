@@ -1,6 +1,3 @@
-import { page } from '$app/stores'
-import { derived } from 'svelte/store'
-
 export async function getMap_smart<
 	M extends Map<string, any>,
 	C extends (...args: any) => V,
@@ -14,4 +11,29 @@ export async function getMap_smart<
 		map.set(key, await callback(...setMapCb_params))
 	}
 	return map.get(key) as Awaited<V>
+}
+
+export const youtubeEndpoint = `https://www.youtube.com`
+export const youtubeLocale = <const>{
+	hl: 'en',
+	gl: 'us',
+}
+
+export function getEndpoint(path: string, params?: Record<string, string>) {
+	const keys = {
+		...youtubeLocale,
+		...params,
+	}
+
+	const paramKeys = Object.entries(keys)
+		.map(([key, value]) => `${key}=${value}`, '')
+		.join('&')
+	const union = '?'
+	return youtubeEndpoint + path + union + paramKeys
+}
+
+export function getWatchEndpoint(videoId: string) {
+	return getEndpoint('/watch', {
+		v: videoId,
+	})
 }

@@ -1,14 +1,15 @@
 import type { ITEM } from '../types'
+import { getEndpoint } from '../utils'
 import { getYouTubePage } from './parse'
 import { VideoRender } from './query'
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
 
 export const GetPlaylistData = async (params: {
 	playlistId: string
 	limit: number
 }) => {
-	const endpoint = `${youtubeEndpoint}/playlist?list=${params.playlistId}&${_locale_}`
+	const endpoint = getEndpoint('/playlist', {
+		list: params.playlistId,
+	})
 
 	const page = await getYouTubePage(endpoint)
 	const sectionListRenderer = page.initialData

@@ -1,8 +1,6 @@
 import { getYouTubePage } from '../data/parse'
+import { getWatchEndpoint } from '../utils'
 import { getNextResult } from './suggestion'
-
-const youtubeEndpoint = `https://www.youtube.com`
-const _locale_ = 'hl=en&gl=us'
 
 async function getContent(videoId: string, index: number) {
 	const page = await getContentPage(videoId)
@@ -11,7 +9,7 @@ async function getContent(videoId: string, index: number) {
 }
 
 export async function getContentPage(videoId: string) {
-	const endpoint = `${youtubeEndpoint}/watch?v=${videoId}&${_locale_}`
+	const endpoint = getWatchEndpoint(videoId)
 	return await getYouTubePage(endpoint)
 }
 
