@@ -3907,22 +3907,16 @@ interface MacroMarkersInfoItemRenderer {
 	menu: Menu3
 }
 
-interface Title11 {
+export interface Title11 {
 	simpleText: string
 }
 
-interface TimeDescription {
+export interface TimeDescription {
 	simpleText: string
-}
-
-interface Thumbnail18 {
-	url: string
-	width: number
-	height: number
 }
 
 interface Thumbnail17 {
-	thumbnails: Thumbnail18[]
+	thumbnails: Thumbnail13[]
 }
 
 interface WebCommandMetadata51 {
@@ -4032,7 +4026,7 @@ interface DefaultIcon3 {
 	iconType: string
 }
 
-interface RepeatChapterCommand2 {
+export interface RepeatChapterCommand2 {
 	repeat: string
 	startTimeMs: string
 	endTimeMs: string
@@ -4152,7 +4146,7 @@ interface MacroMarkersListItemRenderer {
 	onTap: OnTap2
 	trackingParams: string
 	shareButton: ShareButton2
-	repeatButton: RepeatButton
+	repeatButton?: RepeatButton
 	macroMarkerRepeatStateEntityKey: string
 	endRepeatCommand: EndRepeatCommand
 	playerStateEntityKey: string
@@ -5809,6 +5803,7 @@ interface Payload {
 	transcriptTrackSelectionEntity: TranscriptTrackSelectionEntity
 	transcriptSearchBoxStateEntity: TranscriptSearchBoxStateEntity
 	subscriptionStateEntity: SubscriptionStateEntity
+	macroMarkersListEntity?: MacroMarkersListEntity
 }
 
 interface Mutation3 {
@@ -5816,6 +5811,75 @@ interface Mutation3 {
 	type: string
 	options: Options
 	payload: Payload
+}
+
+interface MacroMarkersListEntity {
+	key: string
+	externalVideoId: string
+	markersList: MarkersList
+}
+interface MarkersList {
+	markerType: string
+	markers?: MarkersEntity[] | null
+	headerTitle: HeaderTitle
+	onTap: OnTap
+	loggingDirectives: LoggingDirectives
+}
+interface MarkersEntity {
+	title: Title11
+	startMillis: string
+	durationMillis: string
+	thumbnailDetails: ThumbnailDetails
+	onActive: OnActive
+}
+interface ThumbnailDetails {
+	thumbnails?: Thumbnail13[] | null
+	lightColorPalette: LightColorPaletteOrDarkColorPalette
+	darkColorPalette: LightColorPaletteOrDarkColorPalette
+}
+interface LightColorPaletteOrDarkColorPalette {
+	section1Color: number
+	section2Color: number
+	section3Color: number
+	primaryTitleColor: number
+	secondaryTitleColor: number
+	section4Color: number
+}
+interface OnActive {
+	innertubeCommand: InnertubeCommand
+}
+interface InnertubeCommand {
+	clickTrackingParams: string
+	setActivePanelItemAction: SetActivePanelItemAction
+}
+interface SetActivePanelItemAction {
+	panelTargetId: string
+	itemIndex: number
+}
+interface HeaderTitle {
+	runs?: RunsEntity[] | null
+}
+interface RunsEntity {
+	text: string
+}
+interface OnTap {
+	innertubeCommand: InnertubeCommand1
+}
+interface InnertubeCommand1 {
+	clickTrackingParams: string
+	changeEngagementPanelVisibilityAction: ChangeEngagementPanelVisibilityAction
+}
+interface ChangeEngagementPanelVisibilityAction {
+	targetId: string
+	visibility: string
+}
+interface LoggingDirectives {
+	trackingParams: string
+	visibility: Visibility
+	enableDisplayloggerExperiment: boolean
+}
+interface Visibility {
+	types: string
 }
 
 interface Timestamp {

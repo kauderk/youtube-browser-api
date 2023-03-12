@@ -36,6 +36,7 @@
 		context: { selected: false, shim: 'fa-code-branch' },
 		auto_chapters: { selected: false, shim: 'fa-list-ol' },
 		macro_chapters: { selected: false, shim: 'fa-code' },
+		key_chapters: { selected: false, shim: 'fa-box' },
 		chapters: { selected: false, shim: 'fa-book-open' },
 		heatmap: { selected: false, shim: 'fa-fire' },
 	}

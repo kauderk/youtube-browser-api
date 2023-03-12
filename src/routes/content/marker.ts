@@ -26,7 +26,7 @@ export async function getMarkers(videoId: string) {
 					if (!macro) return undefined as typeof macro // JA!
 					return {
 						chapter:
-							macro.repeatButton.toggleButtonRenderer
+							macro.repeatButton?.toggleButtonRenderer
 								.defaultServiceEndpoint.repeatChapterCommand,
 						thumbnails: macro.thumbnail.thumbnails,
 						title: macro.title,
@@ -34,6 +34,19 @@ export async function getMarkers(videoId: string) {
 					}
 				})
 				.filter(val => val !== undefined), // typescript returns the union type on filter ?!
+		key_chapters:
+			page.initialData.frameworkUpdates?.entityBatchUpdate.mutations?.[1].payload.macroMarkersListEntity?.markersList.markers?.map(
+				renderer => {
+					return {
+						tittle: renderer.title,
+						thumbnails: renderer.thumbnailDetails.thumbnails,
+						chapter: {
+							startTimeMs: renderer.startMillis,
+							durationTimeMs: renderer.durationMillis,
+						},
+					}
+				}
+			),
 		heatmap: relative?.find(e => e.key == 'HEATSEEKER')?.value.heatmap
 			.heatmapRenderer,
 	}
