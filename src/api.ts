@@ -10,4 +10,5 @@ const routes = createZeroApi({
 	},
 }) as GeneratedAPI
 
+export { pick } from './routes/query/utils'
 export default routes

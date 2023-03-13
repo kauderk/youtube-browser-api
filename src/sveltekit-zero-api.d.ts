@@ -6,6 +6,7 @@
 import type { Z } from 'sveltekit-zero-api/types/zeroapi'
 import * as __routes_content__server from "./routes/content/+server";
 import * as __routes_data__endpoint___server from "./routes/data/[endpoint]/+server";
+import * as __routes_query__server from "./routes/query/+server";
 import * as __routes_transcript__server from "./routes/transcript/+server";
 
 
@@ -20,6 +21,9 @@ export type GeneratedAPI = {
     endpoint$: (endpoint: Slug<__routes_data__endpoint___server.Slug>) => {
       } & Z<typeof __routes_data__endpoint___server> & {
     }
+  },
+  "query": {
+    } & Z<typeof __routes_query__server> & {
   },
   "transcript": {
     } & Z<typeof __routes_transcript__server> & {
