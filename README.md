@@ -114,6 +114,76 @@ fetch(fetchUrl)
     .then(res => res.json())
     .then(console.log)
 ```
+
+
+**[/query](https://youtube-browser-api.netlify.app/query/page)**: Extract data by passing schemas on `video ids`:
+
+<a href="https://youtube-browser-api.netlify.app/query?id=ZwLekxsSY3Y&schema=%7B%22playerResponse%22%3A%7B%22videoDetails%22%3A%7B%22title%22%3A%22youtube-browser-api-schema-id%22%2C%22shortDescription%22%3A%22youtube-browser-api-schema-id%22%2C%22thumbnail%22%3A%7B%22thumbnails%22%3A%7B%224%22%3A%7B%22url%22%3A%22youtube-browser-api-schema-id%22%7D%7D%7D%7D%7D%7D&paths=playerResponse.streamingData.formats.0.url" target="_blank"><img src="https://img.shields.io/badge/test endpoint-query-green"></a>
+
+```ts
+// typescript
+import Api, { pick } from 'youtube-browser-api'
+
+Api.query
+    .GET({
+        query: {
+            id: 'ZwLekxsSY3Y',
+            schema: {
+                playerResponse: {
+                    videoDetails: {
+                        title: pick,
+                        shortDescription: pick,
+                        thumbnail: {
+                            // typescript expects everything but
+                            // nested properties are still typed
+                            // @ts-expect-error
+                            thumbnails: {
+                                4: {
+                                    url: pick,
+                                    height: pick,
+                                    width: pick,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            // optional path|path[]
+            paths: 'playerResponse.streamingData.formats.0.url',
+        },
+    })
+    .Ok((res) => console.log(res.body))
+```
+```js
+// javascript
+const pick = true
+const query = {
+    id: 'ZwLekxsSY3Y',
+    schema: {
+        playerResponse: {
+            videoDetails: {
+                title: pick,
+                shortDescription: pick,
+                thumbnail: {
+                    thumbnails: {
+                        4: {
+                            url: pick,
+                            height: pick,
+                            width: pick,
+                        },
+                    },
+                },
+            },
+        },
+    },
+    paths: 'playerResponse.streamingData.formats.0.url',
+};
+const fetchUrl = 'https://youtube-browser-api.netlify.app/query?' + new URLSearchParams(query).toString()
+// https://youtube-browser-api.netlify.app/query?id=ZwLekxsSY3Y&paths=playerResponse.streamingData.formats.0.url
+fetch(fetchUrl)
+    .then(res => res.json())
+    .then(console.log)
+```
 ## Description
 This YouTube API Wrapper website offers a simple and user-friendly interface to access YouTube's API. It is tailored to the needs of developers; it provides data through fully typed endpoints. Whether you need to extract video analytics, search for specific data, or extract transcripts, the API wrapper can help you do it quickly and easily.
 

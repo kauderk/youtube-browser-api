@@ -18,6 +18,12 @@
 			description: 'Extract transcripts.',
 			link: '/transcript',
 		},
+		{
+			name: 'QUERY',
+			required: '?id=',
+			description: 'Extract data using schemas',
+			link: '/query',
+		},
 	]
 </script>
 

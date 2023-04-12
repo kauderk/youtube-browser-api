@@ -21,12 +21,18 @@
 	const endpoints = <const>{
 		main: { shim: ' fa-bars', title: 'YouTube Browser API' },
 		content: { shim: ' fa-video', title: 'YouTube Video Browser API' },
-		data: { shim: 'fa-file-alt', title: 'YouTube Data Browser API' },
+		data: { shim: 'fa-folder-tree', title: 'YouTube Data Browser API' },
 		transcript: {
-			shim: 'fa-file-alt',
+			shim: 'fa-file-invoice',
 			title: 'YouTube Transcript Browser API',
 		},
+		query: {
+			shim: 'fa-database',
+			title: 'YouTube Query Browser API',
+			badge: '🔥',
+		},
 	}
+	const tsAny = (t: any) => t
 	const { main, ...rest } = endpoints
 	// set to the current url
 	const initialKey: any =
@@ -58,13 +64,20 @@
 			</AppRailTile>
 		</svelte:fragment>
 		<!-- Default -->
-		{#each Object.entries(rest) as [to, { shim }]}
+		{#each Object.entries(rest) as [to, endpoint]}
 			<AppRailTile
 				tag="a"
 				href="/{to}/page"
 				label={to.toUpperCase()}
 				value={to}>
-				<i class="fa-solid {shim} text-2xl" />
+				<div class="relative inline-block">
+					{#if tsAny(endpoint).badge}
+						<span
+							class="badge-icon variant-glass absolute -top-0 -right-4 z-10"
+							>{tsAny(endpoint).badge}</span>
+					{/if}
+					<i class="fa-solid {endpoint.shim} text-2xl" />
+				</div>
 			</AppRailTile>
 		{/each}
 		<!-- Trail -->
