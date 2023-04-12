@@ -1,22 +1,34 @@
-import { API, querySpread } from 'sveltekit-zero-api'
+import { API, querySpread, err } from 'sveltekit-zero-api'
 import { deepKeys, getProperty, setProperty } from 'dot-prop'
 import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
 import type { DeepPartial, Path } from './utils'
-import { pick } from './utils'
-import type { Page } from '$src/routes/data/parse'
+import type constPage from '../data/const-page'
 
+type path = Path<typeof constPage>
 type query = {
 	id: string
-	schema: DeepPartial<Page>
-	paths?: Path<Page> | Path<Page>[]
+	schema: DeepPartial<typeof constPage>
+	paths?: path | path[]
 }
 
-export async function GET(event: API<{ query: query }>) {
-	const { id, schema, paths } = querySpread(event)
+export async function GET<Q extends query>(event: API<{ query: Q }>) {
+	const { id, paths, schema: preSchema } = querySpread(event)
+
+	const errorResponse = err.handler(
+		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
+		err.test(!!paths || !!preSchema, {
+			query: 'paths or schema should be present and typed accordingly',
+		})
+	)
+
+	if (errorResponse) {
+		return errorResponse('BadRequest')
+	}
 
 	const page = await getContentPage(id)
 
+	const schema = querySpread(event).schema ?? {}
 	const flattenedPaths = [deepKeys(schema), paths ?? []]
 		.flat()
 		.map(path =>
@@ -31,7 +43,7 @@ export async function GET(event: API<{ query: query }>) {
 	for (const path of flattenedPaths) {
 		try {
 			let value = getProperty(schema, path)
-			if (value !== pick) {
+			if (!value) {
 				value = undefined // erase unknown values
 			}
 
@@ -41,6 +53,5 @@ export async function GET(event: API<{ query: query }>) {
 			setProperty(schema, path, apiValue)
 		} catch (error) {}
 	}
-
 	return Ok({ body: schema })
 }
