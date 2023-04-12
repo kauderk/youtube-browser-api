@@ -1,7 +1,7 @@
 import { type API, querySpread } from 'sveltekit-zero-api'
 import { Ok } from 'sveltekit-zero-api/http'
 import { getStoryboard } from './storyboard'
-import { getPrimary, getSecondary, getContentPage } from './content'
+import { getDetails as getDetails, getContentPage } from './content'
 import { getHeatmapPath, getMarkers } from './marker'
 import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
@@ -15,8 +15,7 @@ export type Single = {
 	movingThumbnail?: boolean
 }
 export type Multiple = {
-	getPrimary?: Return<typeof getPrimary>
-	getSecondary?: Return<typeof getSecondary>
+	getDetails?: Return<typeof getDetails>
 	getContentPage?: Return<typeof getContentPage>
 	getMarkers?: Return<typeof getMarkers>
 }
@@ -30,8 +29,7 @@ export const GET = async (event: API<{ query: id & { params: params } }>) => {
 		typeof Q == 'string' ? (Q as any).split(',') : Q.flat()
 
 	const body = {
-		...reduceKeys(await getPrimary(id).catch(), params),
-		...reduceKeys(await getSecondary(id).catch(), params),
+		...reduceKeys(await getDetails(id).catch(), params),
 		...reduceKeys(await getMarkers(id).catch(), params),
 		...reduceKeys(await getContentPage(id).catch(), params),
 		suggestions: params.includes('suggestions')

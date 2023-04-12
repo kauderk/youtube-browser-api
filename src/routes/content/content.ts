@@ -13,30 +13,27 @@ export async function getContentPage(videoId: string) {
 	return await getYouTubePage(endpoint)
 }
 
-export async function getPrimary(videoId: string) {
-	const content = (await getContent(videoId, 0)).videoPrimaryInfoRenderer
+export async function getDetails(videoId: string) {
+	const primary = (await getContent(videoId, 0)).videoPrimaryInfoRenderer
+	const secondary = (await getContent(videoId, 1)).videoSecondaryInfoRenderer
 
 	return {
-		title: content.title.runs[0].text as string,
-		isLive: content.viewCount.videoViewCountRenderer.hasOwnProperty(
+		title: primary.title.runs[0].text as string,
+		isLive: primary.viewCount.videoViewCountRenderer.hasOwnProperty(
 			'isLive'
 		)
-			? (content.viewCount.videoViewCountRenderer.isLive as boolean)
+			? (primary.viewCount.videoViewCountRenderer.isLive as boolean)
 			: false,
-	}
-}
-export async function getSecondary(videoId: string) {
-	const content = (await getContent(videoId, 1)).videoSecondaryInfoRenderer
-
-	return {
-		channel: content.owner.videoOwnerRenderer.title.runs[0].text as string,
+		// dumb
+		channel: secondary.owner.videoOwnerRenderer.title.runs[0]
+			.text as string,
 		description:
-			(content.description?.runs
+			(secondary.description?.runs
 				.map(x => x.text)
 				.join()
 				.toString() as string) ??
 			// @ts-expect-error
-			content.attributedDescription?.content ??
+			secondary.attributedDescription?.content ??
 			'',
 	}
 }
