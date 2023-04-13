@@ -3,12 +3,12 @@ import { deepKeys, getProperty, setProperty } from 'dot-prop'
 import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
 import type { DeepPartial, Path } from './utils'
-import type constPage from '../data/const-page'
+import type { Page } from '$src/routes/data/parse'
 
-type path = Path<typeof constPage>
+type path = Path<Page>
 type query = {
 	id: string
-	schema: DeepPartial<typeof constPage>
+	schema: DeepPartial<Page>
 	paths?: path | path[]
 	flatten?: boolean
 }
