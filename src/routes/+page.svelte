@@ -1,30 +1,10 @@
 <script>
-	const endpoints = [
-		{
-			name: 'CONTENT',
-			required: '?id=',
-			description: 'Extract all/some video data.',
-			link: '/content',
-		},
-		{
-			name: 'DATA',
-			required: 'keywords',
-			description: 'Search for narrower data.',
-			link: '/data',
-		},
-		{
-			name: 'TRANSCRIPT',
-			required: 'video ids',
-			description: 'Extract transcripts.',
-			link: '/transcript',
-		},
-		{
-			name: 'QUERY',
-			required: '?id=',
-			description: 'Extract data using schemas',
-			link: '/query',
-		},
-	]
+	import { layout } from './layout'
+
+	const endpoints = Object.entries(layout)
+		// @ts-expect-error
+		.map(layout => layout[1].info)
+		.filter(Boolean)
 </script>
 
 <svelte:head>

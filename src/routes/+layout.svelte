@@ -17,33 +17,19 @@
 	import { AppRail, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton'
 	import { page } from '$app/stores'
 	import { writable } from 'svelte/store'
+	import { layout } from './layout'
 
-	const endpoints = <const>{
-		main: { shim: ' fa-bars', title: 'YouTube Browser API' },
-		content: { shim: ' fa-video', title: 'YouTube Video Browser API' },
-		data: { shim: 'fa-folder-tree', title: 'YouTube Data Browser API' },
-		transcript: {
-			shim: 'fa-file-invoice',
-			title: 'YouTube Transcript Browser API',
-		},
-		query: {
-			shim: 'fa-database',
-			title: 'YouTube Query Browser API',
-			badge: '🔥',
-		},
-	}
 	const tsAny = (t: any) => t
-	const { main, ...rest } = endpoints
+	const { main, ...rest } = layout
 	// set to the current url
 	const initialKey: any =
-		Object.keys(endpoints).find(key =>
-			$page.url.toString().includes(key)
-		) || 'main'
-	const storeValue = writable<keyof typeof endpoints>(initialKey)
+		Object.keys(layout).find(key => $page.url.toString().includes(key)) ||
+		'main'
+	const storeValue = writable<keyof typeof layout>(initialKey)
 </script>
 
 <svelte:head>
-	<title>{endpoints[$storeValue].title}</title>
+	<title>{layout[$storeValue].link.title}</title>
 	<title>YouTube Browser API</title>
 	<meta name="author" content="KauDerK" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,23 +46,23 @@
 				href="/"
 				value={'main'}
 				title="Lead slot tile.">
-				<i class="fa-solid {main.shim} text-2xl" />
+				<i class="fa-solid {layout.main.link.shim} text-2xl" />
 			</AppRailTile>
 		</svelte:fragment>
 		<!-- Default -->
-		{#each Object.entries(rest) as [to, endpoint]}
+		{#each Object.entries(rest) as [to, { link }]}
 			<AppRailTile
 				tag="a"
 				href="/{to}/page"
 				label={to.toUpperCase()}
 				value={to}>
 				<div class="relative inline-block">
-					{#if tsAny(endpoint).badge}
+					{#if tsAny(link).badge}
 						<span
 							class="badge-icon variant-glass absolute -top-0 -right-4 z-10"
-							>{tsAny(endpoint).badge}</span>
+							>{tsAny(link).badge}</span>
 					{/if}
-					<i class="fa-solid {endpoint.shim} text-2xl" />
+					<i class="fa-solid {link.shim} text-2xl" />
 				</div>
 			</AppRailTile>
 		{/each}
@@ -99,7 +85,7 @@
 		<div class="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
 			<section class="card variant-glass p-4 space-y-4">
 				<p class="text-center card p-4 card-header">
-					<strong>{endpoints[$storeValue].title}</strong>
+					<strong>{layout[$storeValue].link.title}</strong>
 				</p>
 				<slot />
 			</section>
