@@ -10,10 +10,11 @@ type query = {
 	id: string
 	schema: DeepPartial<typeof constPage>
 	paths?: path | path[]
+	flatten?: boolean
 }
 
 export async function GET<Q extends query>(event: API<{ query: Q }>) {
-	const { id, paths, schema: preSchema } = querySpread(event)
+	const { id, paths, schema: preSchema, flatten } = querySpread(event)
 
 	const errorResponse = err.handler(
 		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
@@ -40,6 +41,7 @@ export async function GET<Q extends query>(event: API<{ query: Q }>) {
 		)
 		.filter(path => !!path)
 
+	const outputSchema = {}
 	for (const path of flattenedPaths) {
 		try {
 			let value = getProperty(schema, path)
@@ -49,9 +51,13 @@ export async function GET<Q extends query>(event: API<{ query: Q }>) {
 
 			const apiValue = getProperty(page, path)
 
+			const lastPath = flatten
+				? path.split('.')?.splice(-2)?.join('.') || ''
+				: path
+
 			// modify by reference
-			setProperty(schema, path, apiValue)
+			setProperty(outputSchema, lastPath, apiValue)
 		} catch (error) {}
 	}
-	return Ok({ body: schema })
+	return Ok({ body: outputSchema })
 }
