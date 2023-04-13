@@ -1,5 +1,5 @@
 import { API, querySpread, err } from 'sveltekit-zero-api'
-import { deepKeys, getProperty, setProperty } from 'dot-prop'
+import { deepKeys, getProperty, setProperty } from './dot-prop'
 import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
 import type { DeepPartial, Path } from './utils'
@@ -44,12 +44,12 @@ export async function GET<Q extends query>(event: API<{ query: Q }>) {
 	const outputSchema = {}
 	for (const path of flattenedPaths) {
 		try {
-			let value = getProperty(schema, path)
+			let value = getProperty(schema, path, undefined)
 			if (!value) {
 				value = undefined // erase unknown values
 			}
 
-			const apiValue = getProperty(page, path)
+			const apiValue = getProperty(page, path, undefined)
 
 			const lastPath = flatten
 				? path.split('.')?.splice(-2)?.join('.') || ''
