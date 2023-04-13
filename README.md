@@ -117,6 +117,7 @@ fetch(fetchUrl)
 
 
 **[/query](https://youtube-browser-api.netlify.app/query/page)**: Extract data by passing schemas on `video ids`:
+**You can make granular request as complex as the Javascript Object Notation lets you**. [Go to the playground](https://stackblitz.com/edit/youtube-browser-api-client-playground?file=index.ts)
 
 <a href="https://youtube-browser-api.netlify.app/query?id=ZwLekxsSY3Y&schema=%7B%22playerResponse%22%3A%7B%22videoDetails%22%3A%7B%22title%22%3A%22youtube-browser-api-schema-id%22%2C%22shortDescription%22%3A%22youtube-browser-api-schema-id%22%2C%22thumbnail%22%3A%7B%22thumbnails%22%3A%7B%224%22%3A%7B%22url%22%3A%22youtube-browser-api-schema-id%22%7D%7D%7D%7D%7D%7D&paths=playerResponse.streamingData.formats.0.url" target="_blank"><img src="https://img.shields.io/badge/test endpoint-query-green"></a>
 

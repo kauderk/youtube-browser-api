@@ -8,7 +8,7 @@ export const layout = <const>{
 			name: 'CONTENT',
 			required: '?id=',
 			description: 'Extract all/some video data.',
-			link: '/content',
+			link: '/content/page',
 		},
 	},
 	data: {
@@ -17,7 +17,7 @@ export const layout = <const>{
 			name: 'DATA',
 			required: 'keywords',
 			description: 'Search for narrower data.',
-			link: '/data',
+			link: '/data/page',
 		},
 	},
 	transcript: {
@@ -29,7 +29,7 @@ export const layout = <const>{
 			name: 'TRANSCRIPT',
 			required: 'video ids',
 			description: 'Extract transcripts.',
-			link: '/transcript',
+			link: '/transcript/page',
 		},
 	},
 	query: {
@@ -42,7 +42,7 @@ export const layout = <const>{
 			name: 'QUERY',
 			required: '?id=',
 			description: 'Extract data using schemas.',
-			link: '/query',
+			link: '/query/page',
 		},
 	},
 }
