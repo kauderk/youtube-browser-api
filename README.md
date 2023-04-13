@@ -136,7 +136,7 @@ Api.query
                         thumbnail: {
                             // typescript expects everything but
                             // nested properties are still typed
-                            // @ts-expect-error
+                            // @ts-ignore
                             thumbnails: {
                                 4: {
                                     url: pick,
@@ -149,7 +149,7 @@ Api.query
                 },
             },
             // optional path|path[]
-            paths: 'playerResponse.streamingData.formats.0.url',
+            paths: 'playerResponse.streamingData.formats',
         },
     })
     .Ok((res) => console.log(res.body))
