@@ -73,7 +73,7 @@
 			</section>
 			<AppRailTile
 				tag="a"
-				href="https://github.com/"
+				href="https://github.com/kauderk/youtube-browser-api"
 				target="_blank"
 				title="Trail slot tile.">
 				<i class="fa-brands fa-github text-2xl" />
