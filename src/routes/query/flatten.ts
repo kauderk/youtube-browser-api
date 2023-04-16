@@ -51,7 +51,8 @@ type MergeUnion<U> = UnionMerge<U> extends infer O
 
 import type { Page } from '$src/routes/data/parse'
 import type { DeepPartial } from '$src/routes/query/utils'
-type ClearPage = NonNullableNested<Page>
+// @ts-ignore
+export type ClearPage = NonNullableNested<Page>
 export type PartialPage = DeepPartial<Page>
 function pipe<Schema>() {
 	type paths = OmitNever<CleanPick<Schema>>

@@ -13,3 +13,28 @@ const routes = createZeroApi({
 
 export { pick } from './routes/query/utils'
 export default routes
+
+// demo
+import type { demo } from './routes/query/+server'
+export const query: demo = async (query, ok) => {
+	//                                    res should be typed
+	return routes.query.GET({ query }).Ok(res => ok(res as any))
+}
+
+// query(
+// 	{
+// 		id: '3O05nyS6hwQ',
+// 		schema: {
+// 			playerResponse: {
+// 				videoDetails: {
+// 					author: true,
+// 				},
+// 			},
+// 		},
+// 		flatten: true,
+// 	},
+// 	res => {
+// 		res.body
+// 		//  ^?
+// 	}
+// )

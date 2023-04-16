@@ -2,23 +2,29 @@ import { API, querySpread, err } from 'sveltekit-zero-api'
 import { deepKeys, getProperty, setProperty } from './dot-prop'
 import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
-import type { DeepPartial, Path } from './utils'
-import type { Page } from '$src/routes/data/parse'
+import type { Path } from './utils'
+import type { Flatten, PartialPage, ClearPage } from './flatten'
 
 // @ts-ignore too much recursion
-type path = Path<Page>
-type query = {
+type path = Path<ClearPage>
+export type query = {
 	id: string
-	schema: DeepPartial<Page>
+	schema: PartialPage
 	paths?: path | path[]
 	flatten?: boolean
 }
 
-export async function GET<Q extends query>(event: API<{ query: Q }>) {
+export type demo = <const Q extends query>(
+	query: Q,
+	ok: (res: { body: Flatten<Q['schema']> }) => void
+) => Promise<any>
+
+export async function GET<const Q extends query>(event: API<{ query: Q }>) {
 	const { id, paths, schema: preSchema, flatten } = querySpread(event)
 
 	const errorResponse = err.handler(
 		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
+		// @ts-ignore too much recursion
 		err.test(!!paths || !!preSchema, {
 			query: 'paths or schema should be present and typed accordingly',
 		})
@@ -61,5 +67,5 @@ export async function GET<Q extends query>(event: API<{ query: Q }>) {
 			setProperty(outputSchema, lastPath, apiValue)
 		} catch (error) {}
 	}
-	return Ok({ body: outputSchema })
+	return Ok({ body: outputSchema /* as Flatten<Q['schema']> */ })
 }
