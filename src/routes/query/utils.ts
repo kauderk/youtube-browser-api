@@ -1,3 +1,5 @@
+import type { Prettify } from '../utility-types'
+
 // https://stackoverflow.com/a/74804708/13914180
 type OptionalArrayOr<T, Otherwise> = T extends T[] ? T[] | undefined : Otherwise
 type OptionalUndefinedOr<T, Otherwise> = T extends undefined
@@ -70,3 +72,23 @@ export type PathValue<
 export type Path<T> = PathImpl<T, keyof T> | keyof T
 
 export const pick = 'youtube-browser-api-schema-id' as any // a utility that the user uses to make js/ts happy
+
+// import type{Page} from '$src/routes/data/parse';
+const Page = {
+	thumbnail: {
+		//thumbnails: { '0': { url: '' } },
+		thumbnails: [{ value: { a: '' } }],
+	},
+}
+// type Page = typeof Page
+
+// type P = Path<Page>
+// //   ^?
+// type A = PathValue<Page, 'thumbnail.thumbnails'>
+// //   ^?
+// type B = PathValue<Page, `thumbnail.thumbnails.0`>
+// //   ^?
+// type C = PathValue<Page, `thumbnail.thumbnails.0.value`>
+// //   ^?
+// type D = PathValue<Page, `thumbnail.thumbnails.0.value.a`>
+// //   ^?
