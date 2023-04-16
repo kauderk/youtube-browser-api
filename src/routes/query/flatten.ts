@@ -70,8 +70,25 @@ type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
 type paths = OmitNever<CleanPick<schema>>
 type ClearPage = NonNullableNested<Page>
 //#endregion
+
+//#region last leaf
+type ArrayLike<P extends number> = `${string}.${P}.${string}`
+
+type LastKey<T extends string, NextPair = '', Result = ''> =
+	// Recursively call LastKey with the Tail as T,
+	// T as NextPair, and Result as itself
+	T extends `${infer _}.${infer Tail}`
+		? LastKey<Tail, T, NextPair>
+		: // prettier-ignore
+		Result extends ArrayLike<infer _ extends number> ? Result : NextPair
+
+type PathsToOutput<T extends Record<string, unknown>> = {
+	[K in keyof T as LastKey<K & string>]: T[K]
+}
+//#endregion
 function GET<T>(params: { query: { schema: T } }) {
 	type paths = OmitNever<CleanPick<schema>>
+	type flatten = PathsToOutput<paths>
 }
 
 const response = GET({
