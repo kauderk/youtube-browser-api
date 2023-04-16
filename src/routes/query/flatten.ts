@@ -68,7 +68,37 @@ type CleanPick<schema> = {
 }
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
 type paths = OmitNever<CleanPick<schema>>
+const C = <Page>{}
+C.playerResponse.videoDetails.thumbnail.thumbnails
 type ClearPage = NonNullableNested<Page>
+// @ts-ignore
+type A = PathValue<
+	ClearPage,
+	'playerResponse.videoDetails.thumbnail.thumbnails'
+>
+//   ^?
+
+const f = ((<ClearPage>{}) as ClearPage).initialData.engagementPanels[1]
+	.engagementPanelSectionListRenderer.content.macroMarkersListRenderer
+	.contents[0].macroMarkersListItemRenderer
+const a = ((<Page>{}) as Page)?.initialData?.engagementPanels?.[1]
+	?.engagementPanelSectionListRenderer?.content?.macroMarkersListRenderer
+	?.contents
+
+type B = PathValue<
+	//   ^?
+	ClearPage,
+	'initialData.engagementPanels.1.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents.0.macroMarkersListItemRenderer.repeatButton.toggleButtonRenderer.defaultServiceEndpoint.repeatChapterCommand'
+>
+// type Pre =
+// 	ClearPage['initialData']['playerOverlays']['playerOverlayRenderer']['decoratedPlayerBarRenderer']['decoratedPlayerBarRenderer']
+// type BC = PathValue<
+// 	//   ^?
+// 	Pre,
+// 	'playerBar.multiMarkersPlayerBarRenderer.markersMap.0.value.chapters'
+// >
+//"initialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.0.value.chapters.0.chapterRenderer.title"
+
 //#endregion
 
 //#region last leaf
@@ -105,6 +135,14 @@ type MergeUnion<U> = UnionMerge<U> extends infer O
 	? { [K in keyof O]: O[K] }
 	: never
 //#endregion
+
+//#region tests
+type Result = PathsToOutput<paths>
+//   ^?
+// @ts-expect-error
+const test = (<Result>{}) satisfies testOutput
+//#endregion
+
 function GET<T>(params: { query: { schema: T } }) {
 	type paths = OmitNever<CleanPick<schema>>
 	type flatten = PathsToOutput<paths>
