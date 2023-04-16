@@ -56,8 +56,22 @@ type schema = typeof testSchema
 type keys = Path<schema>
 //#endregion
 
+//#region flatten paths
+type CleanPick<schema> = {
+	[key in Path<schema>]: PathValue<schema, key> extends object
+		? never
+		: // @ts-ignore
+		PathValue<ClearPage, key> extends never
+		? unknown
+		: // @ts-ignore
+		  PathValue<ClearPage, key>
+}
+type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
+type paths = OmitNever<CleanPick<schema>>
+type ClearPage = NonNullableNested<Page>
+//#endregion
 function GET<T>(params: { query: { schema: T } }) {
-	return
+	type paths = OmitNever<CleanPick<schema>>
 }
 
 const response = GET({
