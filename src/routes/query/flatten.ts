@@ -1,60 +1,5 @@
-import type { Page } from '$src/routes/data/parse'
 import type { Prettify } from '../utility-types'
-// import type Page from './const-page'
 import type { Path, PathValue, NonNullableNested } from './utils'
-
-const pick = ''
-
-//#region schemas
-const simpleSchema = <const>{
-	playerResponse: {
-		videoDetails: {
-			title: '',
-			shortDescription: '',
-			thumbnail: {
-				thumbnails: {
-					'0': {
-						url: '',
-					},
-				},
-			},
-		},
-	},
-}
-type SimpleOutput = {
-	videoDetails: {
-		title: string
-		shortDescription: string
-	}
-	thumbnails: [
-		{
-			url: string
-		}
-	]
-}
-// prettier-ignore
-const complexSchema = <const>{initialData:{ playerOverlays: { playerOverlayRenderer: { decoratedPlayerBarRenderer: { decoratedPlayerBarRenderer: { playerBar: { multiMarkersPlayerBarRenderer: { markersMap: { '0': { value: { chapters: {'0': { chapterRenderer: { title: pick, }, },}, }, }, }, }, }, }, }, }, }, }}
-type complexOutput = {
-	chapterRenderer: {
-		title: {
-			simpleText: string
-		}
-	}
-}
-
-const objectSchema = {
-	playerResponse: {
-		videoDetails: {
-			thumbnail: '',
-		},
-	},
-}
-
-const testSchema = complexSchema //complexSchema
-type testOutput = SimpleOutput //complexOutput
-type schema = typeof testSchema
-type keys = Path<schema>
-//#endregion
 
 //#region flatten paths
 type CleanPick<schema> = {
@@ -67,38 +12,6 @@ type CleanPick<schema> = {
 		  PathValue<ClearPage, key>
 }
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
-type paths = OmitNever<CleanPick<schema>>
-const C = <Page>{}
-C.playerResponse.videoDetails.thumbnail.thumbnails
-type ClearPage = NonNullableNested<Page>
-// @ts-ignore
-type A = PathValue<
-	ClearPage,
-	'playerResponse.videoDetails.thumbnail.thumbnails'
->
-//   ^?
-
-const f = ((<ClearPage>{}) as ClearPage).initialData.engagementPanels[1]
-	.engagementPanelSectionListRenderer.content.macroMarkersListRenderer
-	.contents[0].macroMarkersListItemRenderer
-const a = ((<Page>{}) as Page)?.initialData?.engagementPanels?.[1]
-	?.engagementPanelSectionListRenderer?.content?.macroMarkersListRenderer
-	?.contents
-
-type B = PathValue<
-	//   ^?
-	ClearPage,
-	'initialData.engagementPanels.1.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents.0.macroMarkersListItemRenderer.repeatButton.toggleButtonRenderer.defaultServiceEndpoint.repeatChapterCommand'
->
-// type Pre =
-// 	ClearPage['initialData']['playerOverlays']['playerOverlayRenderer']['decoratedPlayerBarRenderer']['decoratedPlayerBarRenderer']
-// type BC = PathValue<
-// 	//   ^?
-// 	Pre,
-// 	'playerBar.multiMarkersPlayerBarRenderer.markersMap.0.value.chapters'
-// >
-//"initialData.playerOverlays.playerOverlayRenderer.decoratedPlayerBarRenderer.decoratedPlayerBarRenderer.playerBar.multiMarkersPlayerBarRenderer.markersMap.0.value.chapters.0.chapterRenderer.title"
-
 //#endregion
 
 //#region last leaf
@@ -136,48 +49,16 @@ type MergeUnion<U> = UnionMerge<U> extends infer O
 	: never
 //#endregion
 
-//#region tests
-type Result = PathsToOutput<paths>
-//   ^?
-// @ts-expect-error
-const test = (<Result>{}) satisfies testOutput
-//#endregion
-
-function GET<T>(params: { query: { schema: T } }) {
-	type paths = OmitNever<CleanPick<schema>>
+import type { Page } from '$src/routes/data/parse'
+import type { DeepPartial } from '$src/routes/query/utils'
+type ClearPage = NonNullableNested<Page>
+export type PartialPage = DeepPartial<Page>
+function pipe<Schema>() {
+	type paths = OmitNever<CleanPick<Schema>>
 	type flatten = PathsToOutput<paths>
 	type assemble = MapFromPaths<flatten>
 	type union = assemble[keyof assemble]
 	type merge = MergeUnion<union>
 	return <Prettify<merge>>{}
 }
-
-const response = GET({
-	query: {
-		//schema: complexSchema,
-		//schema: simpleSchema,
-		schema: { ...complexSchema, ...simpleSchema },
-	},
-})
-
-// https://stackblitz.com/edit/youtube-browser-api-client-playground?file=index.ts
-type ServerResponse = {
-	chapterRenderer: {
-		title: {
-			simpleText: string
-		}
-	}
-	videoDetails: {
-		title: string
-		shortDescription: string
-	}
-	thumbnails: [
-		null,
-		null,
-		null,
-		null,
-		{
-			url: string
-		}
-	]
-}
+export type Flatten<Schema> = ReturnType<typeof pipe<Schema>>
