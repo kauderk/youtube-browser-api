@@ -86,9 +86,20 @@ type PathsToOutput<T extends Record<string, unknown>> = {
 	[K in keyof T as LastKey<K & string>]: T[K]
 }
 //#endregion
+
+// #region merge
+// https://stackoverflow.com/a/63542565/13914180
+type ObjectFromPaths<Path, V = true> = Path extends `${infer K}.${infer R}`
+	? { [P in K]: ObjectFromPaths<R, V> }
+	: // @ts-expect-error
+	  { [P in Path]: V }
+type MapFromPaths<T> = { [key in keyof T]: ObjectFromPaths<key, T[key]> }
+
+//#endregion
 function GET<T>(params: { query: { schema: T } }) {
 	type paths = OmitNever<CleanPick<schema>>
 	type flatten = PathsToOutput<paths>
+	type assemble = MapFromPaths<flatten>
 }
 
 const response = GET({
