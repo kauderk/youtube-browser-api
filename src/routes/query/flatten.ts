@@ -95,11 +95,23 @@ type ObjectFromPaths<Path, V = true> = Path extends `${infer K}.${infer R}`
 	  { [P in Path]: V }
 type MapFromPaths<T> = { [key in keyof T]: ObjectFromPaths<key, T[key]> }
 
+type UnionMerge<U> = (U extends any ? (k: U) => void : never) extends (
+	k: infer I
+) => void
+	? I
+	: never
+
+type MergeUnion<U> = UnionMerge<U> extends infer O
+	? { [K in keyof O]: O[K] }
+	: never
 //#endregion
 function GET<T>(params: { query: { schema: T } }) {
 	type paths = OmitNever<CleanPick<schema>>
 	type flatten = PathsToOutput<paths>
 	type assemble = MapFromPaths<flatten>
+	type union = assemble[keyof assemble]
+	type merge = MergeUnion<union>
+	return <Prettify<merge>>{}
 }
 
 const response = GET({
