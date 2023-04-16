@@ -5,6 +5,7 @@ import { Ok } from 'sveltekit-zero-api/http'
 import type { DeepPartial, Path } from './utils'
 import type { Page } from '$src/routes/data/parse'
 
+// @ts-ignore too much recursion
 type path = Path<Page>
 type query = {
 	id: string
@@ -30,6 +31,7 @@ export async function GET<Q extends query>(event: API<{ query: Q }>) {
 	const page = await getContentPage(id)
 
 	const schema = querySpread(event).schema ?? {}
+	// @ts-ignore too much recursion
 	const flattenedPaths = [deepKeys(schema), paths ?? []]
 		.flat()
 		.map(path =>
