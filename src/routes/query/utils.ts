@@ -42,9 +42,29 @@ export type DeepPartial<T> = OptionalStringOr<
 type PathImpl<T, K extends keyof T> = K extends string | number
 	? T[K] extends Record<string | number, any>
 		? T[K] extends ArrayLike<any>
-			? K | `${K}.${PathImpl<T[K], Exclude<keyof T[K], keyof any[]>>}`
+			? K | `${K}.${PathImpl<T[K], number>}`
 			: K | `${K}.${PathImpl<T[K], keyof T[K]>}`
 		: K
+	: never
+
+export type NonNullableNested<T> = {
+	[P in keyof T]-?: Prettify<NonNullable<NonNullableNested<T[P]>>>
+}
+
+export type PathValue<
+	T,
+	P extends Path<T>
+> = P extends `${infer Key}.${infer Rest}`
+	? Key extends keyof T
+		? Rest extends Path<T[Key]>
+			? PathValue<T[Key], Rest>
+			: T[Key] extends ArrayLike<any>
+			? PathValue<T[Key], number>
+			: never
+		: // @ts-expect-error
+		  PathValue<T[Key], Rest>
+	: P extends keyof T
+	? T[P]
 	: never
 
 export type Path<T> = PathImpl<T, keyof T> | keyof T
