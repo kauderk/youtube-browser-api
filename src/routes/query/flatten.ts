@@ -6,9 +6,6 @@ type CleanPick<schema> = {
 	[key in Path<schema>]: PathValue<schema, key> extends object
 		? never
 		: // @ts-ignore
-		PathValue<ClearPage, key> extends never
-		? unknown
-		: // @ts-ignore
 		  PathValue<ClearPage, key>
 }
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
@@ -54,12 +51,14 @@ import type { DeepPartial } from '$src/routes/query/utils'
 // @ts-ignore
 export type ClearPage = NonNullableNested<Page>
 export type PartialPage = DeepPartial<Page>
-function pipe<Schema>() {
+function pipe<Schema, Verbose>() {
 	type paths = OmitNever<CleanPick<Schema>>
 	type flatten = PathsToOutput<paths>
-	type assemble = MapFromPaths<flatten>
+	type assemble = MapFromPaths<Verbose extends true ? paths : flatten>
 	type union = assemble[keyof assemble]
 	type merge = MergeUnion<union>
 	return <Prettify<merge>>{}
 }
-export type Flatten<Schema> = ReturnType<typeof pipe<Schema>>
+export type MapSchema<Schema, Verbose> = ReturnType<
+	typeof pipe<Schema, Verbose>
+>

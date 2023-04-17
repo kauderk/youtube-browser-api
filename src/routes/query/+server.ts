@@ -3,7 +3,7 @@ import { deepKeys, getProperty, setProperty } from './dot-prop'
 import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
 import type { Path } from './utils'
-import type { Flatten, PartialPage, ClearPage } from './flatten'
+import type { MapSchema, PartialPage, ClearPage } from './flatten'
 
 // @ts-ignore too much recursion
 type path = Path<ClearPage>
@@ -11,16 +11,22 @@ export type query = {
 	id: string
 	schema: PartialPage
 	paths?: path | path[]
-	flatten?: boolean
+	/**
+	 * By default will return closest leafs to the `picked` values
+	 *
+	 * Turn it on to receive the schema as you requested it
+	 * @default false
+	 */
+	verbose?: boolean
 }
 
 export type demo = <const Q extends query>(
 	query: Q,
-	ok: (res: { body: Flatten<Q['schema']> }) => void
+	ok: (res: { body: MapSchema<Q['schema'], Q['verbose']> }) => void
 ) => Promise<any>
 
 export async function GET<const Q extends query>(event: API<{ query: Q }>) {
-	const { id, paths, schema: preSchema, flatten } = querySpread(event)
+	const { id, paths, schema: preSchema, verbose } = querySpread(event)
 
 	const errorResponse = err.handler(
 		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
@@ -59,7 +65,7 @@ export async function GET<const Q extends query>(event: API<{ query: Q }>) {
 
 			const apiValue = getProperty(page, path, undefined)
 
-			const lastPath = flatten
+			const lastPath = !verbose
 				? path.split('.')?.splice(-2)?.join('.') || ''
 				: path
 
@@ -67,5 +73,7 @@ export async function GET<const Q extends query>(event: API<{ query: Q }>) {
 			setProperty(outputSchema, lastPath, apiValue)
 		} catch (error) {}
 	}
-	return Ok({ body: outputSchema /* as Flatten<Q['schema']> */ })
+	return Ok({
+		body: outputSchema /* as MapSchema<Q['schema'], Q['verbose']> */,
+	})
 }

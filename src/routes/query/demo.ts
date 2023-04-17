@@ -1,4 +1,4 @@
-import type { Flatten, PartialPage } from './flatten'
+import type { MapSchema, PartialPage } from './flatten'
 
 // demo
 const schema = {
@@ -46,5 +46,5 @@ const schema = {
 	},
 } satisfies PartialPage
 
-type FlatResponse = Flatten<typeof schema>
+type FlatResponse = MapSchema<typeof schema>
 //   ^?
