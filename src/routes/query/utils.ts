@@ -2,7 +2,9 @@ import type { Prettify } from '../utility-types'
 
 // https://stackoverflow.com/a/74804708/13914180
 type Partial = undefined | true
-type OptionalArrayOr<T, Otherwise> = T extends T[] ? T[] | Partial : Otherwise
+type OptionalArrayOr<T, Otherwise> = T extends ArrayLike<any>
+	? { [index: number]: DeepPartial<T[number]> | Partial } | Partial
+	: Otherwise
 type OptionalUndefinedOr<T, Otherwise> = T extends Partial ? Partial : Otherwise
 type OptionalNullOr<T, Otherwise> = T extends null ? null | Partial : Otherwise
 type OptionalStringOr<T, Otherwise> = T extends string ? T | Partial : Otherwise

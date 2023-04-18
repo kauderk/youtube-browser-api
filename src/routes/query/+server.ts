@@ -7,10 +7,10 @@ import type { MapSchema, PartialPage, ClearPage } from './flatten'
 
 // @ts-ignore too much recursion
 type path = Path<ClearPage>
-export type query = {
+export type Query<Partial = true> = {
 	id: string
-	schema: PartialPage
-	paths?: path | path[]
+	schema: Partial extends true ? PartialPage : Record<string, object>
+	paths?: Partial extends true ? path | path[] : string | string[]
 	/**
 	 * By default will return closest leafs to the `picked` values
 	 *
@@ -20,12 +20,12 @@ export type query = {
 	verbose?: boolean
 }
 
-export type demo = <const Q extends query>(
+export type demo = <Q extends Query<false>>(
 	query: Q,
 	ok: (res: { body: MapSchema<Q['schema'], Q['verbose']> }) => void
 ) => Promise<any>
 
-export async function GET<const Q extends query>(event: API<{ query: Q }>) {
+export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)
 
 	const errorResponse = err.handler(

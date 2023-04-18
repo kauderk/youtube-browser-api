@@ -16,24 +16,63 @@ export default routes
 
 // demo
 import type { demo } from './routes/query/+server'
+export type { Query } from '$src/routes/query/+server'
 export const query: demo = async (query, ok) => {
 	//                                    res should be typed
-	return routes.query.GET({ query }).Ok(res => ok(res as any))
+	return routes.query.GET({ query: query as any }).Ok(res => ok(res as any))
 }
 
-// query(
-// 	{
-// 		id: '3O05nyS6hwQ',
-// 		schema: {
-// 			playerResponse: {
-// 				videoDetails: {
-// 					author: true,
+// const complexQuery = {
+// 	// required 🔵
+// 	id: 'ZwLekxsSY3Y',
+// 	// optional/partial ⚫
+// 	schema: {
+// 		initialData: {
+// 			playerOverlays: {
+// 				playerOverlayRenderer: {
+// 					decoratedPlayerBarRenderer: {
+// 						decoratedPlayerBarRenderer: {
+// 							playerBar: {
+// 								multiMarkersPlayerBarRenderer: {
+// 									markersMap: {
+// 										0: {
+// 											value: {
+// 												chapters: {
+// 													1: {
+// 														chapterRenderer: {
+// 															title: true,
+// 														},
+// 													},
+// 												},
+// 											},
+// 										},
+// 									},
+// 								},
+// 							},
+// 						},
+// 					},
+// 				},
+// 			},
+// 		},
+// 		playerResponse: {
+// 			videoDetails: {
+// 				title: true,
+// 				shortDescription: true,
+// 				thumbnail: {
+// 					thumbnails: {
+// 						2: {
+// 							url: true,
+// 							height: true,
+// 							width: true,
+// 						},
+// 					},
 // 				},
 // 			},
 // 		},
 // 	},
-// 	res => {
-// 		res.body
-// 		//  ^?
-// 	}
-// )
+// } satisfies import('$src/routes/query/+server').Query
+// query(complexQuery, res => {
+// 	// @ts-ignore
+// 	res.body
+// 	//  ^?
+// })
