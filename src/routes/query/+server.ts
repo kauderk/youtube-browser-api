@@ -8,8 +8,19 @@ import type { MapSchema, PartialPage, ClearPage } from './flatten'
 // @ts-ignore too much recursion
 type path = Path<ClearPage>
 export type Query<Partial = true> = {
+	/**
+	 * YouTube videoID - eleven characters
+	 */
 	id: string
+	/**
+	 * Describe your request on `JavaScript Object Notation (JSON)` syntax
+	 */
 	schema: Partial extends true ? PartialPage : Record<string, object>
+	/**
+	 * Describe your request on dot.notaion style
+	 *
+	 * On excessive recursion warnings, suppress it by commenting `@ts-ignore` on top of the function
+	 */
 	paths?: Partial extends true ? path | path[] : string | string[]
 	/**
 	 * By default will return closest leafs to the `picked` values

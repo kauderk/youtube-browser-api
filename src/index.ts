@@ -72,7 +72,6 @@ export const query: demo = async (query, ok) => {
 // 	},
 // } satisfies import('$src/routes/query/+server').Query
 // query(complexQuery, res => {
-// 	// @ts-ignore
 // 	res.body
 // 	//  ^?
 // })

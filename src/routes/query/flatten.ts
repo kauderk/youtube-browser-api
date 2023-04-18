@@ -5,8 +5,12 @@ import type { Path, PathValue, NonNullableNested } from './utils'
 type CleanPick<schema> = {
 	[key in Path<schema>]: PathValue<schema, key> extends object
 		? never
-		: // @ts-ignore
-		  PathValue<ClearPage, key>
+		: PathValue<schema, key>
+}
+type PickPath<Schema, Page, NextKey = never> = {
+	[Key in keyof Schema]: Schema[Key] extends object
+		? PickPath<Schema[Key], Page[Key & keyof Page], Key>
+		: Page[Key & keyof Page]
 }
 type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
 //#endregion
@@ -31,8 +35,7 @@ type PathsToOutput<T extends Record<string, unknown>> = {
 // https://stackoverflow.com/a/63542565/13914180
 type ObjectFromPaths<Path, V = true> = Path extends `${infer K}.${infer R}`
 	? { [P in K]: ObjectFromPaths<R, V> }
-	: // @ts-expect-error
-	  { [P in Path]: V }
+	: { [P in Path & string]: V }
 type MapFromPaths<T> = { [key in keyof T]: ObjectFromPaths<key, T[key]> }
 
 type UnionMerge<U> = (U extends any ? (k: U) => void : never) extends (
@@ -50,9 +53,11 @@ import type { Page } from '$src/routes/data/parse'
 import type { DeepPartial } from '$src/routes/query/utils'
 // @ts-ignore
 export type ClearPage = NonNullableNested<Page>
+// @ts-ignore
 export type PartialPage = DeepPartial<Page>
 function pipe<Schema, Verbose>() {
-	type paths = OmitNever<CleanPick<Schema>>
+	type pick = PickPath<Schema, ClearPage>
+	type paths = OmitNever<CleanPick<pick>>
 	type flatten = PathsToOutput<paths>
 	type assemble = MapFromPaths<Verbose extends true ? paths : flatten>
 	type union = assemble[keyof assemble]
