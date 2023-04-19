@@ -67,6 +67,25 @@ query({
 					},
 				},
 			},
+			contents: {
+				twoColumnWatchNextResults: {
+					secondaryResults: {
+						secondaryResults: {
+							results: {
+								13: {
+									compactVideoRenderer: {
+										menu: {
+											menuRenderer: {
+												items: true,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 		playerResponse: {
 			videoDetails: {
