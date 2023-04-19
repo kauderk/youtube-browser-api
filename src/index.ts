@@ -16,62 +16,13 @@ export default routes
 
 // demo
 import type { demo } from './routes/query/+server'
-export type { Query } from '$src/routes/query/+server'
-export const query: demo = async (query, ok) => {
-	//                                    res should be typed
-	return routes.query.GET({ query: query as any }).Ok(res => ok(res as any))
+export type { Query } from './routes/query/+server'
+import { Deferred } from './routes/query/utils'
+export const query: demo = async query => {
+	const promise = new Deferred<any, any>()
+	routes.query
+		.GET({ query: query as any })
+		// res should be typed
+		.Ok(res => promise.resolve(res as any))
+	return promise as any
 }
-
-// const complexQuery = {
-// 	// required 🔵
-// 	id: 'ZwLekxsSY3Y',
-// 	// optional/partial ⚫
-// 	schema: {
-// 		initialData: {
-// 			playerOverlays: {
-// 				playerOverlayRenderer: {
-// 					decoratedPlayerBarRenderer: {
-// 						decoratedPlayerBarRenderer: {
-// 							playerBar: {
-// 								multiMarkersPlayerBarRenderer: {
-// 									markersMap: {
-// 										0: {
-// 											value: {
-// 												chapters: {
-// 													1: {
-// 														chapterRenderer: {
-// 															title: true,
-// 														},
-// 													},
-// 												},
-// 											},
-// 										},
-// 									},
-// 								},
-// 							},
-// 						},
-// 					},
-// 				},
-// 			},
-// 		},
-// 		playerResponse: {
-// 			videoDetails: {
-// 				title: true,
-// 				shortDescription: true,
-// 				thumbnail: {
-// 					thumbnails: {
-// 						2: {
-// 							url: true,
-// 							height: true,
-// 							width: true,
-// 						},
-// 					},
-// 				},
-// 			},
-// 		},
-// 	},
-// } satisfies import('$src/routes/query/+server').Query
-// query(complexQuery, res => {
-// 	res.body
-// 	//  ^?
-// })

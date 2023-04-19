@@ -73,3 +73,16 @@ export type PathValue<
 export type Path<T> = PathImpl<T, keyof T> | keyof T
 
 export const pick = 'youtube-browser-api-schema-id' as any // a utility that the user uses to make js/ts happy
+
+export class Deferred<T, E = unknown> {
+	promise: Promise<T>
+	resolve: (value: T | PromiseLike<T>) => void = () => null
+	reject: (reason?: E) => void = () => null
+
+	constructor() {
+		this.promise = new Promise((res, rej) => {
+			this.resolve = res
+			this.reject = rej
+		})
+	}
+}

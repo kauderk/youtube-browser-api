@@ -31,10 +31,9 @@ export type Query<Partial = true> = {
 	verbose?: boolean
 }
 
-export type demo = <Q extends Query<false>>(
-	query: Q,
-	ok: (res: { body: MapSchema<Q['schema'], Q['verbose']> }) => void
-) => Promise<any>
+export type demo = <Q extends Query<true>>(
+	query: Q
+) => Promise<{ body: MapSchema<Q['schema'], Q['verbose']> }>
 
 export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)
