@@ -33,7 +33,7 @@ export type Query<Partial = true> = {
 
 export type demo = <Q extends Query<true>>(
 	query: Q
-) => Promise<{ body: MapSchema<Q['schema']> }>
+) => Promise<{ body: MapSchema<Q['schema'], Q['verbose']> }>
 
 export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)

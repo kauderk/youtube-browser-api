@@ -46,12 +46,33 @@ type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
 //#endregion
 
 //#region last leaf
-type ArrayLike<P extends number> = `${string}.${P}.${string}`
-type PackNullColl<Original, Leaf> = Original extends `${string}?${string}`
-	? Leaf extends `${infer SecondToLastParent}.${infer Rest}`
-		? `${SecondToLastParent}?.${Rest}`
-		: Leaf
+/**
+ * PathsToOutput
+ * Takes a Record<PathToNestedPartialValue> (aka Path), and Value>
+ * Searches the LastKey recursively on the Path to reach the last property.name (aka Leaf)
+ * Then acts on objects and arrays:
+ * for objects -> {parent:{property: value}} | parent.property
+ * for arrays -> {parent: {[index]: value}} | parent.index.property
+ * For each, carries variables for the OriginalPath, LeafToValue, isVerboseOrFlatten
+ * If it is an optional/NullCoalescing path, shift the uncertainty to the parent,
+ * 		meaning grab the "?" and put it higher on the Path
+ * If it isVerbose
+ * 		infer the BranchPath and append the Leaf, else it's just the leaf.path
+ */
+type OR<T, E> = E extends never ? T : E
+// prettier-ignore
+type JoinPath<Original, Leaf, isVerbose, OGLeafArray=never> = isVerbose extends true
+	? Original extends `${infer Verbose}${OR<Leaf,OGLeafArray>&string}`
+		? `${Verbose}${Leaf&string}`
+		: Original
 	: Leaf
+// prettier-ignore
+type PackNullColl<Original, Leaf, isVerbose, _=never> =
+	Original extends `${string}?${string}`
+		? Leaf extends `${infer SecondToLastParent}.${infer Rest}`
+			? JoinPath<Original, `${SecondToLastParent}?.${Rest}`, isVerbose,_>
+			: JoinPath<Original, Leaf, isVerbose,_>
+		: JoinPath<Original, Leaf, isVerbose,_>
 type UnpackNullColl<Original> = Original extends `${infer Key}?`
 	? Key
 	: Original
@@ -60,17 +81,17 @@ type AssignNullColl<Original, Object> = Original extends `${infer Key}?`
 	: Object
 
 // prettier-ignore
-type LastKey<Path extends string, Original='', TrackJSON = '', TrackArrayLike = ''> =
+type LastKey<Path extends string, isVerbose, Original='', TrackJSON = '', TrackArrayLike = ''> =
 	// Recursively call LastKey with the Tail as T,
 	// T as NextPair, and Result as itself
 	Path extends `${infer _}.${infer Rest}`
-		? LastKey<Rest, Original extends ''?Path:Original, Path, TrackJSON>
+		? LastKey<Rest, isVerbose, Original extends ''?Path:Original, Path, TrackJSON>
 		: TrackArrayLike extends `${infer key}.${infer K extends number & number}?.${infer Value}`
-			? PackNullColl<Original, `${key}.${K}.${Value}`>
-			: PackNullColl<Original, TrackJSON>
+			? PackNullColl<Original, `${key}.${K}.${Value}`, isVerbose, TrackArrayLike>
+			: PackNullColl<Original, TrackJSON, isVerbose>
 
-type PathsToOutput<T extends Record<string, unknown>> = {
-	[K in keyof T as LastKey<K & string>]: T[K]
+type PathsToOutput<T extends Record<string, unknown>, isVerbose> = {
+	[K in keyof T as LastKey<K & string, isVerbose>]: T[K]
 }
 //#endregion
 
@@ -101,9 +122,14 @@ export type ClearPage = NonNullableNested<Page>
 export type PartialPage = DeepPartial<Page>
 
 // how do you avoid type hell
-export type MapSchema<Schema extends PartialPage> = MergeUnion<
+// prettier-ignore
+export type MapSchema<Schema extends PartialPage, isVerbose=false> = MergeUnion<
 	MapFromPaths<
-		CleanLeafs<PathsToOutput<OmitNever<CleanPick<PickPath<Schema, Page>>>>>
+		CleanLeafs<
+			PathsToOutput<
+				OmitNever<CleanPick<PickPath<Schema, Page>>>,isVerbose
+			>
+		>
 	>
 >
 
