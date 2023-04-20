@@ -1,12 +1,9 @@
 import { API, querySpread, err } from 'sveltekit-zero-api'
 import { deepKeys, getProperty, setProperty } from './dot-prop'
 import { Ok } from 'sveltekit-zero-api/http'
-import type { Path } from './utils'
-import type { MapSchema, PartialPage, ClearPage } from './flatten'
+import type { MapSchema, PartialPage } from './flatten'
 import { getContentPage } from '../content/content'
 
-// @ts-ignore too much recursion
-type path = Path<ClearPage>
 export type Query<Partial = true> = {
 	/**
 	 * YouTube videoID - eleven characters
@@ -18,10 +15,8 @@ export type Query<Partial = true> = {
 	schema: Partial extends true ? PartialPage : Record<string, object>
 	/**
 	 * Describe your request on dot.notaion style
-	 *
-	 * On excessive recursion warnings, suppress it by commenting `@ts-ignore` on top of the function
 	 */
-	paths?: Partial extends true ? path | path[] : string | string[]
+	paths?: string | string[]
 	/**
 	 * By default will return closest leafs to the `picked` values
 	 *
@@ -92,6 +87,6 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 		} catch (error) {}
 	}
 	return Ok({
-		body: outputSchema as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>,
+		body: outputSchema as Record<string, any>,
 	})
 }

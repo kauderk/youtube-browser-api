@@ -18,14 +18,11 @@ export default routes
 // demo
 import type { demo } from './routes/query/+server'
 export type { Query } from './routes/query/+server'
-import { Deferred } from './routes/query/utils'
 export const query: demo = async query => {
-	const promise = new Deferred<any, any>()
-	// @ts-ignore
-	routes.query
-		.GET({ query: query })
-		// res should be typed
-		.Ok(res => promise.resolve(res as any))
-		.catch(res => promise.reject(res as any))
-	return promise as any
+	return new Promise((resolve, reject) => {
+		routes.query
+			.GET({ query })
+			.Ok(res => resolve(res as never))
+			.catch(res => reject(res))
+	})
 }
