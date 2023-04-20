@@ -12,7 +12,7 @@ export type Query<Partial = true> = {
 	/**
 	 * Describe your request on `JavaScript Object Notation (JSON)` syntax
 	 */
-	schema: Partial extends true ? PartialPage : Record<string, object>
+	schema: PartialPage
 	/**
 	 * Describe your request on dot.notaion style
 	 */
@@ -38,7 +38,10 @@ export type demo = <Q extends Query<true>>(
 	query: Q
 ) => Promise<{ body: MapSchema<Q['schema'], Q['verbose'], Q['tsAny']> }>
 
-export async function GET<Q extends Query>(event: API<{ query: Q }>) {
+interface Get {
+	query: Query
+}
+export async function GET<const Q extends Get>(event: API<Get>) {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)
 
 	const errorResponse = err.handler(
@@ -87,6 +90,7 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 		} catch (error) {}
 	}
 	return Ok({
-		body: outputSchema as Record<string, any>,
+		// prettier-ignore
+		body: outputSchema as Q['query']['tsAny'] extends true? Record<string, any>:  MapSchema<Q['query']['schema'], Q['query']['verbose'], Q['query']['tsAny']>,
 	})
 }

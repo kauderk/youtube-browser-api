@@ -16,12 +16,14 @@ const x = {
 		return this as Prettify<Pick<typeof this, 'OK'>>
 	},
 	async OK(res?: { body: any }) {
+		/*
 		routes.query
 			.GET({ query: this._query })
 			// hmmm
 			// @ts-ignore
 			.Ok(res => this.promise.resolve(res.body))
 			.catch(res => this.promise.reject(res))
+		*/
 		return this.promise
 	},
 }
@@ -107,6 +109,7 @@ query({
 	//  ^?
 })
 
+// recursive error
 // @ts-ignore
 routes.query
 	.GET({
@@ -121,7 +124,32 @@ routes.query
 			},
 		},
 	})
+	// @ts-ignore
 	.Ok(res => {
 		res.body
 		//  ^?
+	})
+
+const testQuery = {
+	id: 'ZwLekxsSY3Y',
+	schema: {
+		playerResponse: {
+			videoDetails: {
+				title: true,
+			},
+		},
+	},
+	tsAny: true,
+} satisfies Query
+
+// recursive error
+// @ts-ignore
+routes.query
+	.GET({
+		query: testQuery,
+	})
+	// @ts-ignore
+	.Ok(res => {
+		res.body
+		//   ^?
 	})
