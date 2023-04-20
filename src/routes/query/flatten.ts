@@ -88,7 +88,7 @@ type UnionMerge<U> = (U extends any ? (k: U) => void : never) extends (
 	? I
 	: never
 
-type MergeUnion<U> = UnionMerge<U> extends infer O
+type MergeUnion<U> = UnionMerge<U[keyof U]> extends infer O
 	? { [K in keyof O]: O[K] }
 	: never
 //#endregion
@@ -100,29 +100,12 @@ export type ClearPage = NonNullableNested<Page>
 // @ts-ignore
 export type PartialPage = DeepPartial<Page>
 
-import type { Pipe } from 'hotscript'
-import type { Fn } from 'hotscript/dist/internals/core/Core'
-
-export type MapSchema<
-	Schema extends PartialPage,
-	Verbose extends boolean
-> = Pipe<Schema, [_Pick, _Paths, _Flatten, _Squash, _Join]>
-
-interface _Pick extends Fn {
-	return: PickPath<this['args'][0], Page /*, Page, [] */>
-}
-interface _Paths extends Fn {
-	return: OmitNever<CleanPick<this['args'][0]>>
-}
-interface _Flatten extends Fn {
-	return: CleanLeafs<PathsToOutput<this['args'][0]>>
-}
-interface _Squash extends Fn {
-	return: MapFromPaths<this['args'][0]>
-}
-interface _Join extends Fn {
-	return: MergeUnion<this['args'][0][keyof this['args'][0]]>
-}
+// how do you avoid type hell
+export type MapSchema<Schema extends PartialPage> = MergeUnion<
+	MapFromPaths<
+		CleanLeafs<PathsToOutput<OmitNever<CleanPick<PickPath<Schema, Page>>>>>
+	>
+>
 
 type Schema = {
 	playerResponse: {
