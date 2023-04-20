@@ -99,15 +99,45 @@ import type { DeepPartial } from '$src/routes/query/utils'
 export type ClearPage = NonNullableNested<Page>
 // @ts-ignore
 export type PartialPage = DeepPartial<Page>
-function pipe<Schema, Verbose>() {
-	type pick = PickPath<Schema, Page /*, Page, [] */>
-	type paths = OmitNever<CleanPick<pick>>
-	type flatten = CleanLeafs<PathsToOutput<paths>>
-	type assemble = MapFromPaths<Verbose extends true ? paths : flatten>
-	type union = assemble[keyof assemble]
-	type merge = MergeUnion<union>
-	return <Prettify<merge>>{}
+
+import type { Pipe } from 'hotscript'
+import type { Fn } from 'hotscript/dist/internals/core/Core'
+
+export type MapSchema<
+	Schema extends PartialPage,
+	Verbose extends boolean
+> = Pipe<Schema, [_Pick, _Paths, _Flatten, _Squash, _Join]>
+
+interface _Pick extends Fn {
+	return: PickPath<this['args'][0], Page /*, Page, [] */>
 }
-export type MapSchema<Schema, Verbose> = ReturnType<
-	typeof pipe<Schema, Verbose>
->
+interface _Paths extends Fn {
+	return: OmitNever<CleanPick<this['args'][0]>>
+}
+interface _Flatten extends Fn {
+	return: CleanLeafs<PathsToOutput<this['args'][0]>>
+}
+interface _Squash extends Fn {
+	return: MapFromPaths<this['args'][0]>
+}
+interface _Join extends Fn {
+	return: MergeUnion<this['args'][0][keyof this['args'][0]]>
+}
+
+type Schema = {
+	playerResponse: {
+		videoDetails: {
+			title: true
+			shortDescription: true
+			thumbnail: {
+				thumbnails: {
+					2: {
+						url: true
+						height: true
+						width: true
+					}
+				}
+			}
+		}
+	}
+}

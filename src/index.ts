@@ -8,6 +8,7 @@ const routes = createZeroApi({
 		method.Error(err => {
 			console.warn('Error', err)
 		})
+		// method.Ok(res => res.body)
 	},
 }) as GeneratedAPI
 
