@@ -114,8 +114,8 @@ type MergeUnion<U> = UnionMerge<U[keyof U]> extends infer O
 	: never
 //#endregion
 
-import type { Page } from '$src/routes/data/parse'
-import type { DeepPartial } from '$src/routes/query/utils'
+import type { Page } from './../data/parse'
+import type { DeepPartial } from './../query/utils'
 // @ts-ignore
 export type ClearPage = NonNullableNested<Page>
 // @ts-ignore

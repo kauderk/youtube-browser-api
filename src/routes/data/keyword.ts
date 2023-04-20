@@ -1,7 +1,7 @@
 import type { ITEM } from '../types'
+import { getEndpoint } from '../utils'
 import { getYouTubePage } from './parse'
 import { eneabledLog, VideoRender } from './query'
-import { getEndpoint } from '$src/routes/utils'
 
 export async function GetListByKeyword({
 	keyword,

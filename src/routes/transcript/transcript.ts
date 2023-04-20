@@ -4,8 +4,8 @@
  * because it "import { WaitForSelectorOptions } from "puppeteer""
  */
 
-import type { Page } from '$src/routes/data/parse'
-import { getContentPage } from '$src/routes/content/content'
+import type { Page } from './../data/parse'
+import { getContentPage } from './../content/content'
 import { getEndpoint } from '../utils'
 
 const RE_YOUTUBE =

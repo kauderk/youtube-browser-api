@@ -1,9 +1,9 @@
 import { API, querySpread, err } from 'sveltekit-zero-api'
 import { deepKeys, getProperty, setProperty } from './dot-prop'
-import { getContentPage } from '$src/routes/content/content'
 import { Ok } from 'sveltekit-zero-api/http'
 import type { Path } from './utils'
 import type { MapSchema, PartialPage, ClearPage } from './flatten'
+import { getContentPage } from '../content/content'
 
 // @ts-ignore too much recursion
 type path = Path<ClearPage>
@@ -84,6 +84,6 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 		} catch (error) {}
 	}
 	return Ok({
-		body: outputSchema /* as MapSchema<Q['schema'], Q['verbose']> */,
+		body: outputSchema as MapSchema<Q['schema'], Q['verbose']>,
 	})
 }
