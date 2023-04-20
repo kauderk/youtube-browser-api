@@ -29,11 +29,19 @@ export type Query<Partial = true> = {
 	 * @default false
 	 */
 	verbose?: boolean
+	/**
+	 * Enable to bypass typechecking.
+	 *
+	 * There are 4000+ base queries plus their combinations; recover your performance.
+	 *
+	 * Come help https://github.com/kauderk/youtube-browser-api/issues/1
+	 */
+	tsAny?: boolean
 }
 
 export type demo = <Q extends Query<true>>(
 	query: Q
-) => Promise<{ body: MapSchema<Q['schema'], Q['verbose']> }>
+) => Promise<{ body: MapSchema<Q['schema'], Q['verbose'], Q['tsAny']> }>
 
 export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)
@@ -84,6 +92,6 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 		} catch (error) {}
 	}
 	return Ok({
-		body: outputSchema as MapSchema<Q['schema'], Q['verbose']>,
+		body: outputSchema as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>,
 	})
 }

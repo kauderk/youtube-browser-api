@@ -4,6 +4,7 @@ import routes from './api'
 import { Deferred } from './routes/query/utils'
 import type { Prettify } from './routes/utility-types'
 
+// @ts-ignore
 const x = {
 	promise: new Deferred<Query, any>(),
 	_query: {} as Query<true>,
@@ -18,7 +19,7 @@ const x = {
 		routes.query
 			.GET({ query: this._query })
 			// hmmm
-			// @ts-expect-error
+			// @ts-ignore
 			.Ok(res => this.promise.resolve(res.body))
 			.catch(res => this.promise.reject(res))
 		return this.promise
@@ -37,9 +38,7 @@ y.GET({
 } satisfies Query).OK()
 
 query({
-	// required 🔵
 	id: 'ZwLekxsSY3Y',
-	// optional/partial ⚫
 	schema: {
 		initialData: {
 			playerOverlays: {
@@ -107,3 +106,22 @@ query({
 	res.body
 	//  ^?
 })
+
+// @ts-ignore
+routes.query
+	.GET({
+		query: {
+			id: 'ZwLekxsSY3Y',
+			schema: {
+				playerResponse: {
+					videoDetails: {
+						title: true,
+					},
+				},
+			},
+		},
+	})
+	.Ok(res => {
+		res.body
+		//  ^?
+	})

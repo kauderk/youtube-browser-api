@@ -123,7 +123,8 @@ export type PartialPage = DeepPartial<Page>
 
 // how do you avoid type hell
 // prettier-ignore
-export type MapSchema<Schema extends PartialPage, isVerbose=false> = MergeUnion<
+export type MapSchema<Schema extends PartialPage, isVerbose=false, tsAny=false> = tsAny extends true ? Record<string,any> : 
+MergeUnion<
 	MapFromPaths<
 		CleanLeafs<
 			PathsToOutput<

@@ -32,7 +32,8 @@ export default defineConfig({
 				'src/**/*.d.ts',
 				'src/**/*.js',
 				'src/**/*.ts',
-				'./node_modules/sveltekit-zero-api',
+				'./node_modules/sveltekit-zero-api/dist/types',
+				'./node_modules/sveltekit-zero-api/dist/z.d.ts',
 			],
 			copyDtsFiles: true,
 			exclude: [
