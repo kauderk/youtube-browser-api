@@ -1,6 +1,6 @@
 {
 	"name": "youtube-browser-api",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"private": false,
 	"scripts": {
 		"dev": "set NODE_OPTIONS=--inspect && vite dev",
