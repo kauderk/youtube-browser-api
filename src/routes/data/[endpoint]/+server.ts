@@ -41,6 +41,13 @@ export const GET = async <S extends Slug, Q extends Query<S>>(event: {params: {e
 	return json(body as any as NonNullable<Params[S & keyof Params]> )
 }
 
+export const _GET = async <S extends Slug, Q extends Query<S>>(
+	slug: S,
+	query: Q
+) => {
+	return patchFetch<RequestHandler>({
+		endpoint: 'data',
+		query,
+		slug,
+	}) as ReturnType<typeof GET<S, Q>>
 }
-export const GET = async (e: API<Param<typeof get>>) =>
-	Ok({ body: await get(e as any) })

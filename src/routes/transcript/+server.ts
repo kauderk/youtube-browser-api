@@ -46,5 +46,9 @@ export const GET = async <Q extends Query>(event: {}) => {
 	return json(body as { [key in keyof Q]: (typeof body)[key & keyof Params] })
 }
 
-	return Ok({ body })
+export const _GET = async <Q extends Query>(query: Q) => {
+	return patchFetch<RequestHandler>({
+		endpoint: 'transcript',
+		query,
+	}) as ReturnType<typeof GET<Q>>
 }

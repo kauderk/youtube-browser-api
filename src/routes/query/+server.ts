@@ -96,4 +96,12 @@ export const GET = async <const Q extends Query>(event: Q) => {
 	)
 }
 
+export const _GET = async <Q extends Query>(query: Q) => {
+	return (await patchFetch<RequestHandler>({
+		endpoint: 'query',
+		query,
+		// special case... due to the nature of the excessive recursion
+		// handling the inference through any Utility<T>
+		// will cause headaches
+	})) as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
 }

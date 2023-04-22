@@ -77,3 +77,10 @@ function reduceKeys<A extends object, B extends params>(A: A, B: B) {
 		return acc
 	}, <Partial<typeof A>>{})
 }
+
+export const _GET = async <P extends params>(query: id & { params: P }) => {
+	return patchFetch<RequestHandler>({
+		endpoint: 'content',
+		query,
+	}) as ReturnType<typeof GET<P>>
+}

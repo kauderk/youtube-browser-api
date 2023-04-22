@@ -88,7 +88,7 @@ type LastKey<Path extends string, isVerbose, Original='', TrackJSON = '', TrackA
 		? LastKey<Rest, isVerbose, Original extends ''?Path:Original, Path, TrackJSON>
 		: TrackArrayLike extends `${infer key}.${infer K extends number & number}?.${infer Value}`
 			? PackNullColl<Original, `${key}.${K}.${Value}`, isVerbose, TrackArrayLike>
-			: PackNullColl<Original, TrackJSON, isVerbose>
+			: Original extends "" ? Path: PackNullColl<Original, TrackJSON, isVerbose>
 
 type PathsToOutput<T extends Record<string, unknown>, isVerbose> = {
 	[K in keyof T as LastKey<K & string, isVerbose>]: T[K]
@@ -128,7 +128,15 @@ MergeUnion<
 	MapFromPaths<
 		CleanLeafs<
 			PathsToOutput<
-				OmitNever<CleanPick<PickPath<Schema, Page>>>,isVerbose
+				// //---------
+				OmitNever<
+					CleanPick<
+						PickPath<Schema, Page>
+						// //Schema
+					>
+				>
+				// //----------
+				,isVerbose
 			>
 		>
 	>
