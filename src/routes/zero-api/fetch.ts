@@ -43,18 +43,38 @@ export function json<data = unknown>(params: data) {
 type FetchQuery = Record<string, any>
 
 type tsRequestFailure = (event: { route: { id: any } }) => any
-export async function patchFetch<R extends object>(params: {
-	endpoint: Endpoint<R>
-	slug?: string
-	query: FetchQuery
-}) {
+export type Patch = {
+	/**
+	 * Get access to the Response Object
+	 * ```
+	 * endpoint({...}).then(res=>{
+	 * 	if(!res.ok){
+	 * 		// ...
+	 * 	}
+	 * 	return res.json()
+	 * })
+	 * ```
+	 */
+	manual?: boolean
+}
+
+export async function patchFetch<
+	R extends object,
+	P extends Patch,
+	Promise extends object
+>(params: { endpoint: Endpoint<R>; slug?: string; query: FetchQuery & Patch }) {
 	const stringify = stringifyQuery(params.query)
 	const urlParams =
 		params.endpoint +
 		(params.slug || '') +
 		new URLSearchParams(stringify).toString()
 	const url = 'https://youtube-browser-api.netlify.app' + urlParams
-	return fetch(url).then(res => res.json())
+	return fetch(url).then(res => res.json()) as unknown as P extends {
+		manual: true
+	}
+		? Awaited<Promise>
+		: // @ts-ignore
+		  Awaited<ReturnType<Awaited<Promise>['json']>>
 }
 function stringifyQuery(query: FetchQuery) {
 	const copy = structuredClone(query)

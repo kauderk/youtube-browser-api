@@ -3,7 +3,7 @@ import { GetChannelById } from '../../content/channel'
 import { GetPlaylistData } from '../playlist'
 import { GetSuggestData } from '../suggest'
 import type { Param, Prettify } from '../../utility-types'
-import { json, patchFetch } from './../../zero-api/fetch'
+import { type Patch, json, patchFetch } from './../../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from './../../zero-api/helper'
 
@@ -41,13 +41,22 @@ export const GET = async <S extends Slug, Q extends Query<S>>(event: {params: {e
 	return json(body as any as NonNullable<Params[S & keyof Params]> )
 }
 
-export const _GET = async <S extends Slug, Q extends Query<S>>(
+export const _GET = async <S extends Slug, Q extends Query<S> & Patch>(
 	slug: S,
-	query: Q
+	query: Q & Patch
 ) => {
-	return patchFetch<RequestHandler>({
+	return patchFetch<RequestHandler, Q, ReturnType<typeof GET<S, Q>>>({
 		endpoint: 'data',
 		query,
 		slug,
-	}) as ReturnType<typeof GET<S, Q>>
+	})
 }
+
+// _GET('channel', {
+// 	channelId: '',
+// 	manual: true,
+// }).then(res => {
+// 	// @ts-ignore
+// 	res.json()
+// 	//^?
+// })

@@ -5,7 +5,7 @@ import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
 import type { Return, FirstFlatten } from './types'
 import { getMovingThumbnail } from './thumbnail'
-import { json, patchFetch } from '../zero-api/fetch'
+import { type Patch, json, patchFetch } from '../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from '../zero-api/helper'
 
@@ -22,7 +22,8 @@ export type Multiple = {
 }
 type id = { id: string }
 export type Params = id & Single & FirstFlatten<Multiple>
-type params = NonNullable<keyof Params>[]
+type keys = Exclude<Exclude<keyof Params, undefined>, id>
+type params = [keys, ...keys[]]
 
 export const GET = async <P extends params>(event: {
 	query: id & { params: P }
@@ -78,9 +79,20 @@ function reduceKeys<A extends object, B extends params>(A: A, B: B) {
 	}, <Partial<typeof A>>{})
 }
 
-export const _GET = async <P extends params>(query: id & { params: P }) => {
-	return patchFetch<RequestHandler>({
+export const _GET = async <R extends params, P extends Patch>(
+	query: id & { params: R } & P & Patch
+) => {
+	return patchFetch<RequestHandler, P, ReturnType<typeof GET<R>>>({
 		endpoint: 'content',
 		query,
-	}) as ReturnType<typeof GET<P>>
+	})
 }
+
+// _GET({
+// 	id: '',
+// 	params: ['title'],
+// 	manual: true,
+// }).then(res => {
+// 	res
+// 	//^?
+// })

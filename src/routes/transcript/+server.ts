@@ -3,7 +3,7 @@ import { getDomainText, ParseUniqueIDs } from './fetch'
 import { getEndpoint, getMap_smart } from '../utils'
 import type { Prettify } from '../utility-types'
 import type { RequestHandler } from './$types'
-import { patchFetch, json } from '../zero-api/fetch'
+import { type Patch, patchFetch, json } from '../zero-api/fetch'
 import { querySpread } from '../zero-api/helper'
 
 type Params = {
@@ -46,9 +46,17 @@ export const GET = async <Q extends Query>(event: {}) => {
 	return json(body as { [key in keyof Q]: (typeof body)[key & keyof Params] })
 }
 
-export const _GET = async <Q extends Query>(query: Q) => {
-	return patchFetch<RequestHandler>({
+export const _GET = async <Q extends Query & Patch>(query: Q & Patch) => {
+	return patchFetch<RequestHandler, Q, ReturnType<typeof GET<Q>>>({
 		endpoint: 'transcript',
 		query,
-	}) as ReturnType<typeof GET<Q>>
+	})
 }
+
+// _GET({
+// 	videoId: '',
+// }).then(res => {
+// 	// @ts-ignore
+// 	res.json()
+// 	//^?
+// })

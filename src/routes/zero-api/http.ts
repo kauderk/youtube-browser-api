@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { StatusText } from "./statusCode"
 import type {Simplify} from './utility'
 

@@ -1,10 +1,11 @@
 import { deepKeys, getProperty, setProperty } from './dot-prop'
 import type { MapSchema, PartialPage } from './flatten'
 import { getContentPage } from '../content/content'
-import { json, patchFetch } from '../zero-api/fetch'
+import { type Patch, json, patchFetch } from '../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from '../zero-api/helper'
 import { err } from '../zero-api/error-handling'
+import { json as _json } from '@sveltejs/kit'
 
 export type Query = {
 	/**
@@ -48,13 +49,7 @@ export const GET = async <const Q extends Query>(event: Q) => {
 	)
 
 	if (errorResponse) {
-		// type y = Awaited<ReturnType<typeof errorResponse<'BadRequest'>>>
-		// type f = keyof y // why is this never from `import { err } from 'sveltekit-zero-api'`
-
-		// improve readability on IDEs
-		interface BadRequest
-			extends ReturnType<typeof errorResponse<'BadRequest'>> {}
-		return errorResponse('BadRequest') as BadRequest
+		return errorResponse('BadRequest')
 	}
 
 	const page = await getContentPage(id)
@@ -96,12 +91,38 @@ export const GET = async <const Q extends Query>(event: Q) => {
 	)
 }
 
-export const _GET = async <Q extends Query>(query: Q) => {
-	return (await patchFetch<RequestHandler>({
+// https://stackoverflow.com/a/75827278/13914180
+// @ts-ignore
+export const _GET = async <Q extends Query & Patch>(
+	query: Q & Query & Patch
+) => {
+	const promise = patchFetch<RequestHandler, any, Promise<any>>({
 		endpoint: 'query',
 		query,
-		// special case... due to the nature of the excessive recursion
-		// handling the inference through any Utility<T>
-		// will cause headaches
-	})) as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
+	})
+
+	// special case... due to the nature of the excessive recursion
+	// handling the inference through any Utility<T>
+	// will cause headaches
+	// https://github.com/kauderk/youtube-browser-api/issues/1
+	return promise as any as { manual: Q['manual'] } extends {
+		manual: true
+	}
+		? Omit<Response, 'json'> & {
+				json: () => Promise<
+					MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
+				>
+		  }
+		: MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
 }
+
+// _GET({
+// 	id: '',
+// 	schema: {
+// 		apiToken: true,
+// 	},
+// 	tsAny: true,
+// }).then(res => {
+// 	res.json()
+// 	//^?
+// })
