@@ -1,9 +1,10 @@
 import { fetchTranscript } from './transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
-import { type API, querySpread } from 'sveltekit-zero-api'
-import { Ok } from 'sveltekit-zero-api/http'
 import { getEndpoint, getMap_smart } from '../utils'
-import type { Param, Prettify } from '../utility-types'
+import type { Prettify } from '../utility-types'
+import type { RequestHandler } from './$types'
+import { patchFetch, json } from '../zero-api/fetch'
+import { querySpread } from '../zero-api/helper'
 
 type Params = {
 	playlistId?: string
@@ -31,7 +32,8 @@ async function getPlaylistTranscripts(list: string) {
 	return await Promise.all(ids.map(async id => getTranscript(id)))
 }
 
-export const GET = async (event: API<{ query: Prettify<Params> }>) => {
+export type Query = Prettify<Params>
+export const GET = async <Q extends Query>(event: {}) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
@@ -40,6 +42,9 @@ export const GET = async (event: API<{ query: Prettify<Params> }>) => {
 			? await getPlaylistTranscripts(playlistId).catch()
 			: undefined,
 	}
+
+	return json(body as { [key in keyof Q]: (typeof body)[key & keyof Params] })
+}
 
 	return Ok({ body })
 }

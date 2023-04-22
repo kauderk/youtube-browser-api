@@ -1,5 +1,3 @@
-import { type API, querySpread } from 'sveltekit-zero-api'
-import { Ok } from 'sveltekit-zero-api/http'
 import { getStoryboard } from './storyboard'
 import { getDetails as getDetails, getContentPage } from './content'
 import { getHeatmapPath, getMarkers } from './marker'
@@ -7,6 +5,9 @@ import { getCompactVideoRenderer } from './suggestion'
 import { getTimeline } from './timeline'
 import type { Return, FirstFlatten } from './types'
 import { getMovingThumbnail } from './thumbnail'
+import { json, patchFetch } from '../zero-api/fetch'
+import type { RequestHandler } from './$types'
+import { querySpread } from '../zero-api/helper'
 
 export type Single = {
 	suggestions?: boolean
@@ -21,11 +22,14 @@ export type Multiple = {
 }
 type id = { id: string }
 export type Params = id & Single & FirstFlatten<Multiple>
-type params = (keyof Params)[]
+type params = NonNullable<keyof Params>[]
 
-export const GET = async (event: API<{ query: id & { params: params } }>) => {
+export const GET = async <P extends params>(event: {
+	query: id & { params: P }
+}) => {
 	const { id, params: Q } = querySpread(event)
 	const params: params =
+		// @ts-expect-error
 		typeof Q == 'string' ? (Q as any).split(',') : Q.flat()
 
 	const body = {
@@ -46,7 +50,11 @@ export const GET = async (event: API<{ query: id & { params: params } }>) => {
 			: undefined,
 	}
 
-	return Ok({ body })
+	return json(
+		body as {
+			[key in P[number]]: (typeof body)[key & keyof typeof body]
+		}
+	)
 }
 
 async function getStoryboards(id: string) {

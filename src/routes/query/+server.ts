@@ -1,10 +1,12 @@
-import { API, querySpread, err } from 'sveltekit-zero-api'
 import { deepKeys, getProperty, setProperty } from './dot-prop'
-import { Ok } from 'sveltekit-zero-api/http'
 import type { MapSchema, PartialPage } from './flatten'
 import { getContentPage } from '../content/content'
+import { json, patchFetch } from '../zero-api/fetch'
+import type { RequestHandler } from './$types'
+import { querySpread } from '../zero-api/helper'
+import { err } from '../zero-api/error-handling'
 
-export type Query<Partial = true> = {
+export type Query = {
 	/**
 	 * YouTube videoID - eleven characters
 	 */
@@ -12,7 +14,7 @@ export type Query<Partial = true> = {
 	/**
 	 * Describe your request on `JavaScript Object Notation (JSON)` syntax
 	 */
-	schema: Partial extends true ? PartialPage : Record<string, object>
+	schema: PartialPage
 	/**
 	 * Describe your request on dot.notaion style
 	 */
@@ -34,11 +36,7 @@ export type Query<Partial = true> = {
 	tsAny?: boolean
 }
 
-export type demo = <Q extends Query<true>>(
-	query: Q
-) => Promise<{ body: MapSchema<Q['schema'], Q['verbose'], Q['tsAny']> }>
-
-export async function GET<Q extends Query>(event: API<{ query: Q }>) {
+export const GET = async <const Q extends Query>(event: Q) => {
 	const { id, paths, schema: preSchema, verbose } = querySpread(event)
 
 	const errorResponse = err.handler(
@@ -50,7 +48,13 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 	)
 
 	if (errorResponse) {
-		return errorResponse('BadRequest')
+		// type y = Awaited<ReturnType<typeof errorResponse<'BadRequest'>>>
+		// type f = keyof y // why is this never from `import { err } from 'sveltekit-zero-api'`
+
+		// improve readability on IDEs
+		interface BadRequest
+			extends ReturnType<typeof errorResponse<'BadRequest'>> {}
+		return errorResponse('BadRequest') as BadRequest
 	}
 
 	const page = await getContentPage(id)
@@ -86,7 +90,10 @@ export async function GET<Q extends Query>(event: API<{ query: Q }>) {
 			setProperty(outputSchema, lastPath, apiValue)
 		} catch (error) {}
 	}
-	return Ok({
-		body: outputSchema as Record<string, any>,
-	})
+
+	return json(
+		outputSchema as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
+	)
+}
+
 }

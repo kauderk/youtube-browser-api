@@ -1,13 +1,11 @@
-import { querySpread } from 'sveltekit-zero-api'
-// @ts-ignore
-import type { API } from 'sveltekit-zero-api'
-
-import { Ok } from 'sveltekit-zero-api/http'
 import { GetListByKeyword } from '../keyword'
 import { GetChannelById } from '../../content/channel'
 import { GetPlaylistData } from '../playlist'
 import { GetSuggestData } from '../suggest'
 import type { Param, Prettify } from '../../utility-types'
+import { json, patchFetch } from './../../zero-api/fetch'
+import type { RequestHandler } from './$types'
+import { querySpread } from './../../zero-api/helper'
 
 export type Union<T> = {
 	[K2 in keyof T]: T[K2]
@@ -19,29 +17,30 @@ export type Params = Prettify<{
 	search?: Param<typeof GetListByKeyword>
 }>
 
-export type Slug = keyof Params
-
-const get = async (event: { query?: Prettify<Union<Params>> }) => {
-	const endpoint: Slug =
-		// @ts-expect-error
-		event.params.endpoint
-
-	const query = querySpread(event)
-	type _<E extends Slug> = Exclude<Params[E], undefined>
-
-	switch (endpoint) {
-		case 'playlist':
-			return await GetPlaylistData(query as _<typeof endpoint>).catch()
-
-		case 'channel':
-			return await GetChannelById(query as _<typeof endpoint>).catch()
-
-		case 'suggestion':
-			return await GetSuggestData(query as _<typeof endpoint>).catch()
-
-		case 'search':
-			return await GetListByKeyword(query as _<typeof endpoint>).catch()
+function switchQuery<S extends Slug>(endpoint: S, query: any) {
+	if (endpoint === 'playlist') {
+		return GetPlaylistData(query)
+	} else if (endpoint === 'channel') {
+		return GetChannelById(query)
+	} else if (endpoint === 'suggestion') {
+		return GetSuggestData(query)
+	} else {
+		return GetListByKeyword(query)
 	}
+}
+
+export type Slug = keyof Params
+export type Query<S extends Slug> = Prettify<NonNullable<Params[S]>>
+
+// prettier-ignore
+export const GET = async <S extends Slug, Q extends Query<S>>(event: {params: {endpoint: S}, query: Q}) => {
+	const endpoint = event.params.endpoint
+	const query = querySpread(event) as any
+	const body = await switchQuery(endpoint, query)
+
+	return json(body as any as NonNullable<Params[S & keyof Params]> )
+}
+
 }
 export const GET = async (e: API<Param<typeof get>>) =>
 	Ok({ body: await get(e as any) })

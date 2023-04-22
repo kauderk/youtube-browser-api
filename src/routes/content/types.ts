@@ -12,6 +12,11 @@ type NonObjectKeysOf<T> = {
 		? never
 		: K
 }[keyof T]
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+	k: infer I
+) => void
+	? I
+	: never
 export type Flatten<T> = Pick<T, NonObjectKeysOf<T>> &
 	UnionToIntersection<ObjectValuesOf<T>>
 
