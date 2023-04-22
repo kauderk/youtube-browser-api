@@ -7,9 +7,6 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			$src: resolve('./src'),
-			'sveltekit-zero-api': resolve(
-				'./node_modules/sveltekit-zero-api/dist'
-			),
 		},
 	},
 	build: {
@@ -28,13 +25,7 @@ export default defineConfig({
 		dts({
 			clearPureImport: false,
 			insertTypesEntry: true,
-			include: [
-				'src/**/*.d.ts',
-				'src/**/*.js',
-				'src/**/*.ts',
-				'./node_modules/sveltekit-zero-api/dist/types',
-				'./node_modules/sveltekit-zero-api/dist/z.d.ts',
-			],
+			include: ['src/**/*.d.ts', 'src/**/*.js', 'src/**/*.ts'],
 			copyDtsFiles: true,
 			exclude: [
 				'./src/app.d.ts',
