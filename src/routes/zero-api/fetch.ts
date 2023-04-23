@@ -34,9 +34,13 @@ function f<T, E>(data: T, error: E) {
 // y.then(res=>res);
 // y.catch(err=>err)
 
-export function json<data = unknown>(params: data) {
-	return _json(params) as Omit<ReturnType<typeof _json>, 'json'> & {
+export function json<data = unknown, Ok = true>(params: data) {
+	return _json(params) as Omit<
+		Omit<ReturnType<typeof _json>, 'json'>,
+		'ok'
+	> & {
 		json: () => Promise<data>
+		ok: Ok
 	}
 }
 

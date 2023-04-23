@@ -53,10 +53,12 @@ export const _GET = async <Q extends Query & Patch>(query: Q & Patch) => {
 	})
 }
 
-// _GET({
-// 	videoId: '',
-// }).then(res => {
-// 	// @ts-ignore
-// 	res.json()
-// 	//^?
-// })
+/* uncomment me
+_GET({
+	videoId: '',
+}).then(res => {
+	// @ts-ignore
+	res.json()
+	//^?
+})
+// */

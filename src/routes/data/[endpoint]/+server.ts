@@ -52,11 +52,13 @@ export const _GET = async <S extends Slug, Q extends Query<S> & Patch>(
 	})
 }
 
-// _GET('channel', {
-// 	channelId: '',
-// 	manual: true,
-// }).then(res => {
-// 	// @ts-ignore
-// 	res.json()
-// 	//^?
-// })
+/* uncomment me
+_GET('channel', {
+	channelId: '',
+	manual: true,
+}).then(res => {
+	// @ts-ignore
+	res.json()
+	//^?
+})
+// */

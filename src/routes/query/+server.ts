@@ -36,20 +36,33 @@ export type Query = {
 	 */
 	tsAny?: boolean
 }
+type _MapSchema<Q extends Query> = MapSchema<
+	Q['schema'],
+	Q['verbose'],
+	Q['tsAny']
+>
 
-export const GET = async <const Q extends Query>(event: Q) => {
-	const { id, paths, schema: preSchema, verbose } = querySpread(event)
-
+// Extracted to recycle the reasons, due to the `recursive inference limitation`
+function handleBadInputs(id?: string, paths?: string, preSchema?: object) {
 	const errorResponse = err.handler(
 		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
-		// @ts-ignore too much recursion
 		err.test(!!paths || !!preSchema, {
 			query: 'paths or schema should be present and typed accordingly',
 		})
 	)
+	return errorResponse?.('BadRequest', {
+		message:
+			'Visualize the query process https://excalidraw.com/#json=0hDFTajVxa2oO7s34kMef,M_jPO1x4IoE_Eqz2RGvPVA',
+	})
+}
 
-	if (errorResponse) {
-		return errorResponse('BadRequest')
+export const GET = async <const Q extends Query>(event: Q) => {
+	const { id, paths, schema: preSchema, verbose } = querySpread(event)
+
+	const badInputError = handleBadInputs(id, paths, preSchema)
+
+	if (badInputError) {
+		return badInputError
 	}
 
 	const page = await getContentPage(id)
@@ -86,9 +99,7 @@ export const GET = async <const Q extends Query>(event: Q) => {
 		} catch (error) {}
 	}
 
-	return json(
-		outputSchema as MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
-	)
+	return json(outputSchema as _MapSchema<Q>)
 }
 
 // https://stackoverflow.com/a/75827278/13914180
@@ -108,21 +119,29 @@ export const _GET = async <Q extends Query & Patch>(
 	return promise as any as { manual: Q['manual'] } extends {
 		manual: true
 	}
-		? Omit<Response, 'json'> & {
-				json: () => Promise<
-					MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
-				>
-		  }
-		: MapSchema<Q['schema'], Q['verbose'], Q['tsAny']>
+		?
+				| ReturnType<typeof json<_MapSchema<Q>>>
+				| NonNullable<ReturnType<typeof handleBadInputs>>
+		: _MapSchema<Q>
 }
 
-// _GET({
-// 	id: '',
-// 	schema: {
-// 		apiToken: true,
-// 	},
-// 	tsAny: true,
-// }).then(res => {
-// 	res.json()
-// 	//^?
-// })
+/* uncomment me
+_GET({
+	id: '',
+	schema: {
+		apiToken: true,
+	},
+	//tsAny: true,
+	manual: true,
+}).then(async res => {
+	if (!res?.ok) {
+		res.body.errors.id
+		//              ^?
+
+		return
+	}
+
+	const data = await res.json()
+	//    ^?
+})
+// */

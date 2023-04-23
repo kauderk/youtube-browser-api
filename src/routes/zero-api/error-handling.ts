@@ -27,7 +27,7 @@ export const err = {
 						...errors,
 						...(options.body?.errors || {})
 					} as Simplify<UnionToIntersection<NonNullable<E[number]>>>,
-					message: message //as NonNullable<typeof message>
+					message: message as M extends undefined ? never:M
 				}
 			}
 			return HTTP[response](o) as CreateResponse<K, StatusText[K], false, typeof o & T> 

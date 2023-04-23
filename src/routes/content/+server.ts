@@ -88,11 +88,13 @@ export const _GET = async <R extends params, P extends Patch>(
 	})
 }
 
-// _GET({
-// 	id: '',
-// 	params: ['title'],
-// 	manual: true,
-// }).then(res => {
-// 	res
-// 	//^?
-// })
+/* uncomment me
+_GET({
+	id: '',
+	params: ['title'],
+	manual: true,
+}).then(res => {
+	res
+	//^?
+})
+// */
