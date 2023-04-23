@@ -1,6 +1,6 @@
 import { fetchTranscript } from './transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
-import { getEndpoint, getMap_smart } from '../utils'
+import { getEndpoint, getMap_smart, handleCatch } from '../utils'
 import type { Prettify } from '../utility-types'
 import type { RequestHandler } from './$types'
 import { type Patch, patchFetch, json } from '../zero-api/fetch'
@@ -33,13 +33,16 @@ async function getPlaylistTranscripts(list: string) {
 }
 
 export type Query = Prettify<Params>
+
 export const GET = async <Q extends Query>(event: {}) => {
 	const { videoId, playlistId } = querySpread(event)
 
 	const body = {
-		videoId: videoId ? await getTranscript(videoId).catch() : undefined,
+		videoId: videoId
+			? await getTranscript(videoId).catch(handleCatch)
+			: undefined,
 		playlistId: playlistId
-			? await getPlaylistTranscripts(playlistId).catch()
+			? await getPlaylistTranscripts(playlistId).catch(handleCatch)
 			: undefined,
 	}
 

@@ -6,6 +6,7 @@ import type { Param, Prettify } from '../../utility-types'
 import { type Patch, json, patchFetch } from './../../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from './../../zero-api/helper'
+import { handleCatch } from './../../utils'
 
 export type Union<T> = {
 	[K2 in keyof T]: T[K2]
@@ -36,7 +37,7 @@ export type Query<S extends Slug> = Prettify<NonNullable<Params[S]>>
 export const GET = async <S extends Slug, Q extends Query<S>>(event: {params: {endpoint: S}, query: Q}) => {
 	const endpoint = event.params.endpoint
 	const query = querySpread(event) as any
-	const body = await switchQuery(endpoint, query)
+	const body = await switchQuery(endpoint, query).catch(handleCatch)
 
 	return json(body as any as NonNullable<Params[S & keyof Params]> )
 }
