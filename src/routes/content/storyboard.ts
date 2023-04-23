@@ -77,3 +77,18 @@ export function getStoryboard(
 		},
 	}
 }
+
+import { getContentPage } from './content'
+import { getTimeline } from './timeline'
+export async function getStoryboards(id: string) {
+	const page = await getContentPage(id)
+
+	if (!page?.playerResponse?.storyboards) {
+		return
+	}
+	const storyboards = page.playerResponse.storyboards
+	return {
+		storyboard: getStoryboard(storyboards, true, 1002),
+		timeline: getTimeline({ storyboards, quality: 'medium', quantity: 5 }),
+	}
+}

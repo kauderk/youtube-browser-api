@@ -37,3 +37,7 @@ export function getWatchEndpoint(videoId: string) {
 		v: videoId,
 	})
 }
+
+export function handleCatch(e?: Error) {
+	return
+}
