@@ -5888,7 +5888,7 @@ interface Timestamp {
 }
 
 interface EntityBatchUpdate3 {
-	mutations: Mutation3[]
+	mutations: (Mutation3|undefined)[]
 	timestamp: Timestamp
 }
 

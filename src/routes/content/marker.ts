@@ -35,7 +35,7 @@ export async function getMarkers(videoId: string) {
 				})
 				.filter(val => val !== undefined), // typescript returns the union type on filter ?!
 		key_chapters:
-			page.initialData.frameworkUpdates?.entityBatchUpdate.mutations?.[1].payload.macroMarkersListEntity?.markersList.markers?.map(
+			page.initialData.frameworkUpdates?.entityBatchUpdate.mutations?.[1]?.payload.macroMarkersListEntity?.markersList.markers?.map(
 				renderer => {
 					return {
 						tittle: renderer.title,

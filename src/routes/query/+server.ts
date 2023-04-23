@@ -5,7 +5,6 @@ import { type Patch, json, patchFetch } from '../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from '../zero-api/helper'
 import { err } from '../zero-api/error-handling'
-import { json as _json } from '@sveltejs/kit'
 
 export type Query = {
 	/**
