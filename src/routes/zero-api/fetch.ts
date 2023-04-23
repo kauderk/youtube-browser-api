@@ -62,23 +62,35 @@ export type Patch = {
 	manual?: boolean
 }
 
+export const config = { baseUrl: '' }
 export async function patchFetch<
 	R extends object,
 	P extends Patch,
-	Promise extends object
+	promise extends object
 >(params: { endpoint: Endpoint<R>; slug?: string; query: FetchQuery & Patch }) {
 	const stringify = stringifyQuery(params.query)
 	const urlParams =
+		'/' +
 		params.endpoint +
-		(params.slug || '') +
+		(params.slug ? '/' + params.slug : '') +
+		'?' +
 		new URLSearchParams(stringify).toString()
-	const url = 'https://youtube-browser-api.netlify.app' + urlParams
-	return fetch(url).then(res => res.json()) as unknown as P extends {
+	const url = config.baseUrl + urlParams
+	const promise = params.query.manual
+		? fetch(url)
+		: fetch(url).then(res => res.json())
+	return promise as unknown as P extends {
 		manual: true
 	}
-		? Awaited<Promise>
-		: // @ts-ignore
-		  Awaited<ReturnType<Awaited<Promise>['json']>>
+		? Awaited<promise>
+		: Awaited<
+				ReturnType<
+					Extract<
+						Awaited<promise>,
+						ReturnType<typeof json<any>>
+					>['json']
+				>
+		  >
 }
 function stringifyQuery(query: FetchQuery) {
 	const copy = structuredClone(query)
