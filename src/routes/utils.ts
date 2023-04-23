@@ -41,3 +41,7 @@ export function getWatchEndpoint(videoId: string) {
 export function handleCatch(e?: Error) {
 	return
 }
+
+import { err } from '$src/routes/zero-api/error-handling'
+export const idTest = (id: string) =>
+	err.test(id?.length == 11, { id: 'Must be 11 characters' })

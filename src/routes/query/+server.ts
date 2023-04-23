@@ -5,6 +5,7 @@ import { type Patch, json, patchFetch } from '../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from '../zero-api/helper'
 import { err } from '../zero-api/error-handling'
+import { idTest } from './../utils'
 
 export type Query = {
 	/**
@@ -44,7 +45,7 @@ type _MapSchema<Q extends Query> = MapSchema<
 // Extracted to recycle the reasons, due to the `recursive inference limitation`
 function handleBadInputs(id?: string, paths?: string, preSchema?: object) {
 	const errorResponse = err.handler(
-		err.test(id?.length == 11, { id: 'Must be 11 characters' }),
+		idTest(id!),
 		err.test(!!paths || !!preSchema, {
 			query: 'paths or schema should be present and typed accordingly',
 		})

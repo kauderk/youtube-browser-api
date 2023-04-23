@@ -7,39 +7,43 @@ import { type Patch, json, patchFetch } from './../../zero-api/fetch'
 import type { RequestHandler } from './$types'
 import { querySpread } from './../../zero-api/helper'
 import { handleCatch } from './../../utils'
+import { err } from './../../zero-api/error-handling'
 
-export type Union<T> = {
-	[K2 in keyof T]: T[K2]
-}[keyof T]
+const switchData = {
+	playlist: GetPlaylistData,
+	channel: GetChannelById,
+	suggestion: GetSuggestData,
+	search: GetListByKeyword,
+} as const
+type SwitchData = typeof switchData
 export type Params = Prettify<{
-	playlist?: Param<typeof GetPlaylistData>
-	channel?: Param<typeof GetChannelById>
-	suggestion?: Param<typeof GetSuggestData>
-	search?: Param<typeof GetListByKeyword>
+	[key in keyof SwitchData]?: Param<SwitchData[key]>
 }>
-
-function switchQuery<S extends Slug>(endpoint: S, query: any) {
-	if (endpoint === 'playlist') {
-		return GetPlaylistData(query)
-	} else if (endpoint === 'channel') {
-		return GetChannelById(query)
-	} else if (endpoint === 'suggestion') {
-		return GetSuggestData(query)
-	} else {
-		return GetListByKeyword(query)
-	}
-}
-
 export type Slug = keyof Params
 export type Query<S extends Slug> = Prettify<NonNullable<Params[S]>>
 
+function handleBadInputs(slug: string) {
+	const errorResponse = err.handler(
+		err.test(Object.keys(switchData).includes(slug), {
+			query: `Invalid slug, should be either: playlist, channel, suggestion or search`,
+		})
+	)
+	return errorResponse?.('BadRequest')
+}
+
 // prettier-ignore
 export const GET = async <S extends Slug, Q extends Query<S>>(event: {params: {endpoint: S}, query: Q}) => {
-	const endpoint = event.params.endpoint
-	const query = querySpread(event) as any
-	const body = await switchQuery(endpoint, query).catch(handleCatch)
+	const slug = event.params.endpoint
 
-	return json(body as any as NonNullable<Params[S & keyof Params]> )
+	const badInput = handleBadInputs(slug)
+	if(badInput){
+		return badInput
+	}
+
+	const query = querySpread(event) as any
+	const body = await switchData[slug](query).catch(handleCatch)
+
+	return json(body as any as ReturnType<SwitchData[S]> )
 }
 
 export const _GET = async <S extends Slug, Q extends Query<S> & Patch>(
@@ -54,12 +58,15 @@ export const _GET = async <S extends Slug, Q extends Query<S> & Patch>(
 }
 
 /* uncomment me
-_GET('channel', {
-	channelId: '',
+_GET('playlist', {
+	limit: 0,
+	playlistId: '',
 	manual: true,
 }).then(res => {
 	// @ts-ignore
-	res.json()
+	if (!res.ok) {
+		res.body.errors.query
+	}
 	//^?
 })
 // */

@@ -5,6 +5,7 @@ import type { Prettify } from '../utility-types'
 import type { RequestHandler } from './$types'
 import { type Patch, patchFetch, json } from '../zero-api/fetch'
 import { querySpread } from '../zero-api/helper'
+import { err } from '../zero-api/error-handling'
 
 type Params = {
 	playlistId?: string
@@ -34,9 +35,22 @@ async function getPlaylistTranscripts(list: string) {
 
 export type Query = Prettify<Params>
 
+function handleBadInputs(videoId: string, playlistId: string) {
+	const errorResponse = err.handler(
+		err.test(!!videoId || !!playlistId, {
+			query: 'Empty Params: try with a videoId or playlistId',
+		})
+	)
+	return errorResponse?.('BadRequest')
+}
+
 export const GET = async <Q extends Query>(event: {}) => {
 	const { videoId, playlistId } = querySpread(event)
 
+	const badInputs = handleBadInputs(videoId, playlistId)
+	if (badInputs) {
+		return badInputs
+	}
 	const body = {
 		videoId: videoId
 			? await getTranscript(videoId).catch(handleCatch)
