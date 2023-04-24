@@ -6,6 +6,7 @@
 		"lib": ["es2020", "DOM"],
 		"target": "es2017",
 		"strict": true,
+		"noUncheckedIndexedAccess": true,
 		"noImplicitThis": true,
 		"strictNullChecks": true,
 		"noImplicitAny": true,

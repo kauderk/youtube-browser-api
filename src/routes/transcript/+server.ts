@@ -1,9 +1,11 @@
 import { fetchTranscript } from './transcript'
 import { getDomainText, ParseUniqueIDs } from './fetch'
-import { type API, querySpread } from 'sveltekit-zero-api'
-import { Ok } from 'sveltekit-zero-api/http'
-import { getEndpoint, getMap_smart } from '../utils'
-import type { Param, Prettify } from '../utility-types'
+import { getEndpoint, getMap_smart, handleCatch } from '../utils'
+import type { Prettify } from '../utility-types'
+import type { RequestHandler } from './$types'
+import { type Patch, patchFetch, json } from '../zero-api/fetch'
+import { querySpread } from '../zero-api/helper'
+import { err } from '../zero-api/error-handling'
 
 type Params = {
 	playlistId?: string
@@ -31,15 +33,49 @@ async function getPlaylistTranscripts(list: string) {
 	return await Promise.all(ids.map(async id => getTranscript(id)))
 }
 
-export const GET = async (event: API<{ query: Prettify<Params> }>) => {
+export type Query = Prettify<Params>
+
+function handleBadInputs(videoId: string, playlistId: string) {
+	const errorResponse = err.handler(
+		err.test(!!videoId || !!playlistId, {
+			query: 'Empty Params: try with a videoId or playlistId',
+		})
+	)
+	return errorResponse?.('BadRequest')
+}
+
+export const GET = async <Q extends Query>(event: {}) => {
 	const { videoId, playlistId } = querySpread(event)
 
+	const badInputs = handleBadInputs(videoId, playlistId)
+	if (badInputs) {
+		return badInputs
+	}
 	const body = {
-		videoId: videoId ? await getTranscript(videoId).catch() : undefined,
+		videoId: videoId
+			? await getTranscript(videoId).catch(handleCatch)
+			: undefined,
 		playlistId: playlistId
-			? await getPlaylistTranscripts(playlistId).catch()
+			? await getPlaylistTranscripts(playlistId).catch(handleCatch)
 			: undefined,
 	}
 
-	return Ok({ body })
+	return json(body as { [key in keyof Q]: (typeof body)[key & keyof Params] })
 }
+
+export const _GET = async <Q extends Query & Patch>(query: Q & Patch) => {
+	return patchFetch<RequestHandler, Q, ReturnType<typeof GET<Q>>>({
+		endpoint: 'transcript',
+		query,
+	})
+}
+
+/* uncomment me
+_GET({
+	videoId: '',
+}).then(res => {
+	// @ts-ignore
+	res.json()
+	//^?
+})
+// */

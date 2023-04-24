@@ -12,6 +12,11 @@ type NonObjectKeysOf<T> = {
 		? never
 		: K
 }[keyof T]
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+	k: infer I
+) => void
+	? I
+	: never
 export type Flatten<T> = Pick<T, NonObjectKeysOf<T>> &
 	UnionToIntersection<ObjectValuesOf<T>>
 
@@ -46,3 +51,9 @@ export type Union<T> = {
 
 // @ts-expect-error
 <Union<Model>>{}.yolo
+
+export type TupleUnion<U extends string, R extends any[] = []> = {
+	[S in U]: Exclude<U, S> extends never
+		? [...R, S]
+		: TupleUnion<Exclude<U, S>, [...R, S]>
+}[U]

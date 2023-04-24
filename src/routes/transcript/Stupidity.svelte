@@ -3,12 +3,12 @@
 	import { page } from '$app/stores'
 	import { Paginator, Table } from '@skeletonlabs/skeleton'
 	import { derived, writable } from 'svelte/store'
-	import type { TranscriptResponse } from 'youtube-transcript'
 	import CodeBlocks, { createState } from '../components/CodeBlocks.svelte'
 	import Item from '../components/Item.svelte'
 	import Legend from '../components/Legend.svelte'
 	import { fetchQuery } from '../components/submit'
 	import { toProps } from '../data/utils'
+	import type { TranscriptResponse } from './transcript'
 
 	export let entry: any
 

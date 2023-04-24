@@ -20,6 +20,8 @@ export function ParseUniqueIDs(htmlContent: string) {
 	const matches = [
 		...htmlContent.matchAll(/https?:\/\/youtu\.be\/([\w\W]{11})/gm),
 		...htmlContent.matchAll(/watch?\?v\=([\w\W]{11})/gm),
-	].map(m => m[1])
-	return [...new Set(matches)]
+	]
+		.map(m => m[1])
+		.filter(Boolean)
+	return [...new Set(matches as string[])]
 }

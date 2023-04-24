@@ -7,7 +7,6 @@
 	import Item from '../../components/Item.svelte'
 	import { common } from '../../components/common'
 
-	import Api from '$src/api'
 	import CodeBlocks, { createState } from '../../components/CodeBlocks.svelte'
 	import { fetchQuery } from '../../components/submit'
 

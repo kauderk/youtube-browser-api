@@ -50,7 +50,7 @@ export async function fetchTranscript(
 		headers: {
 			'Content-Type': 'application/json',
 		},
-	}).then(res => res.json())
+	}).then(res => res.json()).catch()
 
 	if (!body?.responseContext) {
 		return
